@@ -20,6 +20,9 @@ export class Tab1Page {
   }
 
   private loadMap(): void {
+    if(this.map !== undefined){
+      return
+    }
     this.map = Leaflet.map('mapId').setView([0, 0], 1);
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Idevation Saqib Khan',
