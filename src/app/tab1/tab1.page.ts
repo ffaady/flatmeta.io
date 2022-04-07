@@ -13,13 +13,22 @@ declare var what3words;
 })
 export class Tab1Page {
   map: Leaflet.Map;
-  tiles:any;
+  tiles: any;
   constructor() { }
 
   ngOnInit() { }
 
   ionViewDidEnter() {
     this.loadMap();
+    this.map.on('zoomend', (res) => {
+      if (res.target._zoom == 18) {
+        this.setGrid(this.map);
+      } else {
+        if (this.tiles != undefined) {
+          this.map.removeLayer(this.tiles);
+        }
+      }
+    });
   }
 
   async loadMap() {
@@ -34,7 +43,6 @@ export class Tab1Page {
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
 
-
     const coordinates = await Geolocation.getCurrentPosition();
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 13);
 
@@ -46,17 +54,6 @@ export class Tab1Page {
 
     const marker = Leaflet.marker([coordinates.coords.latitude, coordinates.coords.longitude], { icon }).bindPopup('Angular Leaflet');
     marker.addTo(this.map);
-
-    this.map.on('zoomend', (res) => {
-      if (res.target._zoom == 18) {
-        this.setGrid(this.map);
-      } else {
-        if(this.tiles != undefined){
-          this.map.removeLayer(this.tiles);
-        }
-      }
-    });
-
   }
 
   setGrid(m) {
@@ -80,7 +77,7 @@ export class Tab1Page {
       ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
       ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
       ctx.strokeStyle = 'darkgrey';
-      
+
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.lineTo(size.x - 1, 0);
@@ -91,7 +88,7 @@ export class Tab1Page {
       return tile;
     }
     this.tiles.addTo(m);
-    
+
   }
 
   /** Remove map when we have multiple map object */
