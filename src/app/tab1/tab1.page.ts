@@ -62,9 +62,9 @@ export class Tab1Page {
   setGrid(m) {
     this.tiles = new Leaflet.GridLayer();
     this.tiles.createTile = function (coords) {
-      var tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
-      var ctx = tile.getContext('2d');
-      var size = this.getTileSize()
+      let tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
+      let ctx = tile.getContext('2d');
+      let size = this.getTileSize()
       tile.width = size.x
       tile.height = size.y
 
