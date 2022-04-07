@@ -13,7 +13,6 @@ declare var what3words;
 })
 export class Tab1Page {
   map: Leaflet.Map;
-  grid_layer: any;
 
   constructor() { }
 
