@@ -13,7 +13,7 @@ declare var what3words;
 })
 export class Tab1Page {
   map: Leaflet.Map;
-
+  tiles:any;
   constructor() { }
 
   ngOnInit() { }
@@ -34,7 +34,7 @@ export class Tab1Page {
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
 
-    this.setGrid(this.map);
+
     const coordinates = await Geolocation.getCurrentPosition();
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 13);
 
@@ -47,43 +47,51 @@ export class Tab1Page {
     const marker = Leaflet.marker([coordinates.coords.latitude, coordinates.coords.longitude], { icon }).bindPopup('Angular Leaflet');
     marker.addTo(this.map);
 
+    this.map.on('zoomend', (res) => {
+      if (res.target._zoom == 18) {
+        this.setGrid(this.map);
+      } else {
+        if(this.tiles != undefined){
+          this.map.removeLayer(this.tiles);
+        }
+      }
+    });
+
   }
 
   setGrid(m) {
-    setTimeout(() => {
-      var tiles = new Leaflet.GridLayer();
-      tiles.createTile = function (coords) {
-        var tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
-        var ctx = tile.getContext('2d');
-        var size = this.getTileSize()
-        tile.width = size.x
-        tile.height = size.y
+    this.tiles = new Leaflet.GridLayer();
+    this.tiles.createTile = function (coords) {
+      var tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
+      var ctx = tile.getContext('2d');
+      var size = this.getTileSize()
+      tile.width = size.x
+      tile.height = size.y
 
-        // calculate projection coordinates of top left tile pixel
-        var nwPoint = coords.scaleBy(size)
+      // calculate projection coordinates of top left tile pixel
+      var nwPoint = coords.scaleBy(size)
 
-        // calculate geographic coordinates of top left tile pixel
-        var nw = m.unproject(nwPoint, coords.z)
+      // calculate geographic coordinates of top left tile pixel
+      var nw = m.unproject(nwPoint, coords.z)
 
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, size.x, 50);
-        ctx.fillStyle = 'black';
-        ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
-        ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
-        ctx.strokeStyle = 'darkgrey';
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(size.x - 1, 0);
-        ctx.lineTo(size.x - 1, size.y - 1);
-        ctx.lineTo(0, size.y - 1);
-        ctx.closePath();
-        ctx.stroke();
-        return tile;
-      }
-      tiles.addTo(m)
-
-    }, 1000)
-
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, size.x, 50);
+      ctx.fillStyle = 'black';
+      ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
+      ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
+      ctx.strokeStyle = 'darkgrey';
+      
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(size.x - 1, 0);
+      ctx.lineTo(size.x - 1, size.y - 1);
+      ctx.lineTo(0, size.y - 1);
+      ctx.closePath();
+      ctx.stroke();
+      return tile;
+    }
+    this.tiles.addTo(m);
+    
   }
 
   /** Remove map when we have multiple map object */
