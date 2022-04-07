@@ -2,6 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as Leaflet from 'leaflet';
 import { antPath } from 'leaflet-ant-path';
 import { Observable, Subscriber } from 'rxjs';
+import { Geolocation } from '@capacitor/geolocation';
+
+declare var what3words;
 
 @Component({
   selector: 'app-tab1',
@@ -10,6 +13,7 @@ import { Observable, Subscriber } from 'rxjs';
 })
 export class Tab1Page {
   map: Leaflet.Map;
+  grid_layer: any;
 
   constructor() { }
 
@@ -19,8 +23,8 @@ export class Tab1Page {
     this.loadMap();
   }
 
-  private loadMap(): void {
-    if(this.map !== undefined){
+  async loadMap() {
+    if (this.map !== undefined) {
       return
     }
     this.map = Leaflet.map('mapId').setView([0, 0], 1);
@@ -32,19 +36,17 @@ export class Tab1Page {
     }).addTo(this.map);
 
     this.setGrid(this.map);
+    const coordinates = await Geolocation.getCurrentPosition();
+    this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 13);
 
-    this.getCurrentPosition().subscribe((position: any) => {
-      this.map.flyTo([position.latitude, position.longitude], 13);
-
-      const icon = Leaflet.icon({
-        iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
-        shadowUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-shadow.png',
-        popupAnchor: [13, 0],
-      });
-
-      const marker = Leaflet.marker([position.latitude, position.longitude], { icon }).bindPopup('Angular Leaflet');
-      marker.addTo(this.map);
+    const icon = Leaflet.icon({
+      iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
+      shadowUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-shadow.png',
+      popupAnchor: [13, 0],
     });
+
+    const marker = Leaflet.marker([coordinates.coords.latitude, coordinates.coords.longitude], { icon }).bindPopup('Angular Leaflet');
+    marker.addTo(this.map);
 
   }
 
@@ -82,28 +84,12 @@ export class Tab1Page {
       tiles.addTo(m)
 
     }, 1000)
-  }
 
-  private getCurrentPosition(): any {
-    return new Observable((observer: Subscriber<any>) => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position: any) => {
-          observer.next({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-          observer.complete();
-        });
-      } else {
-        observer.error();
-      }
-    });
   }
 
   /** Remove map when we have multiple map object */
   ngOnDestroy() {
     this.map.remove();
   }
-
 
 }

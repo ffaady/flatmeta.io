@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">leafletmap</string>
+    <string name="title_activity_main">leafletmap</string>
+    <string name="package_name">com.leaflet.example</string>
+    <string name="custom_url_scheme">com.leaflet.example</string>
+</resources>
