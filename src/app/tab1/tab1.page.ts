@@ -21,7 +21,7 @@ export class Tab1Page {
   ionViewDidEnter() {
     this.loadMap();
     this.map.on('zoomend', (res) => {
-      if (res.target._zoom == 18) {
+      if (res.target._zoom == 20) {
         this.setGrid(this.map);
       } else {
         if (this.tiles != undefined) {
@@ -38,7 +38,7 @@ export class Tab1Page {
     this.map = Leaflet.map('mapId').setView([0, 0], 1);
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Idevation Saqib Khan',
-      maxZoom: 18,
+      maxZoom: 20,
       id: 'mapbox/streets-v11',
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
