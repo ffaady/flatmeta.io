@@ -5,8 +5,7 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import TileDebug from 'ol/source/TileDebug';
-
-import Geolocation from 'ol/Geolocation';
+import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
   selector: 'app-tab2',
@@ -26,41 +25,26 @@ export class Tab2Page implements OnInit {
 
   ionViewDidEnter() {
     this.zone.run(() => {
-      this.getCurrentPosition().subscribe((position: any) => {
-        this.map = new Map({
-          view: new View({
-            center: [position.latitude, position.longitude],
-            zoom: 5,
-          }),
-          layers: [
-            new TileLayer({
-              source: new OSM(),
-            }),
-            new TileLayer({
-              source: new TileDebug(),
-            })
-          ],
-          target: 'ol-map'
-        });         
-      })
+      this.loadMap()
     });
-
-
   }
 
-  private getCurrentPosition(): any {
-    return new Observable((observer: Subscriber<any>) => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position: any) => {
-          observer.next({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-          observer.complete();
-        });
-      } else {
-        observer.error();
-      }
+  async loadMap() {
+    const coordinates = await Geolocation.getCurrentPosition();
+    this.map = new Map({
+      view: new View({
+        center: [coordinates.coords.latitude, coordinates.coords.longitude],
+        zoom: 5,
+      }),
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+        new TileLayer({
+          source: new TileDebug(),
+        })
+      ],
+      target: 'ol-map'
     });
   }
 
