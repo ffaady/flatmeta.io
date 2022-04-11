@@ -21,7 +21,7 @@ export class Tab1Page {
   ionViewDidEnter() {
     this.loadMap();
     this.map.on('zoomend', (res) => {
-      if (res.target._zoom == 20) {
+      if (res.target._zoom >= 12) {
         this.setGrid(this.map);
       } else {
         if (this.tiles != undefined) {
@@ -62,20 +62,25 @@ export class Tab1Page {
       let tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
       let ctx = tile.getContext('2d');
       let size = this.getTileSize()
+      
+      
+      size.x = 200
+      size.y = 200
+      
       tile.width = size.x
       tile.height = size.y
-
+      console.log(size)
       // calculate projection coordinates of top left tile pixel
       var nwPoint = coords.scaleBy(size)
 
       // calculate geographic coordinates of top left tile pixel
       var nw = m.unproject(nwPoint, coords.z)
 
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, size.x, 50);
-      ctx.fillStyle = 'black';
-      ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
-      ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
+      // ctx.fillStyle = 'yellow';
+      // ctx.fillRect(0, 0, size.x, 50);
+      // ctx.fillStyle = 'black';
+      // ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
+      // ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
       ctx.strokeStyle = 'darkgrey';
 
       ctx.beginPath();
@@ -85,6 +90,10 @@ export class Tab1Page {
       ctx.lineTo(0, size.y - 1);
       ctx.closePath();
       ctx.stroke();
+      tile.addEventListener('click', (e) => {
+        console.log(nw);
+        e.srcElement.classList.toggle('border-show');
+      });
       return tile;
     }
     this.tiles.addTo(m);
