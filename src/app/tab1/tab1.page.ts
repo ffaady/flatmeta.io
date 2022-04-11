@@ -21,7 +21,7 @@ export class Tab1Page {
   ionViewDidEnter() {
     this.loadMap();
     this.map.on('zoomend', (res) => {
-      if (res.target._zoom >= 12) {
+      if (res.target._zoom == 20) {
         this.setGrid(this.map);
       } else {
         if (this.tiles != undefined) {
@@ -62,14 +62,10 @@ export class Tab1Page {
       let tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
       let ctx = tile.getContext('2d');
       let size = this.getTileSize()
-      
-      
-      size.x = 200
-      size.y = 200
-      
+
       tile.width = size.x
       tile.height = size.y
-      console.log(size)
+      
       // calculate projection coordinates of top left tile pixel
       var nwPoint = coords.scaleBy(size)
 
@@ -90,7 +86,7 @@ export class Tab1Page {
       ctx.lineTo(0, size.y - 1);
       ctx.closePath();
       ctx.stroke();
-      tile.addEventListener('click', (e) => {
+      tile.addEventListener('dblclick', (e) => {
         console.log(nw);
         e.srcElement.classList.toggle('border-show');
       });
