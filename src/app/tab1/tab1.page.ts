@@ -13,7 +13,7 @@ declare var what3words;
 })
 export class Tab1Page {
   map: Leaflet.Map;
-  tiles: any;
+  tiles: any = undefined;
   constructor() { }
 
   ngOnInit() { }
@@ -21,11 +21,14 @@ export class Tab1Page {
   ionViewDidEnter() {
     this.loadMap();
     this.map.on('zoomend', (res) => {
-      if (res.target._zoom == 20) {
-        this.setGrid(this.map);
+      if (res.target._zoom >= 20) {
+        if (this.tiles == undefined) {
+          this.setGrid(this.map);
+        }
       } else {
         if (this.tiles != undefined) {
           this.map.removeLayer(this.tiles);
+          this.tiles = undefined;
         }
       }
     });
@@ -38,7 +41,7 @@ export class Tab1Page {
     this.map = Leaflet.map('mapId').setView([0, 0], 1);
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Idevation Saqib Khan',
-      maxZoom: 20,
+      maxZoom: 22,
       id: 'mapbox/streets-v11',
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
@@ -57,28 +60,37 @@ export class Tab1Page {
   }
 
   setGrid(m) {
-    this.tiles = new Leaflet.GridLayer();
+    this.tiles = new Leaflet.GridLayer({
+      tileSize: 40,
+      opacity: 0.8,
+      updateWhenZooming: false,
+      updateWhenIdle: false,
+      minNativeZoom: 20,
+      maxNativeZoom: 25,
+    });
     this.tiles.createTile = function (coords) {
-      let tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
-      let ctx = tile.getContext('2d');
-      let size = this.getTileSize()
+      var tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
+      var ctx = tile.getContext('2d');
+
+      var size = this.getTileSize()
+
 
       tile.width = size.x
       tile.height = size.y
-      
+
       // calculate projection coordinates of top left tile pixel
       var nwPoint = coords.scaleBy(size)
-
+      nwPoint.clientHeight = 80
+      nwPoint.clientWidth = 80
       // calculate geographic coordinates of top left tile pixel
       var nw = m.unproject(nwPoint, coords.z)
 
-      // ctx.fillStyle = 'yellow';
-      // ctx.fillRect(0, 0, size.x, 50);
-      // ctx.fillStyle = 'black';
-      // ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
-      // ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
-      ctx.strokeStyle = 'darkgrey';
-
+      //ctx.fillStyle = 'white';
+      //ctx.fillRect(0, 0, size.x, 50);
+      //ctx.fillStyle = 'black';
+      //ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
+      //ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
+      ctx.strokeStyle = 'grey';
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.lineTo(size.x - 1, 0);
