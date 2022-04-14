@@ -87,23 +87,22 @@ export class Tab1Page {
       //ctx.fillStyle = 'black';
       //ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
       //ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
-      ctx.strokeStyle = 'grey';
+      if (nw.lat == 24.892674927004407 && nw.lng == 67.07441926002504) {
+        ctx.strokeStyle = 'red';
+      } else {
+        ctx.strokeStyle = 'grey';
+      }
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(size.x - 1, 0);
-      ctx.lineTo(size.x - 1, size.y - 1);
-      ctx.lineTo(0, size.y - 1);
+      ctx.lineTo(size.x + 1, 0);
+      ctx.lineTo(size.x + 1, size.y + 1);
+      ctx.lineTo(0, size.y + 1);
       ctx.closePath();
       ctx.stroke();
       tile.addEventListener('click', (e) => {
         console.log(nw);
         e.srcElement.classList.toggle('border-show');
       });
-      setTimeout(()=>{
-        if(nw.lat == 24.892674927004407 && nw.lng == 67.07441926002504){
-          tile.click();
-        }
-      })
       return tile;
     }
     this.tiles.addTo(m);
