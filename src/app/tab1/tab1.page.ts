@@ -92,16 +92,21 @@ export class Tab1Page {
       } else {
         ctx.strokeStyle = 'grey';
       }
+
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.lineTo(size.x + 1, 0);
-      ctx.lineTo(size.x + 1, size.y + 1);
-      ctx.lineTo(0, size.y + 1);
+      ctx.lineTo(size.x - 1, 0);
+      ctx.lineTo(size.x - 1, size.y - 1);
+      ctx.lineTo(0, size.y - 1);
       ctx.closePath();
       ctx.stroke();
       tile.addEventListener('click', (e) => {
         console.log(nw);
-        e.srcElement.classList.toggle('border-show');
+        if (nw.lat == 24.892674927004407 && nw.lng == 67.07441926002504) {
+          return
+        } else {
+          e.srcElement.classList.toggle('border-show');
+        }
       });
       return tile;
     }
