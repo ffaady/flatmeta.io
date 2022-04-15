@@ -1,0 +1,38 @@
+#container {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .capitalize {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 15%;
+    }
+
+    form {
+        ion-button {
+            margin-top: 20px;
+        }
+
+        .text-danger {
+            margin-bottom: 10px;
+        }
+    }
+
+    .haveAccount {
+        margin-top: 20%;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .fb {
+        font-size: 28px;
+    }
+
+    .facebookLogin {
+        font-size: 14px;
+    }
+
+}

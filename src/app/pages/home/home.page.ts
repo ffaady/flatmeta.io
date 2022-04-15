@@ -5,11 +5,11 @@ import * as Leaflet from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
-  selector: 'app-tab1',
-  templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss']
+  selector: 'app-home',
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
 })
-export class Tab1Page {
+export class HomePage implements OnInit {
   map: Leaflet.Map;
   tiles: any = undefined;
 
@@ -159,5 +159,6 @@ export class Tab1Page {
   ngOnDestroy() {
     this.map.remove();
   }
+
 
 }
