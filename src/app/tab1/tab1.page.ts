@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { StorageService } from 'src/app/providers/storage.service';
+import { GeneralService } from 'src/app/providers/general.service';
 import * as Leaflet from 'leaflet';
-import { antPath } from 'leaflet-ant-path';
-import { Observable, Subscriber } from 'rxjs';
 import { Geolocation } from '@capacitor/geolocation';
-
-declare var what3words;
 
 @Component({
   selector: 'app-tab1',
@@ -14,7 +12,14 @@ declare var what3words;
 export class Tab1Page {
   map: Leaflet.Map;
   tiles: any = undefined;
-  constructor() { }
+
+  selectedBoxs = [];
+  soldBoxes = [];
+
+  constructor(
+    public storage: StorageService,
+    public general: GeneralService
+  ) { }
 
   ngOnInit() { }
 
@@ -32,6 +37,16 @@ export class Tab1Page {
         }
       }
     });
+
+    this.getSoldBox();
+  }
+  
+  getSoldBox() {
+    this.storage.getObject('boxes').then((res: any) => {
+      if (res != null) {
+        this.soldBoxes = res;
+      }
+    })
   }
 
   async loadMap() {
@@ -60,6 +75,7 @@ export class Tab1Page {
   }
 
   setGrid(m) {
+    let that = this;
     this.tiles = new Leaflet.GridLayer({
       tileSize: 40,
       opacity: 0.8,
@@ -87,12 +103,14 @@ export class Tab1Page {
       //ctx.fillStyle = 'black';
       //ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
       //ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
-      if (nw.lat == 24.892674927004407 && nw.lng == 67.07441926002504) {
+
+      let fb = undefined;
+      fb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
+      if (fb != undefined) {
         ctx.strokeStyle = 'red';
       } else {
         ctx.strokeStyle = 'grey';
       }
-
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.lineTo(size.x - 1, 0);
@@ -101,11 +119,20 @@ export class Tab1Page {
       ctx.closePath();
       ctx.stroke();
       tile.addEventListener('click', (e) => {
-        console.log(nw);
-        if (nw.lat == 24.892674927004407 && nw.lng == 67.07441926002504) {
+        let cb = undefined;
+        cb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
+        if (cb != undefined) {
           return
+        }
+        let r = undefined;
+        r = that.selectedBoxs.filter(e => nw.lat == e.lat && nw.lng == e.lng);
+        if (r.length != 0) {
+          let i = that.selectedBoxs.findIndex(e => (e.lat == nw.lat && e.lng == nw.lng));
+          that.selectedBoxs.splice(i, 1);
+          e.srcElement.classList.toggle('border-show');
         } else {
           e.srcElement.classList.toggle('border-show');
+          that.selectedBoxs.push({ lat: nw.lat, lng: nw.lng });
         }
       });
       return tile;
@@ -113,6 +140,20 @@ export class Tab1Page {
     this.tiles.addTo(m);
 
   }
+
+  async buyNow() {
+    let final = [...this.soldBoxes, ...this.selectedBoxs];
+    this.storage.setObject('boxes', final);
+    this.map.removeLayer(this.tiles);
+    this.soldBoxes = [];
+    this.selectedBoxs = [];
+    this.tiles = undefined;
+    this.getSoldBox();
+    this.general.presentToast('Boxes bought successfully!');
+    setTimeout(() => {
+      this.setGrid(this.map);
+    })
+  } 
 
   /** Remove map when we have multiple map object */
   ngOnDestroy() {

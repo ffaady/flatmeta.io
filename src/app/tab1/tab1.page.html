@@ -12,7 +12,16 @@
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
-  <div id="mapId" style="width: 100%; height: 100%">
-  </div>
+  
+  <div id="mapId" ></div>
+
+  <ng-container *ngIf="selectedBoxs.length > 0">
+    <div class="position ion-padding">
+      <div class="ion-text-center">Buy {{selectedBoxs.length}} boxes</div>
+      <div>
+        <ion-button (click)="buyNow()" expand="block">Buy Now</ion-button>
+      </div>
+    </div>
+  </ng-container>
   
 </ion-content>
