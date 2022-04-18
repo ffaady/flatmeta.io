@@ -54,7 +54,7 @@ export class LoginPage implements OnInit {
     this.http.post2('AppLogin', this.loginForm.value, false).subscribe((res: any) => {
       if (res.status == true) {
         this.loading = false;
-        this.storage.setObject('userObject', { token: res.data })
+        this.storage.setObject('userObject', res.data);
         GlobaldataService.userObject = res.data;
         this.general.goToPage('tabs/home');
       } else {

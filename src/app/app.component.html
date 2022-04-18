@@ -1,3 +1,33 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-split-pane contentId="main-content" when="false">
+    <ion-menu contentId="main-content" type="overlay" side="end">
+      <ion-content>
+        <div class="ion-text-center">
+          <h2>FlatMeta</h2>
+        </div>
+        
+        <ion-list>
+          <ion-menu-toggle autoHide="false" *ngFor="let p of pages">
+            <ion-item [routerLink]="[p.url]" routerLinkActive="selected" routerDirection="root" lines="none"
+              detail="false">
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+            
+          </ion-menu-toggle>
+          <ion-item lines="none" (click)="logOut()">
+            <ion-label>Logout</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+
+      <ion-item>
+        <ion-label>
+          <ion-icon name="{{darkMode ? 'sunny' : 'moon'}}"></ion-icon>
+        </ion-label>
+        <ion-toggle slot="end" (ionChange)="toggleTheme($event)" color="dark" [(ngModel)]="darkMode" mode="md">
+        </ion-toggle>
+      </ion-item>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
 </ion-app>
