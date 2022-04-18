@@ -18,8 +18,8 @@ export class AppComponent {
 
   pages = [
     {
-      title: "FAQ's",
-      url: '/tabs/helpcenter'
+      title: "Profile",
+      url: '/tabs/profile'
     }
   ];
 

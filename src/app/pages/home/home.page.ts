@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
+import { HttpService } from 'src/app/providers/http.service';
 import * as Leaflet from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
+import { GlobaldataService } from 'src/app/providers/globaldata.service';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +20,8 @@ export class HomePage implements OnInit {
 
   constructor(
     public storage: StorageService,
-    public general: GeneralService
+    public general: GeneralService,
+    public http: HttpService
   ) { }
 
   ngOnInit() { }
@@ -40,13 +43,18 @@ export class HomePage implements OnInit {
 
     this.getSoldBox();
   }
-  
+
   getSoldBox() {
-    this.storage.getObject('boxes').then((res: any) => {
-      if (res != null) {
-        this.soldBoxes = res;
+    this.http.get2('GetSelectedTiles', true).subscribe((res: any) => {
+      this.general.stopLoading();
+      if (res.status == true) {
+        this.soldBoxes = res.data.tiles;
       }
-    })
+    },
+      (e) => {
+        this.general.stopLoading();
+        console.log(e)
+      })
   }
 
   async loadMap() {
@@ -141,19 +149,35 @@ export class HomePage implements OnInit {
 
   }
 
-  async buyNow() {
-    let final = [...this.soldBoxes, ...this.selectedBoxs];
-    this.storage.setObject('boxes', final);
-    this.map.removeLayer(this.tiles);
-    this.soldBoxes = [];
-    this.selectedBoxs = [];
-    this.tiles = undefined;
-    this.getSoldBox();
-    this.general.presentToast('Boxes bought successfully!');
-    setTimeout(() => {
-      this.setGrid(this.map);
-    })
-  } 
+  buyNow() {
+    if (GlobaldataService.userObject == undefined) {
+      this.general.presentToast('Please Login to Continue');
+      this.general.goToPage('login');
+    } else {
+      let save = {
+        boxs: this.selectedBoxs,
+        user_id: GlobaldataService.userObject.id
+      }
+      this.http.post2('AddTiles', save, true).subscribe((res: any) => {
+        this.general.stopLoading()
+        if (res.status == true) {
+          this.getSoldBox();
+          this.general.presentToast('Boxes bought successfully!');
+          this.map.removeLayer(this.tiles);
+          this.soldBoxes = [];
+          this.selectedBoxs = [];
+          this.tiles = undefined;
+          setTimeout(() => {
+            this.setGrid(this.map);
+          }, 2000)
+        }
+      },
+        (e) => {
+          this.general.stopLoading()
+          console.log(e)
+        })
+    }
+  }
 
   /** Remove map when we have multiple map object */
   ngOnDestroy() {
