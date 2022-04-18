@@ -1,0 +1,25 @@
+#container {
+    max-width: 500px;
+    margin: 0 auto;
+
+    .capitalize {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 15%;
+    }
+
+    form{
+        ion-button{
+          margin-top: 20px;
+        }
+        .text-danger{
+          margin-bottom: 10px;
+        }
+    }
+
+    .haveAccount {
+        margin-top: 20%;
+        font-size: 14px;
+        text-align: center;
+    }
+}

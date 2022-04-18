@@ -8,14 +8,14 @@
           <ion-label position="floating">
             <ion-icon slot="start" name="person"></ion-icon>
             Email Address
-            <ng-container *ngIf="getLoginControl.email.touched">
+            <ng-container *ngIf="getLoginControl.email_address.touched">
+              <span class="text-danger" *ngIf="getLoginControl.email_address.errors?.required">Email is required*</span>
               <span class="text-danger"
-                *ngIf="getLoginControl.email.errors?.required">Email is required*</span>
-              <span class="text-danger"
-                *ngIf="(getLoginControl.email.invalid && !getLoginControl.email.errors?.required)">Invialid Email*</span>
+                *ngIf="(getLoginControl.email_address.invalid && !getLoginControl.email_address.errors?.required)">Invialid
+                Email*</span>
             </ng-container>
           </ion-label>
-          <ion-input type="email" placeholder="Email address" formControlName="email" enterkeyhint="next"
+          <ion-input type="email" placeholder="Email address" formControlName="email_address" enterkeyhint="next"
             (keydown)="onKeydown($event)">
           </ion-input>
         </ion-item>
@@ -25,8 +25,7 @@
             <ion-icon slot="start" name="lock-open"></ion-icon>
             Password
             <ng-container *ngIf="getLoginControl.password.touched">
-              <span class="text-danger"
-                *ngIf="getLoginControl.password.errors?.required">Password is required *</span>
+              <span class="text-danger" *ngIf="getLoginControl.password.errors?.required">Password is required *</span>
             </ng-container>
 
           </ion-label>
@@ -52,7 +51,7 @@
 
     </form>
 
-    <p class="ion-text-center facebookLogin" >Forget Password?</p>
+    <p class="ion-text-center facebookLogin">Forget Password?</p>
 
   </div>
 </ion-content>

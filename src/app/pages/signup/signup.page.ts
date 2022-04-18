@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { StorageService } from 'src/app/providers/storage.service';
+import { GeneralService } from 'src/app/providers/general.service';
+import { HttpService } from 'src/app/providers/http.service';
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-signup',
@@ -7,9 +11,68 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SignupPage implements OnInit {
 
-  constructor() { }
+  signupForm: FormGroup;
+  showPass: boolean = false;
+
+  constructor(
+    public general: GeneralService,
+    public http: HttpService,
+    public formBuilder: FormBuilder,
+    private storage: StorageService
+  ) { }
 
   ngOnInit() {
+    this.initSignupForm();
+  }
+
+  initSignupForm() {
+    this.signupForm = this.formBuilder.group({
+      full_name: ['', [Validators.required]],
+      user_name: ['', [Validators.required]],
+      email_address: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+      // phone_number: ['', [Validators.required]],
+      // date_of_birth: ['', [Validators.required]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/[A-Z]/),
+        Validators.pattern(/[a-z]/),
+        Validators.pattern(/[0-9]/),
+        Validators.pattern(/[!@#$]/),
+      ]],
+      confirm_password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/[A-Z]/),
+        Validators.pattern(/[a-z]/),
+        Validators.pattern(/[0-9]/),
+        Validators.pattern(/[!@#$]/),
+      ]],
+    })
+  }
+
+  get getControl() {
+    return this.signupForm.controls;
+  }
+
+  onSubmit() {
+    if (this.signupForm.invalid) {
+      return;
+    }
+
+    this.http.post2('SignUp', this.signupForm.value, true).subscribe((res: any) => {
+      this.general.stopLoading();
+      console.log(res)
+      if (res.status == true) {
+        this.general.goToPage('login');
+      } else {
+        this.general.presentToast(res.message);
+      }
+    },
+      (e) => {
+        this.general.stopLoading();
+        console.log(e)
+      })
   }
 
 }

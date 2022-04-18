@@ -32,9 +32,14 @@
 .leaflet-image-layer,
 .leaflet-pane>svg path,
 .leaflet-tile-container {
-    pointer-events: all!important;
+    pointer-events: all !important;
 }
 
-.border-show{
+.border-show {
     border: 2px solid blue;
- }
+}
+
+.text-danger {
+    color: var(--ion-color-danger);
+    text-align: center;
+}

@@ -31,9 +31,8 @@ export class LoginPage implements OnInit {
 
   initLoginForm() {
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
-      password: ['', [Validators.required]],
-      device_token: [GlobaldataService.deviceToken]
+      email_address: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+      password: ['', [Validators.required]]
     })
   }
 
@@ -51,14 +50,13 @@ export class LoginPage implements OnInit {
     if (this.loginForm.invalid) {
       return
     };
-    this.loginForm.patchValue({ device_token: GlobaldataService.deviceToken });
     this.loading = true;
-    this.http.post2('login', this.loginForm.value, false).subscribe((res: any) => {
+    this.http.post2('AppLogin', this.loginForm.value, false).subscribe((res: any) => {
       if (res.status == true) {
         this.loading = false;
-        this.storage.setObject('login_token', { token: res.access_token })
-        GlobaldataService.loginToken = res.access_token;
-        this.general.goToPage('tabs/createtask');
+        this.storage.setObject('userObject', { token: res.data })
+        GlobaldataService.userObject = res.data;
+        this.general.goToPage('tabs/home');
       } else {
         this.loading = false;
         this.general.presentToast(res.message);

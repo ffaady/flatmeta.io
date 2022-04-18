@@ -10,7 +10,7 @@ import { Location } from '@angular/common';
 export class GeneralService {
   loading: any;
 
-  globalUrl: string = 'https://gigeconomy.yaze.live/api/';
+  globalUrl: string = 'https://leafletdemo.mewebe.net/API/index.php?action=';
 
   constructor(
     public alertController: AlertController,
