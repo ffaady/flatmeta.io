@@ -23,5 +23,18 @@
       </div>
     </div>
   </ng-container>
+
+  <ng-container *ngIf="myBoxs.length > 0">
+    <div class="position ion-padding">
+      <div class="flex">
+        <div *ngFor="let i of [].constructor(5)">
+          Item 1
+        </div>
+      </div>
+      <div>
+        <ion-button (click)="buyNow()" expand="block">Update Box</ion-button>
+      </div>
+    </div>
+  </ng-container>
   
 </ion-content>

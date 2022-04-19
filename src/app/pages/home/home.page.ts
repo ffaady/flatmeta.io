@@ -17,6 +17,7 @@ export class HomePage implements OnInit {
 
   selectedBoxs = [];
   soldBoxes = [];
+  myBoxs = [];
 
   constructor(
     public storage: StorageService,
@@ -130,17 +131,20 @@ export class HomePage implements OnInit {
         let cb = undefined;
         cb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
         if (cb != undefined) {
-          return
-        }
-        let r = undefined;
-        r = that.selectedBoxs.filter(e => nw.lat == e.lat && nw.lng == e.lng);
-        if (r.length != 0) {
-          let i = that.selectedBoxs.findIndex(e => (e.lat == nw.lat && e.lng == nw.lng));
-          that.selectedBoxs.splice(i, 1);
-          e.srcElement.classList.toggle('border-show');
+          //check here if this box exists in my bought boxes add orange class or else unselect it
+          e.srcElement.classList.toggle('my-box');
+          that.myBoxs.push(cb)
         } else {
-          e.srcElement.classList.toggle('border-show');
-          that.selectedBoxs.push({ lat: nw.lat, lng: nw.lng });
+          let r = undefined;
+          r = that.selectedBoxs.filter(e => nw.lat == e.lat && nw.lng == e.lng);
+          if (r.length != 0) {
+            let i = that.selectedBoxs.findIndex(e => (e.lat == nw.lat && e.lng == nw.lng));
+            that.selectedBoxs.splice(i, 1);
+            e.srcElement.classList.toggle('border-show');
+          } else {
+            e.srcElement.classList.toggle('border-show');
+            that.selectedBoxs.push({ lat: nw.lat, lng: nw.lng });
+          }
         }
       });
       return tile;

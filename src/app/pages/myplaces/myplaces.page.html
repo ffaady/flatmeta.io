@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      My Places
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <ion-card mode="ios" *ngFor="let c of [].constructor(5); let i = index;">
+    <ion-card-content>
+
+      <div class="flex cards">
+        <div class="sale" *ngIf="i % 2 == 0">on Sale</div>
+        <div>
+          <img src="https://via.placeholder.com/150" class="img" />
+        </div>
+        <div>
+          <div>
+            Titles: <b>20</b>
+          </div>
+          <div>
+            Buying Price: <b>$0.1</b>
+          </div>
+          <div>
+            Current Price: <b>$0.20</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex btns">
+        <div *ngIf="i % 2 != 0">
+          <ion-button fill="outline" color="dark" expand="block" size="small">
+            Sell Boxes
+          </ion-button>
+        </div>
+
+        <div  *ngIf="i % 2 == 0">
+          <ion-button fill="outline" color="dark" expand="block" size="small">
+            Remove from Sale
+          </ion-button>
+        </div>
+        <div>
+          <ion-button color="dark" expand="block" size="small">
+            View Details
+          </ion-button>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
