@@ -15,5 +15,30 @@
     border-radius: 10px;
     margin: 0 auto;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0%);
+}
+
+.position2 {
+    position: absolute;
+    bottom: 0;
+    min-width: 300px;
+    background: var(--ion-color-light);
+    z-index: 999;
+    height: 160px;
+    border-radius: 10px;
+    margin: 0 auto;
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    .my-b {
+        overflow-y: scroll;
+        align-items: center;
+        justify-content: center;
+        margin: 10px 0px;
+        img {
+            width: 50px;
+            border-radius: 50px;
+            margin-right: 10px;
+        }
+    }
 }

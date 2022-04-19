@@ -25,14 +25,15 @@
   </ng-container>
 
   <ng-container *ngIf="myBoxs.length > 0">
-    <div class="position ion-padding">
-      <div class="flex">
+    <div class="position2 ion-padding">
+      <div>Select Location Image:</div>
+      <div class="flex my-b">
         <div *ngFor="let i of [].constructor(5)">
-          Item 1
+          <img src="https://via.placeholder.com/150" class="img" />
         </div>
       </div>
       <div>
-        <ion-button (click)="buyNow()" expand="block">Update Box</ion-button>
+        <ion-button (click)="buyNow()" expand="block">Update Box Image</ion-button>
       </div>
     </div>
   </ng-container>
