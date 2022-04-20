@@ -80,7 +80,8 @@ export class HomePage implements OnInit {
       provider: provider,
       style: 'bar',
       showMarker: false,
-      searchLabel: 'Search Map'
+      searchLabel: 'Search Map',
+      retainZoomLevel: true
     });
     this.map.addControl(search);
   }
