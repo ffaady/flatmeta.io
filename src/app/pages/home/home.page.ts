@@ -5,6 +5,9 @@ import { HttpService } from 'src/app/providers/http.service';
 import * as Leaflet from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
 import { GlobaldataService } from 'src/app/providers/globaldata.service';
+import * as GeoSearch from 'leaflet-geosearch';
+const provider = new GeoSearch.OpenStreetMapProvider();
+
 
 @Component({
   selector: 'app-home',
@@ -73,14 +76,13 @@ export class HomePage implements OnInit {
     const coordinates = await Geolocation.getCurrentPosition();
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 13);
 
-    const icon = Leaflet.icon({
-      iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
-      shadowUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-shadow.png',
-      popupAnchor: [13, 0],
+    const search = GeoSearch.GeoSearchControl({
+      provider: provider,
+      style: 'bar',
+      showMarker: false,
+      searchLabel: 'Search Map'
     });
-
-    const marker = Leaflet.marker([coordinates.coords.latitude, coordinates.coords.longitude], { icon }).bindPopup('Angular Leaflet');
-    marker.addTo(this.map);
+    this.map.addControl(search);
   }
 
   setGrid(m) {
