@@ -15,7 +15,12 @@
     border-radius: 10px;
     margin: 0 auto;
     left: 50%;
-    transform: translate(-50%, 0%);
+    transform: translate(-50%, 1%);
+    .icon{
+        position: absolute;
+        right: 5px;
+        top: 5px;
+    }
 }
 
 .position2 {
@@ -28,8 +33,12 @@
     border-radius: 10px;
     margin: 0 auto;
     left: 50%;
-    transform: translate(-50%, 0%);
-
+    transform: translate(-50%, 1%);
+    .icon{
+        position: absolute;
+        right: 5px;
+        top: 5px;
+    }
     .my-b {
         overflow-y: scroll;
         align-items: center;

@@ -22,6 +22,8 @@ export class HomePage implements OnInit {
   soldBoxes = [];
   myBoxs = [];
 
+  user_id = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.id : null;
+
   constructor(
     public storage: StorageService,
     public general: GeneralService,
@@ -119,9 +121,15 @@ export class HomePage implements OnInit {
       let fb = undefined;
       fb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
       if (fb != undefined) {
-        ctx.strokeStyle = 'red';
+        let mb = undefined;
+        mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == that.user_id);
+        if (mb != undefined) {
+          ctx.strokeStyle = 'green'; // if my box
+        } else {
+          ctx.strokeStyle = 'red'; // if other user box
+        }
       } else {
-        ctx.strokeStyle = 'grey';
+        ctx.strokeStyle = 'grey'; // available box
       }
       ctx.beginPath();
       ctx.moveTo(0, 0);
@@ -132,16 +140,29 @@ export class HomePage implements OnInit {
       ctx.stroke();
       tile.addEventListener('click', (e) => {
         let cb = undefined;
-        cb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
+        cb = that.soldBoxes.find(c => nw.lat == c.lat && nw.lng == c.lng);
+
         if (cb != undefined) {
           //check here if this box exists in my bought boxes add orange class or else unselect it
-          e.srcElement.classList.toggle('my-box');
-          that.myBoxs.push(cb)
+          let mb = undefined;
+          mb = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng && d.user_id == that.user_id);
+          if (mb != undefined) { // checking if box i bought by me
+            let m = undefined;
+            m = that.myBoxs.filter(h => nw.lat == h.lat && nw.lng == h.lng);
+            if (m.length != 0) {
+              let i = that.myBoxs.findIndex(i => (i.lat == nw.lat && i.lng == nw.lng));
+              that.myBoxs.splice(i, 1);
+              e.srcElement.classList.toggle('my-box');
+            } else {
+              e.srcElement.classList.toggle('my-box');
+              that.myBoxs.push(cb)
+            }
+          }
         } else {
           let r = undefined;
-          r = that.selectedBoxs.filter(e => nw.lat == e.lat && nw.lng == e.lng);
+          r = that.selectedBoxs.filter(f => nw.lat == f.lat && nw.lng == f.lng);
           if (r.length != 0) {
-            let i = that.selectedBoxs.findIndex(e => (e.lat == nw.lat && e.lng == nw.lng));
+            let i = that.selectedBoxs.findIndex(g => (g.lat == nw.lat && g.lng == nw.lng));
             that.selectedBoxs.splice(i, 1);
             e.srcElement.classList.toggle('border-show');
           } else {
@@ -154,6 +175,14 @@ export class HomePage implements OnInit {
     }
     this.tiles.addTo(m);
 
+  }
+
+  removeSelectedBoxes() {
+    this.selectedBoxs = [];
+  }
+
+  removeMyBoxes() {
+    this.myBoxs = [];
   }
 
   buyNow() {
