@@ -5,19 +5,29 @@
         <div class="ion-text-center">
           <h2>FlatMeta</h2>
         </div>
-        
-        <ion-list>
+
+        <ion-list  *ngIf="profile != undefined">
           <ion-menu-toggle autoHide="false" *ngFor="let p of pages">
             <ion-item [routerLink]="[p.url]" routerLinkActive="selected" routerDirection="root" lines="none"
               detail="false">
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
-            
+
           </ion-menu-toggle>
-          <ion-item lines="none" (click)="logOut()">
+          <ion-item lines="none" (click)="logOut()" *ngIf="profile != undefined">
             <ion-label>Logout</ion-label>
           </ion-item>
+
         </ion-list>
+
+        <ng-container *ngIf="profile == undefined">
+          <div class="ion-padding ion-text-center">
+            <p>Login to Continue</p>
+            <ion-menu-toggle>
+              <ion-button expand="block" color="dark" [routerLink]="['/login']">Log In</ion-button>
+            </ion-menu-toggle>
+          </div>
+        </ng-container>
       </ion-content>
 
       <ion-item>

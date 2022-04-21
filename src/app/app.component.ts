@@ -14,7 +14,7 @@ import { HttpService } from './providers/http.service';
 export class AppComponent {
 
   darkMode: boolean = false;
-  profile: any;
+  profile: any = undefined;
 
   pages = [
     {
@@ -32,6 +32,9 @@ export class AppComponent {
     public http: HttpService
   ) {
     this.initializeApp();
+    this.events.receiveLogin().subscribe((res: any) => {
+      this.profile = res;
+    })
   }
 
   initializeApp() {
@@ -41,10 +44,11 @@ export class AppComponent {
     });
   }
 
-  async checkUserLogin(){
+  async checkUserLogin() {
     let res = await this.storage.getObject('userObject')
-    if(res != null){
+    if (res != null) {
       GlobaldataService.userObject = res;
+      this.profile = res;
     }
   }
 
@@ -98,6 +102,7 @@ export class AppComponent {
             this.storage.clear();
             this.storage.setObject('darkMode', this.darkMode)
             GlobaldataService.clearGobal();
+            this.profile = undefined;
             this.general.goToPage('login');
             this.general.toggleMenu();
           }

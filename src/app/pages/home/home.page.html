@@ -17,9 +17,9 @@
 
   <ng-container *ngIf="selectedBoxs.length > 0">
     <div class="position ion-padding">
-      <div class="icon" (click)="removeSelectedBoxes()">
+      <!-- <div class="icon" (click)="removeSelectedBoxes()">
         <ion-icon name="close"></ion-icon>
-      </div>
+      </div> -->
       <div class="ion-text-center">Buy {{selectedBoxs.length}} boxes</div> 
       <div>
         <ion-button (click)="buyNow()" expand="block">Buy Now</ion-button>
@@ -29,9 +29,9 @@
 
   <ng-container *ngIf="myBoxs.length > 0">
     <div class="position2 ion-padding">
-      <div class="icon"  (click)="removeMyBoxes()">
+      <!-- <div class="icon"  (click)="removeMyBoxes()">
         <ion-icon name="close"></ion-icon>
-      </div>
+      </div> -->
       <div>Select Location Image:</div>
       <div class="flex my-b">
         <div *ngFor="let i of [].constructor(5)">
