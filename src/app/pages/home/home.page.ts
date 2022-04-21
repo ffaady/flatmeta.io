@@ -24,6 +24,10 @@ export class HomePage implements OnInit {
 
   user_id = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.id : null;
 
+  imgSelection: boolean = false;
+  boxImgs = [];
+  selectedImg:string = undefined;
+
   constructor(
     public storage: StorageService,
     public general: GeneralService,
@@ -34,6 +38,7 @@ export class HomePage implements OnInit {
 
   ionViewDidEnter() {
     this.loadMap();
+    this.getBoxImgs();
     this.map.on('zoomend', (res) => {
       if (res.target._zoom == 20) {
         if (this.tiles == undefined) {
@@ -68,6 +73,7 @@ export class HomePage implements OnInit {
       return
     }
     this.map = Leaflet.map('mapId').setView([0, 0], 1);
+    //Leaflet.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?access_token={accessToken}', {
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Idevation Saqib Khan',
       maxZoom: 20,
@@ -167,7 +173,7 @@ export class HomePage implements OnInit {
             e.srcElement.classList.toggle('border-show');
           } else {
             e.srcElement.classList.toggle('border-show');
-            that.selectedBoxs.push({ lat: nw.lat, lng: nw.lng });
+            that.selectedBoxs.push({ lat: nw.lat, lng: nw.lng, img: null });
           }
         }
       });
@@ -192,7 +198,7 @@ export class HomePage implements OnInit {
     } else {
       let save = {
         boxs: this.selectedBoxs,
-        user_id: GlobaldataService.userObject.id
+        user_id: GlobaldataService.userObject.id,
       }
       this.http.post2('AddTiles', save, true).subscribe((res: any) => {
         this.general.stopLoading()
@@ -218,6 +224,25 @@ export class HomePage implements OnInit {
   /** Remove map when we have multiple map object */
   ngOnDestroy() {
     this.map.remove();
+  }
+
+  getBoxImgs() {
+    this.http.get2('BoxImages', false).subscribe((res: any) => {
+      if (res.status == true) {
+        this.boxImgs = res.data;
+      }
+    }, (e) => {
+      console.log(e)
+    })
+  }
+
+  confirmImg(){
+    this.myBoxs.forEach(e=>{
+      e.img = this.selectedImg;
+    })
+    console.log(this.myBoxs);
+
+    
   }
 
 

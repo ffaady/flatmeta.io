@@ -12,15 +12,15 @@
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
-  
-  <div id="mapId" ></div>
+
+  <div id="mapId"></div>
 
   <ng-container *ngIf="selectedBoxs.length > 0">
     <div class="position ion-padding">
       <!-- <div class="icon" (click)="removeSelectedBoxes()">
         <ion-icon name="close"></ion-icon>
       </div> -->
-      <div class="ion-text-center">Buy {{selectedBoxs.length}} boxes</div> 
+      <div class="ion-text-center">Buy {{selectedBoxs.length}} boxes</div>
       <div>
         <ion-button (click)="buyNow()" expand="block">Buy Now</ion-button>
       </div>
@@ -32,16 +32,48 @@
       <!-- <div class="icon"  (click)="removeMyBoxes()">
         <ion-icon name="close"></ion-icon>
       </div> -->
-      <div>Select Location Image:</div>
+      <!-- <div>Select Location Image:</div>
       <div class="flex my-b">
         <div *ngFor="let i of [].constructor(5)">
           <img src="https://via.placeholder.com/150" class="img" />
         </div>
-      </div>
+      </div> -->
       <div>
-        <ion-button (click)="buyNow()" expand="block">Update Box Image</ion-button>
+        <ion-button (click)="imgSelection = true" expand="block">Show Image Selection</ion-button>
       </div>
     </div>
   </ng-container>
-  
+
+
+  <!-- Sheet Modal -->
+  <ion-modal [isOpen]="imgSelection" [breakpoints]="[0.1, 0.5, 1]" [initialBreakpoint]="1" mode="ios">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Select Image </ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="imgSelection = false">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="4" *ngFor="let bi of boxImgs">
+              <div  (click)="selectedImg = bi" [ngClass]="[selectedImg == bi ? 'selectImg' : '']">
+                <img [src]="bi" class="box-img" >
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-content>
+      <ion-footer collapse="fade" mode="ios">
+        <ion-toolbar>
+          <ion-button expand="block" (click)="confirmImg()">Confirm Image</ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
 </ion-content>
