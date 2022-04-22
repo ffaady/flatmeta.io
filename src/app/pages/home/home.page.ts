@@ -249,7 +249,7 @@ export class HomePage implements OnInit {
     })
     this.http.post2('AddTileImage', this.myBoxs, true).subscribe((res: any) => {
       this.general.stopLoading();
-      if (res.stauts == true) {
+      if (res.status == true) {
         this.getSoldBox();
         this.general.presentToast('Boxes bought successfully!');
         this.map.removeLayer(this.tiles);
@@ -257,6 +257,7 @@ export class HomePage implements OnInit {
         this.selectedImg = '';
         this.soldBoxes = [];
         this.selectedBoxs = [];
+        this.myBoxs = [];
         this.tiles = undefined;
         setTimeout(() => {
           this.setGrid(this.map);
