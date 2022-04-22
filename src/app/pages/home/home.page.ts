@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
@@ -6,6 +6,7 @@ import * as Leaflet from 'leaflet';
 import { Geolocation } from '@capacitor/geolocation';
 import { GlobaldataService } from 'src/app/providers/globaldata.service';
 import * as GeoSearch from 'leaflet-geosearch';
+import { InAppBrowser, InAppBrowserOptions } from '@awesome-cordova-plugins/in-app-browser/ngx';
 const provider = new GeoSearch.OpenStreetMapProvider();
 
 
@@ -31,10 +32,36 @@ export class HomePage implements OnInit {
   constructor(
     public storage: StorageService,
     public general: GeneralService,
-    public http: HttpService
+    public http: HttpService,
+    private iab: InAppBrowser,
+    private zone: NgZone
   ) { }
 
   ngOnInit() { }
+
+  ionViewWillEnter() {
+    if (this.tiles != undefined) {
+      this.map.removeLayer(this.tiles);
+      this.imgSelection = false;
+      this.selectedImg = '';
+      this.soldBoxes = [];
+      this.selectedBoxs = [];
+      this.myBoxs = [];
+      this.tiles = undefined;
+    }
+  }
+
+  ionViewWillLeave() {
+    if (this.tiles != undefined) {
+      this.map.removeLayer(this.tiles);
+      this.imgSelection = false;
+      this.selectedImg = '';
+      this.soldBoxes = [];
+      this.selectedBoxs = [];
+      this.myBoxs = [];
+      this.tiles = undefined;
+    }
+  }
 
   ionViewDidEnter() {
     this.loadMap();
@@ -84,14 +111,16 @@ export class HomePage implements OnInit {
     const coordinates = await Geolocation.getCurrentPosition();
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 13);
 
-    const search = GeoSearch.GeoSearchControl({
-      provider: provider,
-      style: 'bar',
-      showMarker: false,
-      searchLabel: 'Search Map',
-      retainZoomLevel: true
-    });
-    this.map.addControl(search);
+    setTimeout(() => {
+      const search = GeoSearch.GeoSearchControl({
+        provider: provider,
+        style: 'bar',
+        showMarker: false,
+        searchLabel: 'Search Map',
+        retainZoomLevel: true
+      });
+      this.map.addControl(search);
+    }, 1000)
   }
 
   setGrid(m) {
@@ -203,28 +232,8 @@ export class HomePage implements OnInit {
       this.general.presentToast('Please Login to Continue');
       this.general.goToPage('login');
     } else {
-      let save = {
-        boxs: this.selectedBoxs,
-        user_id: GlobaldataService.userObject.id,
-      }
-      this.http.post2('AddTiles', save, true).subscribe((res: any) => {
-        this.general.stopLoading()
-        if (res.status == true) {
-          this.getSoldBox();
-          this.general.presentToast('Boxes bought successfully!');
-          this.map.removeLayer(this.tiles);
-          this.soldBoxes = [];
-          this.selectedBoxs = [];
-          this.tiles = undefined;
-          setTimeout(() => {
-            this.setGrid(this.map);
-          }, 2000)
-        }
-      },
-        (e) => {
-          this.general.stopLoading()
-          console.log(e)
-        })
+      let amt = this.selectedBoxs.length * 0.1;
+      this.makePayment(amt);
     }
   }
 
@@ -267,6 +276,60 @@ export class HomePage implements OnInit {
       console.log(e)
     })
 
+  }
+
+  makePayment(amt) {
+    const options: InAppBrowserOptions = {
+      zoom: 'no',
+      location: 'no',
+      toolbar: 'no',
+      fullscreen: 'yes',
+      clearcache: 'no',
+      clearsessioncache: 'no',
+      cleardata: 'no',
+      hardwareback: 'yes',
+      useWideViewPort: 'no',
+      enableViewportScale: 'yes',
+      presentationstyle: 'fullscreen'
+    };
+
+    const browser = this.iab.create('https://cocoon-paypal.herokuapp.com/pay/' + amt, '_blank', options);
+
+    browser.on('loadstart').subscribe((res) => {
+
+      let uri = res.url.split('?');
+      if (uri[0] == 'https://cocoon-paypal.herokuapp.com/success') {
+        browser.close();
+        this.makeBuy();
+      }
+    }, err => {
+      console.error(err);
+    });
+  }
+
+  makeBuy() {
+    let save = {
+      boxs: this.selectedBoxs,
+      user_id: GlobaldataService.userObject.id,
+    };
+    this.http.post2('AddTiles', save, true).subscribe((res: any) => {
+      this.general.stopLoading()
+      if (res.status == true) {
+        this.getSoldBox();
+        this.general.presentToast('Boxes bought successfully!');
+        this.map.removeLayer(this.tiles);
+        this.soldBoxes = [];
+        this.selectedBoxs = [];
+        this.tiles = undefined;
+        setTimeout(() => {
+          this.setGrid(this.map);
+        }, 2000)
+      }
+    },
+      (e) => {
+        this.general.stopLoading()
+        console.log(e)
+      })
   }
 
 }
