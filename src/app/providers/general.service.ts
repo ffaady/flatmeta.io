@@ -11,6 +11,7 @@ export class GeneralService {
   loading: any;
 
   globalUrl: string = 'https://leafletdemo.mewebe.net/API/index.php?action=';
+  //globalUrl: string = 'https://flatmeta.io/API/index.php?action=';
 
   constructor(
     public alertController: AlertController,
@@ -95,7 +96,7 @@ export class GeneralService {
     this._location.back()
   }
 
-  toggleMenu(){
+  toggleMenu() {
     this.menu.toggle();
   }
 
