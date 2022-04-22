@@ -131,15 +131,11 @@ export class HomePage implements OnInit {
         mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == that.user_id);
         if (mb != undefined) {
           if (mb.img != '') {
-            let im = document.createElement('img');
-            im.width = 30;
-            im.height = 30;
-            //im.src = mb.img;
-            im.src = 'https://leafletdemo.mewebe.net/API/assets/img/download.png';
-            //ctx.drawImage(im, 0, 0);
-            ctx.fillStyle = ctx.drawImage(im, 0, 0);
-            ctx.fillRect(5, 5, 30, 30);
-            
+            let im = new Image();
+            im.src = mb.img;
+            setTimeout(() => {
+              ctx.drawImage(im, 3, 3, 33, 33);
+            }, 250)
           }
           ctx.strokeStyle = 'green'; // if my box
         } else {
@@ -255,22 +251,21 @@ export class HomePage implements OnInit {
       this.general.stopLoading();
       if (res.stauts == true) {
         this.getSoldBox();
-          this.general.presentToast('Boxes bought successfully!');
-          this.map.removeLayer(this.tiles);
-          this.imgSelection = false;
-          this.selectedImg = '';
-          this.soldBoxes = [];
-          this.selectedBoxs = [];
-          this.tiles = undefined;
-          setTimeout(() => {
-            this.setGrid(this.map);
-          }, 2000)
+        this.general.presentToast('Boxes bought successfully!');
+        this.map.removeLayer(this.tiles);
+        this.imgSelection = false;
+        this.selectedImg = '';
+        this.soldBoxes = [];
+        this.selectedBoxs = [];
+        this.tiles = undefined;
+        setTimeout(() => {
+          this.setGrid(this.map);
+        }, 2000)
       }
     }, (e) => {
       console.log(e)
     })
 
   }
-
 
 }
