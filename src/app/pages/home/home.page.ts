@@ -26,7 +26,7 @@ export class HomePage implements OnInit {
 
   imgSelection: boolean = false;
   boxImgs = [];
-  selectedImg:string = undefined;
+  selectedImg: string = undefined;
 
   constructor(
     public storage: StorageService,
@@ -39,6 +39,7 @@ export class HomePage implements OnInit {
   ionViewDidEnter() {
     this.loadMap();
     this.getBoxImgs();
+    this.getSoldBox();
     this.map.on('zoomend', (res) => {
       if (res.target._zoom == 20) {
         if (this.tiles == undefined) {
@@ -52,7 +53,6 @@ export class HomePage implements OnInit {
       }
     });
 
-    this.getSoldBox();
   }
 
   getSoldBox() {
@@ -130,6 +130,17 @@ export class HomePage implements OnInit {
         let mb = undefined;
         mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == that.user_id);
         if (mb != undefined) {
+          if (mb.img != '') {
+            let im = document.createElement('img');
+            im.width = 30;
+            im.height = 30;
+            //im.src = mb.img;
+            im.src = 'https://leafletdemo.mewebe.net/API/assets/img/download.png';
+            //ctx.drawImage(im, 0, 0);
+            ctx.fillStyle = ctx.drawImage(im, 0, 0);
+            ctx.fillRect(5, 5, 30, 30);
+            
+          }
           ctx.strokeStyle = 'green'; // if my box
         } else {
           ctx.strokeStyle = 'red'; // if other user box
@@ -236,13 +247,29 @@ export class HomePage implements OnInit {
     })
   }
 
-  confirmImg(){
-    this.myBoxs.forEach(e=>{
+  confirmImg() {
+    this.myBoxs.forEach(e => {
       e.img = this.selectedImg;
     })
-    console.log(this.myBoxs);
+    this.http.post2('AddTileImage', this.myBoxs, true).subscribe((res: any) => {
+      this.general.stopLoading();
+      if (res.stauts == true) {
+        this.getSoldBox();
+          this.general.presentToast('Boxes bought successfully!');
+          this.map.removeLayer(this.tiles);
+          this.imgSelection = false;
+          this.selectedImg = '';
+          this.soldBoxes = [];
+          this.selectedBoxs = [];
+          this.tiles = undefined;
+          setTimeout(() => {
+            this.setGrid(this.map);
+          }, 2000)
+      }
+    }, (e) => {
+      console.log(e)
+    })
 
-    
   }
 
 
