@@ -64,9 +64,9 @@ export class HomePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    this.loadMap();
-    this.getBoxImgs();
     this.getSoldBox();
+    this.getBoxImgs();
+    this.loadMap();
     this.map.on('zoomend', (res) => {
       if (res.target._zoom == 20) {
         if (this.tiles == undefined) {
@@ -157,7 +157,7 @@ export class HomePage implements OnInit {
       fb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
       if (fb != undefined) {
         let mb = undefined;
-        mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == that.user_id);
+        mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == (GlobaldataService.userObject!= undefined ? GlobaldataService.userObject.id : null));
         if (mb != undefined) {
           if (mb.img != '') {
             let im = new Image();
