@@ -187,7 +187,7 @@ export class HomePage implements OnInit {
         if (cb != undefined) {
           //check here if this box exists in my bought boxes add orange class or else unselect it
           let mb = undefined;
-          mb = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng && d.user_id == that.user_id);
+          mb = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng && d.user_id == (GlobaldataService.userObject!= undefined ? GlobaldataService.userObject.id : null));
           if (mb != undefined) { // checking if box i bought by me
             let m = undefined;
             m = that.myBoxs.filter(h => nw.lat == h.lat && nw.lng == h.lng);
