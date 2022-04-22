@@ -2,8 +2,5 @@
 	"appId": "com.leaflet.example",
 	"appName": "leafletmap",
 	"webDir": "www",
-	"bundledWebRuntime": false,
-	"server": {
-		"url": "http://192.168.1.157:8100"
-	}
+	"bundledWebRuntime": false
 }
