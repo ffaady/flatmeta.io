@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
@@ -16,6 +16,8 @@ const provider = new GeoSearch.OpenStreetMapProvider();
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
+
   map: Leaflet.Map;
   tiles: any = undefined;
 
@@ -28,6 +30,7 @@ export class HomePage implements OnInit {
   imgSelection: boolean = false;
   boxImgs = [];
   selectedImg: string = undefined;
+  showUplaodedImage: boolean = false;
 
   constructor(
     public storage: StorageService,
@@ -102,7 +105,7 @@ export class HomePage implements OnInit {
     this.map = Leaflet.map('mapId').setView([0, 0], 1);
     //Leaflet.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?access_token={accessToken}', {
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-      attribution: 'Idevation Saqib Khan',
+      attribution: 'Buy / Customise land | flatmeta.io',
       maxZoom: 20,
       id: 'mapbox/streets-v11',
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
@@ -157,7 +160,7 @@ export class HomePage implements OnInit {
       fb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
       if (fb != undefined) {
         let mb = undefined;
-        mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == (GlobaldataService.userObject!= undefined ? GlobaldataService.userObject.id : null));
+        mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.id : null));
         if (mb != undefined) {
           if (mb.img != '') {
             let im = new Image();
@@ -187,7 +190,7 @@ export class HomePage implements OnInit {
         if (cb != undefined) {
           //check here if this box exists in my bought boxes add orange class or else unselect it
           let mb = undefined;
-          mb = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng && d.user_id == (GlobaldataService.userObject!= undefined ? GlobaldataService.userObject.id : null));
+          mb = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng && d.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.id : null));
           if (mb != undefined) { // checking if box i bought by me
             let m = undefined;
             m = that.myBoxs.filter(h => nw.lat == h.lat && nw.lng == h.lng);
@@ -199,6 +202,25 @@ export class HomePage implements OnInit {
               e.srcElement.classList.toggle('my-box');
               that.myBoxs.push(cb)
             }
+          } else {
+            e.srcElement.classList.toggle('selected-box');
+            const Micon = Leaflet.icon({
+              iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
+              shadowUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-shadow.png',
+              popupAnchor: [13, 0],
+            });
+            let customPopup = `
+              <p>Custome popup html here<p>
+            `;
+
+            // specify popup options 
+            let customOptions = {
+              'maxWidth': '400',
+              'width': '200',
+              'className': 'popupCustom'
+            }
+            var marker = Leaflet.marker([nw.lat, nw.lng], { icon: Micon }).addTo(m);
+            marker.bindPopup(customPopup, customOptions)
           }
         } else {
           let r = undefined;
@@ -268,6 +290,7 @@ export class HomePage implements OnInit {
         this.selectedBoxs = [];
         this.myBoxs = [];
         this.tiles = undefined;
+        this.showUplaodedImage = false;
         setTimeout(() => {
           this.setGrid(this.map);
         }, 2000)
@@ -330,6 +353,52 @@ export class HomePage implements OnInit {
         this.general.stopLoading()
         console.log(e)
       })
+  }
+
+  chooseFile() {
+    this.fileInput.nativeElement.click();
+  }
+
+  choosePhoto = async (e) => {
+    if (e.target.files.length > 0) {
+      for (let i = 0; i < e.target.files.length; i++) {
+        this.http.uploadImages(e.target.files[i], 'UploadImage').subscribe((res: any) => {
+          if (res.status == true) {
+            this.selectedImg = res.data;
+            this.showUplaodedImage = true;
+            this.general.presentToast('Image Uploaded!')
+          } else {
+            this.general.presentToast(res.data.message);
+          }
+        })
+      }
+    }
+  }
+
+  addToCart() {
+    let save = {
+      boxs: this.selectedBoxs,
+      user_id: GlobaldataService.userObject.id,
+    };
+
+    this.http.post2('AddToCart', save, true).subscribe((res: any) => {
+      this.general.stopLoading();
+      if(res.status == true){
+        this.getSoldBox();
+        this.general.presentToast('Boxes added to cart successfully!');
+        this.map.removeLayer(this.tiles);
+        this.soldBoxes = [];
+        this.selectedBoxs = [];
+        this.tiles = undefined;
+        setTimeout(() => {
+          this.setGrid(this.map);
+        }, 2000)
+      }
+
+    }, (e) => {
+      this.general.stopLoading();
+      console.log(e)
+    })
   }
 
 }

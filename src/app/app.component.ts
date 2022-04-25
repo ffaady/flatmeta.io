@@ -20,6 +20,10 @@ export class AppComponent {
     {
       title: "Profile",
       url: '/tabs/profile'
+    },
+    {
+      title: "My Cart",
+      url: '/tabs/cart'
     }
   ];
 

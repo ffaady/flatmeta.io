@@ -1,0 +1,22 @@
+ion-card {
+    margin: 10px 0;
+
+    ion-card-content {
+        padding: 10px;
+
+        .check{
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        ion-item{
+            margin: 10px 0;
+        }
+    }
+    
+    .btns{
+        div{
+            width: 50%;
+        }
+    }
+}

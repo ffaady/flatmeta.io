@@ -1,0 +1,78 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      My Cart
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <ion-card mode="ios">
+    <ion-card-content>
+
+      <div class="cards">
+
+
+        <div class="flex check">
+          <div>
+            Total Selected Titles:
+          </div>
+          <div>
+            <b>{{cartData?.length}}</b>
+          </div>
+        </div>
+
+        <div>
+          Box Details:
+        </div>
+
+        <ion-item *ngFor="let ll of cartData" line="none" button>
+          <ion-icon name="location" slot="start"></ion-icon>
+          <div>
+            <div>
+              <div>
+                {{ll?.lat}}
+              </div>
+              <div>
+                {{ll?.lng}}
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </div>
+
+      <hr />
+      <div class="flex check">
+        <div>
+          Base Price:
+        </div>
+        <div>
+          <b>$0.1</b>
+        </div>
+      </div>
+
+      <div class="flex check">
+        <div>
+          Total:
+        </div>
+        <div>
+          <b>${{(cartData?.length * 0.1).toFixed(1)}}</b>
+        </div>
+      </div>
+
+      <ion-item>
+        <ion-label position="flaoting">Enter Voucher:</ion-label>
+        <ion-input></ion-input>
+      </ion-item>
+
+    </ion-card-content>
+
+
+    <ion-button color="dark" expand="block" (click)="makeBuy()">
+      Confirm Checkout
+    </ion-button>
+
+  </ion-card>
+
+</ion-content>

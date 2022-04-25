@@ -1,10 +1,10 @@
-<ion-header [translucent]="true">
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
       Home
     </ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content [fullscreen]="true">
   
@@ -16,9 +16,9 @@
       <!-- <div class="icon" (click)="removeSelectedBoxes()">
         <ion-icon name="close"></ion-icon>
       </div> -->
-      <div class="ion-text-center">Buy {{selectedBoxs.length}} boxes</div>
+      <div class="ion-text-center">Add to Cart {{selectedBoxs.length}} boxes</div>
       <div>
-        <ion-button (click)="buyNow()" expand="block">Buy Now</ion-button>
+        <ion-button (click)="addToCart()" expand="block">Add to Cart</ion-button>
       </div>
     </div>
   </ng-container>
@@ -52,6 +52,15 @@
               <div  (click)="selectedImg = bi" [ngClass]="[selectedImg == bi ? 'selectImg' : '']">
                 <img [src]="bi" class="box-img" >
               </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col *ngIf="showUplaodedImage" size="12">
+              <img [src]="selectedImg" class="box-img">
+            </ion-col>
+            <ion-col size="12">
+              <input type="file" #fileInput (change)="choosePhoto($event)" hidden="true" accept="image/*" style="visibility: hidden;"/>
+              <ion-button expand="block" fill="outline" color="dark" (click)="chooseFile()">Upload Custom Image</ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>

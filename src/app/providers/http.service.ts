@@ -66,7 +66,7 @@ export class HttpService {
     const formData = new FormData();
     formData.append('images', fileToUpload);
     let headers = {
-      'Authorization': 'Bearer ' + GlobaldataService.loginToken,
+      //'Authorization': 'Bearer ' + GlobaldataService.loginToken,
     };
     return this.http.post(this.general.globalUrl + url, formData, { headers: headers });
   }

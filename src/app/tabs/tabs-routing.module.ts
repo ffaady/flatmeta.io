@@ -20,6 +20,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/profile/profile.module').then(m => m.ProfilePageModule)
       },
       {
+        path: 'cart',
+        loadChildren: () => import('../pages/cart/cart.module').then(m => m.CartPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'
