@@ -12,6 +12,7 @@ import { GlobaldataService } from 'src/app/providers/globaldata.service';
 export class CartPage implements OnInit {
 
   cartData = [];
+
   constructor(
     public storage: StorageService,
     public general: GeneralService,
@@ -43,7 +44,6 @@ export class CartPage implements OnInit {
     })
   }
 
-
   makeBuy() {
     let save = {
       boxs: this.cartData,
@@ -61,7 +61,5 @@ export class CartPage implements OnInit {
         console.log(e)
       })
   }
-
-
 
 }
