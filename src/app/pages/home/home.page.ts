@@ -150,12 +150,6 @@ export class HomePage implements OnInit {
       // calculate geographic coordinates of top left tile pixel
       var nw = m.unproject(nwPoint, coords.z);
 
-      //ctx.fillStyle = 'white';
-      //ctx.fillRect(0, 0, size.x, 50);
-      //ctx.fillStyle = 'black';
-      //ctx.fillText('x: ' + coords.x + ', y: ' + coords.y + ', zoom: ' + coords.z, 20, 20);
-      //ctx.fillText('lat: ' + nw.lat + ', lon: ' + nw.lng, 20, 40);
-
       let fb = undefined;
       fb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
       if (fb != undefined) {
@@ -217,10 +211,13 @@ export class HomePage implements OnInit {
             let customOptions = {
               'maxWidth': '400',
               'width': '200',
-              'className': 'popupCustom'
+              'className': 'popupCustom',
             }
-            var marker = Leaflet.marker([nw.lat, nw.lng], { icon: Micon }).addTo(m);
-            marker.bindPopup(customPopup, customOptions)
+            var marker = Leaflet.marker([nw.lat, nw.lng], { icon: Micon });
+            marker.bindPopup(customPopup, customOptions).addTo(m);
+            setTimeout(()=>{
+              marker.fire('click');
+            })
           }
         } else {
           let r = undefined;
