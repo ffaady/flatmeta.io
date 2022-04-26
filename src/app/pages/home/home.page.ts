@@ -77,7 +77,7 @@ export class HomePage implements OnInit {
     this.getBoxImgs();
     this.loadMap();
     this.map.on('zoomend', (res) => {
-      if (res.target._zoom == 14) {
+      if (res.target._zoom == 15) {
         if (this.tiles == undefined) {
           this.setGrid(this.map);
         }
@@ -113,16 +113,17 @@ export class HomePage implements OnInit {
     this.map = Leaflet.map('mapId').setView([0, 0], 1);
     //Leaflet.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?access_token={accessToken}', {
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-      attribution: 'Buy / Customise land | flatmeta.io',
-      maxZoom: 14,
+      attribution: 'Buy / Customise land',
+      maxZoom: 16,
       id: 'mapbox/streets-v11',
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
+    this.map.attributionControl.setPrefix('FlatMeta.io');
 
     const coordinates = await Geolocation.getCurrentPosition();
-    this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 9);
+    this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 10);
 
-    let allowZooms = [5, 9, 13, 14];
+    let allowZooms = [5, 10, 14, 15];
     this.map.setView = function (center, zoom, options) {
       if ((zoom) && (allowZooms.indexOf(zoom) === -1)) {
         let ixCurZoom = allowZooms.indexOf(this._zoom);
