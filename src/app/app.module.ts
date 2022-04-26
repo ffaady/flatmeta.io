@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
+import { QuillModule } from 'ngx-quill'
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    QuillModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

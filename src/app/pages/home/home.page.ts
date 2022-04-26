@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@angular/core';
+import { IonRouterOutlet } from '@ionic/angular';
 import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
@@ -32,7 +33,12 @@ export class HomePage implements OnInit {
   selectedImg: string = undefined;
   showUplaodedImage: boolean = false;
 
+  showEditor: boolean = false;
+
+  qEditor:any;
+
   constructor(
+    public routerOutlet: IonRouterOutlet,
     public storage: StorageService,
     public general: GeneralService,
     public http: HttpService,
@@ -71,12 +77,14 @@ export class HomePage implements OnInit {
     this.getBoxImgs();
     this.loadMap();
     this.map.on('zoomend', (res) => {
-      if (res.target._zoom == 20) {
+      if (res.target._zoom == 14) {
         if (this.tiles == undefined) {
           this.setGrid(this.map);
         }
       } else {
         if (this.tiles != undefined) {
+          this.selectedBoxs = [];
+          this.myBoxs = [];
           this.map.removeLayer(this.tiles);
           this.tiles = undefined;
         }
@@ -106,13 +114,27 @@ export class HomePage implements OnInit {
     //Leaflet.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?access_token={accessToken}', {
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Buy / Customise land | flatmeta.io',
-      maxZoom: 20,
+      maxZoom: 14,
       id: 'mapbox/streets-v11',
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
 
     const coordinates = await Geolocation.getCurrentPosition();
-    this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 13);
+    this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 9);
+
+    let allowZooms = [5, 9, 13, 14];
+    this.map.setView = function (center, zoom, options) {
+      if ((zoom) && (allowZooms.indexOf(zoom) === -1)) {
+        let ixCurZoom = allowZooms.indexOf(this._zoom);
+        let dir = (zoom > this._zoom) ? 1 : -1;
+        if (allowZooms[ixCurZoom + dir]) {
+          zoom = allowZooms[ixCurZoom + dir];
+        } else {
+          return this;
+        }
+      }
+      return Leaflet.Map.prototype.setView.call(this, center, zoom, options);
+    }
 
     setTimeout(() => {
       const search = GeoSearch.GeoSearchControl({
@@ -133,8 +155,8 @@ export class HomePage implements OnInit {
       opacity: 0.8,
       updateWhenZooming: false,
       updateWhenIdle: false,
-      minNativeZoom: 20,
-      maxNativeZoom: 25,
+      minNativeZoom: 10,
+      maxNativeZoom: 18,
     });
     this.tiles.createTile = function (coords) {
       let tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
@@ -197,10 +219,9 @@ export class HomePage implements OnInit {
               that.myBoxs.push(cb)
             }
           } else {
-            e.srcElement.classList.toggle('selected-box');
+            //e.srcElement.classList.toggle('selected-box');
             const Micon = Leaflet.icon({
-              iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
-              shadowUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-shadow.png',
+              iconUrl: 'http://leafletdemo.mewebe.net/API/assets/img/map-icon.png',              
               popupAnchor: [13, 0],
             });
             let customPopup = `
@@ -215,7 +236,7 @@ export class HomePage implements OnInit {
             }
             var marker = Leaflet.marker([nw.lat, nw.lng], { icon: Micon });
             marker.bindPopup(customPopup, customOptions).addTo(m);
-            setTimeout(()=>{
+            setTimeout(() => {
               marker.fire('click');
             })
           }
@@ -373,6 +394,10 @@ export class HomePage implements OnInit {
   }
 
   addToCart() {
+    if(GlobaldataService.userObject==undefined){
+      this.general.presentToast('Please Login to Continue!')
+      return
+    }
     let save = {
       boxs: this.selectedBoxs,
       user_id: GlobaldataService.userObject.id,
@@ -380,7 +405,7 @@ export class HomePage implements OnInit {
 
     this.http.post2('AddToCart', save, true).subscribe((res: any) => {
       this.general.stopLoading();
-      if(res.status == true){
+      if (res.status == true) {
         this.getSoldBox();
         this.general.presentToast('Boxes added to cart successfully!');
         this.map.removeLayer(this.tiles);
@@ -396,6 +421,10 @@ export class HomePage implements OnInit {
       this.general.stopLoading();
       console.log(e)
     })
+  }
+
+  editorSubmit(){
+    console.log(this.qEditor);
   }
 
 }

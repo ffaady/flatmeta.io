@@ -28,6 +28,9 @@
       <div>
         <ion-button (click)="imgSelection = true" expand="block">Show Image Selection</ion-button>
       </div>
+      <div>
+        <ion-button (click)="showEditor = true" expand="block">Show Editor</ion-button>
+      </div>
     </div>
   </ng-container>
 
@@ -43,6 +46,7 @@
               <ion-icon name="close-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
+          
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
@@ -68,6 +72,29 @@
       <ion-footer collapse="fade" mode="ios">
         <ion-toolbar>
           <ion-button expand="block" (click)="confirmImg()">Confirm Image</ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="showEditor" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Add Data to Your Box </ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showEditor = false">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <quill-editor [(ngModel)]="qEditor"></quill-editor>
+      </ion-content>
+      <ion-footer collapse="fade" mode="ios">
+        <ion-toolbar>
+          <ion-button expand="block" (click)="editorSubmit()">Submit</ion-button>
         </ion-toolbar>
       </ion-footer>
     </ng-template>
