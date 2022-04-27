@@ -7,15 +7,15 @@
 </ion-header> -->
 
 <ion-content [fullscreen]="true">
-  
+
 
   <div id="mapId"></div>
 
   <ng-container *ngIf="selectedBoxs.length > 0">
     <div class="position ion-padding">
-      <!-- <div class="icon" (click)="removeSelectedBoxes()">
+      <div class="icon" (click)="removeSelectedBoxes()">
         <ion-icon name="close"></ion-icon>
-      </div> -->
+      </div>
       <div class="ion-text-center">Add to Cart {{selectedBoxs.length}} boxes</div>
       <div>
         <ion-button (click)="addToCart()" expand="block">Add to Cart</ion-button>
@@ -25,12 +25,23 @@
 
   <ng-container *ngIf="myBoxs.length > 0">
     <div class="position2 ion-padding">
+      <div class="icon" (click)="removeSelectedBoxes()">
+        <ion-icon name="close"></ion-icon>
+      </div>
       <div>
         <ion-button (click)="imgSelection = true" expand="block">Show Image Selection</ion-button>
       </div>
       <div>
         <ion-button (click)="showEditor = true" expand="block">Show Editor</ion-button>
       </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="myBoxs.length == 2">
+    <div class="swipe" (click)="swipeImg()">
+      <ion-icon name="swap-vertical-outline"></ion-icon>
+      <br />
+      Swap
     </div>
   </ng-container>
 
@@ -46,15 +57,15 @@
               <ion-icon name="close-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
-          
+
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
         <ion-grid>
           <ion-row>
             <ion-col size="4" *ngFor="let bi of boxImgs">
-              <div  (click)="selectedImg = bi" [ngClass]="[selectedImg == bi ? 'selectImg' : '']">
-                <img [src]="bi" class="box-img" >
+              <div (click)="selectedImg = bi" [ngClass]="[selectedImg == bi ? 'selectImg' : '']">
+                <img [src]="bi" class="box-img">
               </div>
             </ion-col>
           </ion-row>
@@ -63,8 +74,10 @@
               <img [src]="selectedImg" class="box-img">
             </ion-col>
             <ion-col size="12">
-              <input type="file" #fileInput (change)="choosePhoto($event)" hidden="true" accept="image/*" style="visibility: hidden;"/>
-              <ion-button expand="block" fill="outline" color="dark" (click)="chooseFile()">Upload Custom Image</ion-button>
+              <input type="file" #fileInput (change)="choosePhoto($event)" hidden="true" accept="image/*"
+                style="visibility: hidden;" />
+              <ion-button expand="block" fill="outline" color="dark" (click)="chooseFile()">Upload Custom Image
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>

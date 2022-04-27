@@ -100,4 +100,11 @@ export class GeneralService {
     this.menu.toggle();
   }
 
+  swapArray(Array: any, Swap1: number, Swap2: number): any {
+    var temp = Array[Swap1].img;
+    Array[Swap1].img = Array[Swap2].img
+    Array[Swap2].img = temp
+    return Array;
+  }
+
 }

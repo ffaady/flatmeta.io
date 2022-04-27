@@ -62,3 +62,17 @@
 .selectImg{
     border: 1px solid red;
 }
+
+.swipe{
+    position: absolute;
+    top: 50%;
+    z-index: 999;
+    right: 4px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: var(--ion-color-light);
+    padding: 5px;
+    ion-icon{
+        font-size: 20px;
+    }
+}

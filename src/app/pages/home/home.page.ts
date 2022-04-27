@@ -35,7 +35,7 @@ export class HomePage implements OnInit {
 
   showEditor: boolean = false;
 
-  qEditor:any;
+  qEditor: any;
 
   constructor(
     public routerOutlet: IonRouterOutlet,
@@ -214,7 +214,7 @@ export class HomePage implements OnInit {
               let i = that.myBoxs.findIndex(i => (i.lat == nw.lat && i.lng == nw.lng));
               that.myBoxs.splice(i, 1);
               e.srcElement.classList.toggle('my-box');
-            } else { 
+            } else {
               e.srcElement.classList.toggle('my-box');
               that.qEditor = cb.data;
               that.myBoxs.push(cb)
@@ -222,9 +222,9 @@ export class HomePage implements OnInit {
           } else {
             //e.srcElement.classList.toggle('selected-box');
             let pop = undefined;
-            pop = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng );
+            pop = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng);
             const Micon = Leaflet.icon({
-              iconUrl: 'http://leafletdemo.mewebe.net/API/assets/img/map-icon.png',              
+              iconUrl: 'http://leafletdemo.mewebe.net/API/assets/img/map-icon.png',
               popupAnchor: [13, 0],
             });
             let customPopup = pop.data;
@@ -261,11 +261,16 @@ export class HomePage implements OnInit {
   }
 
   removeSelectedBoxes() {
+    this.map.removeLayer(this.tiles);
+    this.imgSelection = false;
+    this.selectedImg = '';
     this.selectedBoxs = [];
-  }
-
-  removeMyBoxes() {
     this.myBoxs = [];
+    this.tiles = undefined;
+    this.showUplaodedImage = false;
+    setTimeout(() => {
+      this.setGrid(this.map);
+    }, 250)
   }
 
   buyNow() {
@@ -395,7 +400,7 @@ export class HomePage implements OnInit {
   }
 
   addToCart() {
-    if(GlobaldataService.userObject==undefined){
+    if (GlobaldataService.userObject == undefined) {
       this.general.presentToast('Please Login to Continue!')
       return
     }
@@ -424,7 +429,7 @@ export class HomePage implements OnInit {
     })
   }
 
-  editorSubmit(){
+  editorSubmit() {
     this.myBoxs.forEach(e => {
       e.data = this.qEditor;
     });
@@ -449,5 +454,32 @@ export class HomePage implements OnInit {
       console.log(e)
     })
   }
+
+  swipeImg() {
+    let r = this.general.swapArray(this.myBoxs, 0, 1);
+    this.http.post2('SwapImages', r, true).subscribe((res: any) => {
+      this.general.stopLoading();
+      if (res.status == true) {
+        this.getSoldBox();
+        this.general.presentToast('Box Image Update successfully!');
+        this.map.removeLayer(this.tiles);
+        this.imgSelection = false;
+        this.selectedImg = '';
+        this.soldBoxes = [];
+        this.selectedBoxs = [];
+        this.myBoxs = [];
+        this.tiles = undefined;
+        this.showUplaodedImage = false;
+        setTimeout(() => {
+          this.setGrid(this.map);
+        }, 2000)
+      }
+    }, (e) => {
+      console.log(e)
+    })
+  }
+
+
+
 
 }
