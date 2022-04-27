@@ -221,13 +221,13 @@ export class HomePage implements OnInit {
             }
           } else {
             //e.srcElement.classList.toggle('selected-box');
+            let pop = undefined;
+            pop = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng );
             const Micon = Leaflet.icon({
               iconUrl: 'http://leafletdemo.mewebe.net/API/assets/img/map-icon.png',              
               popupAnchor: [13, 0],
             });
-            let customPopup = `
-              <p>Custome popup html here<p>
-            `;
+            let customPopup = pop.data;
 
             // specify popup options 
             let customOptions = {
@@ -426,6 +426,32 @@ export class HomePage implements OnInit {
 
   editorSubmit(){
     console.log(this.qEditor);
+    this.myBoxs.forEach(e => {
+      e.data = this.qEditor;
+    });
+
+    console.log(this.myBoxs);
+    debugger
+    this.http.post2('AddTileContent', this.myBoxs, true).subscribe((res: any) => {
+      this.general.stopLoading();
+      if (res.status == true) {
+        this.getSoldBox();
+        this.general.presentToast('Boxes Updated successfully!');
+        this.map.removeLayer(this.tiles);
+        this.imgSelection = false;
+        this.selectedImg = '';
+        this.soldBoxes = [];
+        this.selectedBoxs = [];
+        this.myBoxs = [];
+        this.tiles = undefined;
+        this.showEditor = false;
+        setTimeout(() => {
+          this.setGrid(this.map);
+        }, 2000)
+      }
+    }, (e) => {
+      console.log(e)
+    })
   }
 
 }
