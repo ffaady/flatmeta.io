@@ -172,7 +172,6 @@ export class HomePage implements OnInit {
       nwPoint.clientWidth = 80;
       // calculate geographic coordinates of top left tile pixel
       var nw = m.unproject(nwPoint, coords.z);
-
       let fb = undefined;
       fb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
       if (fb != undefined) {
@@ -215,8 +214,9 @@ export class HomePage implements OnInit {
               let i = that.myBoxs.findIndex(i => (i.lat == nw.lat && i.lng == nw.lng));
               that.myBoxs.splice(i, 1);
               e.srcElement.classList.toggle('my-box');
-            } else {
+            } else { 
               e.srcElement.classList.toggle('my-box');
+              that.qEditor = cb.data;
               that.myBoxs.push(cb)
             }
           } else {
@@ -425,13 +425,9 @@ export class HomePage implements OnInit {
   }
 
   editorSubmit(){
-    console.log(this.qEditor);
     this.myBoxs.forEach(e => {
       e.data = this.qEditor;
     });
-
-    console.log(this.myBoxs);
-    debugger
     this.http.post2('AddTileContent', this.myBoxs, true).subscribe((res: any) => {
       this.general.stopLoading();
       if (res.status == true) {
