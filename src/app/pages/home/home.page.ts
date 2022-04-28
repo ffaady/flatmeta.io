@@ -144,6 +144,24 @@ export class HomePage implements OnInit {
       return Leaflet.Map.prototype.setView.call(this, center, zoom, options);
     }
 
+    const icon = Leaflet.icon({
+      iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
+      popupAnchor: [13, 0],
+    });
+
+    const marker = Leaflet.marker([coordinates.coords.latitude, coordinates.coords.longitude], { icon }).bindPopup('Your Location');
+    marker.addTo(this.map);
+
+    //var marker.setLatLng(e.latlng);
+
+    this.map.on("click", e => {
+      console.log(e.latlng); // get the coordinates
+      // if (marker) { // check
+      //   this.map.removeLayer(marker); // remove
+      // }
+      marker.setLatLng(e.latlng);
+    });
+
     setTimeout(() => {
       const search = GeoSearch.GeoSearchControl({
         provider: provider,
@@ -156,7 +174,6 @@ export class HomePage implements OnInit {
     }, 1000)
   }
   
-
   setGrid(m) {
     let that = this;
     this.tiles = new Leaflet.GridLayer({
