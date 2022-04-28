@@ -73,6 +73,10 @@
       Confirm Checkout
     </ion-button>
 
+    <ion-button color="dark" expand="block" (click)="removeFromCart(true)" fill="outline" *ngIf="cartData.length > 0">
+      Clear Cart
+    </ion-button>
+
   </ion-card>
 
 </ion-content>

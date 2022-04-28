@@ -62,4 +62,25 @@ export class CartPage implements OnInit {
       })
   }
 
+
+  removeFromCart(rmCheck: boolean){
+    let save = {
+      boxs: this.cartData,
+      user_id: GlobaldataService.userObject.id,
+    };
+    this.http.post2('RemoveFromCart', save, rmCheck).subscribe((res:any)=>{
+      if(rmCheck == true){
+        this.general.stopLoading();
+        this.general.presentToast('Cart Crealed!')
+      }
+      this.cartData = [];
+      this.general.goBack();
+    }, (e)=>{
+      if(rmCheck == true){
+        this.general.stopLoading();
+      }
+      this.general.presentToast('Something went wrong!')
+    })
+  }
+
 }
