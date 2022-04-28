@@ -11,6 +11,14 @@
 
   <div id="mapId"></div>
 
+  <ng-container *ngIf="showBuyBtn">
+    <div class="buybtn" (click)="showGrid()">
+      <ion-icon name="globe-outline"></ion-icon>
+      <br />
+      Buy
+    </div>
+  </ng-container>
+
   <ng-container *ngIf="selectedBoxs.length > 0">
     <div class="position ion-padding">
       <div class="icon" (click)="removeSelectedBoxes()">

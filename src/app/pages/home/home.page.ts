@@ -22,6 +22,8 @@ export class HomePage implements OnInit {
   map: Leaflet.Map;
   tiles: any = undefined;
 
+  showBuyBtn:boolean = false;
+
   selectedBoxs = [];
   soldBoxes = [];
   myBoxs = [];
@@ -78,10 +80,9 @@ export class HomePage implements OnInit {
     this.loadMap();
     this.map.on('zoomend', (res) => {
       if (res.target._zoom == 15) {
-        if (this.tiles == undefined) {
-          this.setGrid(this.map);
-        }
+        this.showBuyBtn = true;
       } else {
+        this.showBuyBtn = false;
         if (this.tiles != undefined) {
           this.selectedBoxs = [];
           this.myBoxs = [];
@@ -91,6 +92,12 @@ export class HomePage implements OnInit {
       }
     });
 
+  }
+  
+  showGrid(){
+    if (this.tiles == undefined) {
+      this.setGrid(this.map);
+    }
   }
 
   getSoldBox() {
@@ -114,16 +121,16 @@ export class HomePage implements OnInit {
     //Leaflet.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?access_token={accessToken}', {
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Buy / Customise land',
-      maxZoom: 16,
+      maxZoom: 15,
       id: 'mapbox/streets-v11',
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
     this.map.attributionControl.setPrefix('FlatMeta.io');
 
     const coordinates = await Geolocation.getCurrentPosition();
-    this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 10);
+    this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
 
-    let allowZooms = [5, 10, 14, 15];
+    let allowZooms = [5, 10, 15];
     this.map.setView = function (center, zoom, options) {
       if ((zoom) && (allowZooms.indexOf(zoom) === -1)) {
         let ixCurZoom = allowZooms.indexOf(this._zoom);
@@ -148,6 +155,7 @@ export class HomePage implements OnInit {
       this.map.addControl(search);
     }, 1000)
   }
+  
 
   setGrid(m) {
     let that = this;
@@ -157,7 +165,7 @@ export class HomePage implements OnInit {
       updateWhenZooming: false,
       updateWhenIdle: false,
       minNativeZoom: 10,
-      maxNativeZoom: 18,
+      maxNativeZoom: 15,
     });
     this.tiles.createTile = function (coords) {
       let tile = Leaflet.DomUtil.create('canvas', 'leaflet-tile');
@@ -182,10 +190,12 @@ export class HomePage implements OnInit {
             let im = new Image();
             im.src = mb.img;
             setTimeout(() => {
-              ctx.drawImage(im, 3, 3, 33, 33);
+              ctx.drawImage(im, 0, 0, 40, 40);
             }, 250)
+            ctx.strokeStyle = 'transparent';
+          }else{
+            ctx.strokeStyle = 'green'; // if my box
           }
-          ctx.strokeStyle = 'green'; // if my box
         } else {
           ctx.strokeStyle = 'red'; // if other user box
         }
@@ -217,7 +227,7 @@ export class HomePage implements OnInit {
             } else {
               e.srcElement.classList.toggle('my-box');
               that.qEditor = cb.data;
-              that.myBoxs.push(cb)
+              that.myBoxs.push(cb);
             }
           } else {
             //e.srcElement.classList.toggle('selected-box');
