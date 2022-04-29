@@ -4,6 +4,94 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+  <div id="container">
 
+    <div class="gett" (click)="chooseFile()">
+      <img [src]="profileImg || 'https://picsum.photos/200'" />
+      <ion-icon class="icon" name="camera-outline"></ion-icon>
+      Your Avatar
+    </div>
+
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" (keyup.enter)="onSubmit()" novalidate>
+      <div>
+        <ion-item mode="md">
+          <ion-label position="floating">
+            <ion-icon slot="start" name="person-outline"></ion-icon>
+            Full Name
+            <ng-container *ngIf="getControl.full_name.touched">
+              <span class="text-danger" *ngIf="getControl.full_name.errors?.required">Full Name is Required*</span>
+            </ng-container>
+          </ion-label>
+          <ion-input placeholder="Enter Full Name" type="text" formControlName="full_name"></ion-input>
+        </ion-item>
+
+        <ion-item mode="md">
+          <ion-label position="floating">
+            <ion-icon slot="start" name="person-add-outline"></ion-icon>
+            Username
+            <ng-container *ngIf="getControl.user_name.touched">
+              <span class="text-danger" *ngIf="getControl.user_name.errors?.required">Username is Required*</span>
+            </ng-container>
+          </ion-label>
+          <ion-input placeholder="Enter Username" type="text" formControlName="user_name" readonly></ion-input>
+        </ion-item>
+
+        <ion-item mode="md">
+          <ion-label position="floating">
+            <ion-icon slot="start" name="mail-outline"></ion-icon>
+            Email Address
+            <ng-container *ngIf="getControl.email_address.touched">
+              <span class="text-danger" *ngIf="getControl.email_address.errors?.required">Email is Required*</span>
+              <span class="text-danger"
+                *ngIf="(getControl.email_address.invalid && !getControl.email_address.errors?.required)">Invalid
+                Email*</span>
+            </ng-container>
+          </ion-label>
+          <ion-input placeholder="Enter Email" type="email" formControlName="email_address" readonly></ion-input>
+        </ion-item>
+
+        <ion-item mode="md">
+          <ion-label position="floating">
+            <ion-icon slot="start" name="call-outline"></ion-icon>
+            Phone Number
+            <ng-container *ngIf="getControl.phone_number.touched">
+              <span class="text-danger" *ngIf="getControl.phone_number.errors?.required">Phone Number is
+                Required*</span>
+            </ng-container>
+          </ion-label>
+          <ion-input placeholder="Enter phone_number" type="tel" formControlName="phone_number">
+          </ion-input>
+        </ion-item>
+
+        <!-- <ion-item mode="md">
+          <ion-label position="floating">
+            <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+            Date of Birth
+            <ng-container *ngIf="getControl.password.touched">
+              <span class="text-danger"
+                *ngIf="getControl.confirm_password.errors?.required">Confirm Password is Required*</span>
+            </ng-container>
+          </ion-label>
+          <ion-input placeholder="Enter Confirm Password" type="{{showPass ? 'text': 'password'}}"
+            formControlName="confirm_password">
+          </ion-input>
+          <ion-icon name="eye-outline" slot="end" *ngIf="!showPass" (click)="showPass = !showPass"
+            class="ion-align-self-center"></ion-icon>
+          <ion-icon name="eye-off-outline" slot="end" *ngIf="showPass" (click)="showPass = !showPass"
+            class="ion-align-self-center"></ion-icon>
+        </ion-item> -->
+      </div>
+
+
+
+      <ion-button expand="block" shape="round" color="dark" type="submit">
+        Sign Up
+      </ion-button>
+
+    </form>
+  </div>
+  <input type="file" #fileInput (change)="choosePhoto($event)" hidden="true" accept="image/*"
+    style="visibility: hidden;" />
 </ion-content>

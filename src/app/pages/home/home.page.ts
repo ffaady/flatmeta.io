@@ -160,8 +160,9 @@ export class HomePage implements OnInit {
 
   async addMarker() {
     const coordinates = await Geolocation.getCurrentPosition();
+    let ico = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.avatar : 'https://avataaars.io/?avatarStyle=Transparent&topType=Hat&accessoriesType=Kurt&facialHairType=BeardLight&facialHairColor=Red&clotheType=BlazerShirt&eyeType=Dizzy&eyebrowType=Default&mouthType=Default&skinColor=Light';
     const icon = Leaflet.icon({
-      iconUrl: 'https://avataaars.io/?avatarStyle=Transparent&topType=Hat&accessoriesType=Kurt&facialHairType=BeardLight&facialHairColor=Red&clotheType=BlazerShirt&eyeType=Dizzy&eyebrowType=Default&mouthType=Default&skinColor=Light',
+      iconUrl:  ico,
       iconSize: [50, 50], // size of the icon
       popupAnchor: [13, 0],
     });
@@ -174,10 +175,10 @@ export class HomePage implements OnInit {
     const onMapClick = (e) => {
       marker.slideTo(e.latlng, { duration: 1500 });
       // Update marker on changing it's position
-      marker.on('dragend', function (ev) {
-        let chagedPos = ev.target.getLatLng();
-        this.bindPopup(chagedPos.toString()).openPopup();
-      });
+      // marker.on('dragend', function (ev) {
+      //   let chagedPos = ev.target.getLatLng();
+      //   this.bindPopup(chagedPos.toString()).openPopup();
+      // });
     }
     this.map.on('click', onMapClick);
   }

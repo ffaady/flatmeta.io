@@ -1,0 +1,53 @@
+#container {
+    max-width: 500px;
+    margin: 0 auto;
+
+    .gett {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 20px auto;
+        text-align: center;
+
+        img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .icon {
+            position: absolute;
+            bottom: 0;
+            background: #fff;
+            border-radius: 50%;
+            padding: 5px;
+            font-size: 20px;
+            right: 0;
+            border: 2px solid grey;
+        }
+    }
+
+
+    .capitalize {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-bottom: 15%;
+    }
+
+    form {
+        ion-button {
+            margin-top: 20px;
+        }
+
+        .text-danger {
+            margin-bottom: 10px;
+        }
+    }
+
+    .haveAccount {
+        margin-top: 20%;
+        font-size: 14px;
+        text-align: center;
+    }
+}
