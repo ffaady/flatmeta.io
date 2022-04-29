@@ -19,11 +19,11 @@ export class AppComponent {
   pages = [
     {
       title: "Profile",
-      url: '/tabs/profile'
+      url: '/t/profile'
     },
     {
       title: "My Cart",
-      url: '/tabs/cart'
+      url: '/t/cart'
     }
   ];
 

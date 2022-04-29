@@ -34,7 +34,6 @@ export class CartPage implements OnInit {
   getCart(id) {
     this.http.post2('GetCart', { user_id: id }, true).subscribe((res: any) => {
       this.general.stopLoading()
-      console.log(res);
       if (res.status == true) {
         this.cartData = res.data.tiles;
       }
@@ -53,7 +52,7 @@ export class CartPage implements OnInit {
       this.general.stopLoading()
       if (res.status == true) {
         this.general.presentToast('Boxes bought successfully!');
-        this.general.goToPage('tabs/home');
+        this.general.goToPage('t/home');
       }
     },
       (e) => {

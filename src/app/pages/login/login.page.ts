@@ -57,7 +57,7 @@ export class LoginPage implements OnInit {
         this.storage.setObject('userObject', res.data);
         GlobaldataService.userObject = res.data;
         this.events.publishLogin(res.data)
-        this.general.goToPage('tabs/home');
+        this.general.goToPage('t/home');
       } else {
         this.loading = false;
         this.general.presentToast(res.message);

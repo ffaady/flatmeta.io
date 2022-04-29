@@ -4,11 +4,11 @@ import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
-    path: 'tabs',
+    path: 't',
     component: TabsPage,
     children: [
       {
-        path: 'home',
+        path: 'h',
         loadChildren: () => import('../pages/home/home.module').then(m => m.HomePageModule)
       },
       {
@@ -25,14 +25,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/home',
+        redirectTo: '/t/h',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/home',
+    redirectTo: '/t/h',
     pathMatch: 'full'
   }
 ];
