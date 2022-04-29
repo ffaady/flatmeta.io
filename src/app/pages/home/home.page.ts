@@ -40,6 +40,8 @@ export class HomePage implements OnInit {
 
   qEditor: any;
 
+  avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.avatar : 'https://avataaars.io/?avatarStyle=Transparent&topType=Hat&accessoriesType=Kurt&facialHairType=BeardLight&facialHairColor=Red&clotheType=BlazerShirt&eyeType=Dizzy&eyebrowType=Default&mouthType=Default&skinColor=Light';
+
   constructor(
     public routerOutlet: IonRouterOutlet,
     public storage: StorageService,
@@ -160,15 +162,15 @@ export class HomePage implements OnInit {
 
   async addMarker() {
     const coordinates = await Geolocation.getCurrentPosition();
-    let ico = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.avatar : 'https://avataaars.io/?avatarStyle=Transparent&topType=Hat&accessoriesType=Kurt&facialHairType=BeardLight&facialHairColor=Red&clotheType=BlazerShirt&eyeType=Dizzy&eyebrowType=Default&mouthType=Default&skinColor=Light';
     const icon = Leaflet.icon({
-      iconUrl: ico,
+      iconUrl: this.avatar,
       iconSize: [50, 50], // size of the icon
       popupAnchor: [13, 0],
     });
 
+    let name = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.full_name : 'No name'
     let customPopup = `
-      <p>Hello i am ${GlobaldataService.userObject.full_name}<p>
+      <p>Hello i am ${name}<p>
       <p>i am Selling my Place you can Buy it. 
       <div class="flex">
         <ion-button size="small">Message</ion-button>
