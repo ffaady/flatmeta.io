@@ -9,6 +9,7 @@ import { GlobaldataService } from 'src/app/providers/globaldata.service';
 import * as GeoSearch from 'leaflet-geosearch';
 import { InAppBrowser, InAppBrowserOptions } from '@awesome-cordova-plugins/in-app-browser/ngx';
 const provider = new GeoSearch.OpenStreetMapProvider();
+import DriftMarker from "leaflet-drift-marker";
 
 
 @Component({
@@ -22,7 +23,7 @@ export class HomePage implements OnInit {
   map: Leaflet.Map;
   tiles: any = undefined;
 
-  showBuyBtn:boolean = false;
+  showBuyBtn: boolean = false;
 
   selectedBoxs = [];
   soldBoxes = [];
@@ -93,8 +94,8 @@ export class HomePage implements OnInit {
     });
 
   }
-  
-  showGrid(){
+
+  showGrid() {
     if (this.tiles == undefined) {
       this.setGrid(this.map);
     }
@@ -148,19 +149,21 @@ export class HomePage implements OnInit {
       iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
       popupAnchor: [13, 0],
     });
+    const marker = new DriftMarker([coordinates.coords.latitude, coordinates.coords.longitude], {
+      draggable: true,
+      icon: icon
+    })//@ts-ignore
+      .addTo(this.map);
 
-    const marker = Leaflet.marker([coordinates.coords.latitude, coordinates.coords.longitude], { icon }).bindPopup('Your Location');
-    marker.addTo(this.map);
-
-    //var marker.setLatLng(e.latlng);
-
-    this.map.on("click", e => {
-      console.log(e.latlng); // get the coordinates
-      // if (marker) { // check
-      //   this.map.removeLayer(marker); // remove
-      // }
-      marker.setLatLng(e.latlng);
-    });
+    const onMapClick = (e) => {
+      marker.slideTo(e.latlng, { duration: 1500 });
+      // Update marker on changing it's position
+      marker.on('dragend', function (ev) {
+        let chagedPos = ev.target.getLatLng();
+        this.bindPopup(chagedPos.toString()).openPopup();
+      });
+    }
+    this.map.on('click', onMapClick);
 
     setTimeout(() => {
       const search = GeoSearch.GeoSearchControl({
@@ -173,7 +176,7 @@ export class HomePage implements OnInit {
       this.map.addControl(search);
     }, 1000)
   }
-  
+
   setGrid(m) {
     let that = this;
     this.tiles = new Leaflet.GridLayer({
@@ -210,7 +213,7 @@ export class HomePage implements OnInit {
               ctx.drawImage(im, 0, 0, 40, 40);
             }, 250)
             ctx.strokeStyle = 'transparent';
-          }else{
+          } else {
             ctx.strokeStyle = 'green'; // if my box
           }
         } else {
