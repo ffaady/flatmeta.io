@@ -144,9 +144,25 @@ export class HomePage implements OnInit {
       }
       return Leaflet.Map.prototype.setView.call(this, center, zoom, options);
     }
+    this.addMarker(); //add my marker
 
+    setTimeout(() => {
+      const search = GeoSearch.GeoSearchControl({
+        provider: provider,
+        style: 'bar',
+        showMarker: false,
+        searchLabel: 'Search Map',
+        retainZoomLevel: true
+      });
+      this.map.addControl(search);
+    }, 1000)
+  }
+
+  async addMarker() {
+    const coordinates = await Geolocation.getCurrentPosition();
     const icon = Leaflet.icon({
-      iconUrl: 'https://res.cloudinary.com/rodrigokamada/image/upload/v1637581626/Blog/angular-leaflet/marker-icon.png',
+      iconUrl: 'https://avataaars.io/?avatarStyle=Transparent&topType=Hat&accessoriesType=Kurt&facialHairType=BeardLight&facialHairColor=Red&clotheType=BlazerShirt&eyeType=Dizzy&eyebrowType=Default&mouthType=Default&skinColor=Light',
+      iconSize: [50, 50], // size of the icon
       popupAnchor: [13, 0],
     });
     const marker = new DriftMarker([coordinates.coords.latitude, coordinates.coords.longitude], {
@@ -164,17 +180,6 @@ export class HomePage implements OnInit {
       });
     }
     this.map.on('click', onMapClick);
-
-    setTimeout(() => {
-      const search = GeoSearch.GeoSearchControl({
-        provider: provider,
-        style: 'bar',
-        showMarker: false,
-        searchLabel: 'Search Map',
-        retainZoomLevel: true
-      });
-      this.map.addControl(search);
-    }, 1000)
   }
 
   setGrid(m) {
