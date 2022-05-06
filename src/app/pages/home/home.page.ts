@@ -40,7 +40,7 @@ export class HomePage implements OnInit {
 
   qEditor: any;
 
-  avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.avatar : 'https://avataaars.io/?avatarStyle=Transparent&topType=Hat&accessoriesType=Kurt&facialHairType=BeardLight&facialHairColor=Red&clotheType=BlazerShirt&eyeType=Dizzy&eyebrowType=Default&mouthType=Default&skinColor=Light';
+  avatar: string;
 
   constructor(
     public routerOutlet: IonRouterOutlet,
@@ -54,6 +54,7 @@ export class HomePage implements OnInit {
   ngOnInit() { }
 
   ionViewWillEnter() {
+    this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.avatar : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png';
     if (this.tiles != undefined) {
       this.map.removeLayer(this.tiles);
       this.imgSelection = false;
