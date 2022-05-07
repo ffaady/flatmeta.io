@@ -188,7 +188,9 @@ export class HomePage implements OnInit {
       'width': '200',
       'className': 'popupCustom',
     }
-
+    if(this.myMarker!= undefined){
+      this.map.removeLayer(this.myMarker);
+    }
     this.myMarker = new DriftMarker([coordinates.coords.latitude, coordinates.coords.longitude], {
       draggable: true,
       icon: icon
