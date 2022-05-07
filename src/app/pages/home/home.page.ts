@@ -42,6 +42,7 @@ export class HomePage implements OnInit {
 
   avatar: string;
   myMarker: any;
+  otherMarkers: any;
 
   constructor(
     public routerOutlet: IonRouterOutlet,
@@ -89,6 +90,7 @@ export class HomePage implements OnInit {
       } else {
         this.showBuyBtn = false;
         this.addMarker();
+        this.addOtherMarkers();
         if (this.tiles != undefined) {
           this.selectedBoxs = [];
           this.myBoxs = [];
@@ -151,6 +153,7 @@ export class HomePage implements OnInit {
       return Leaflet.Map.prototype.setView.call(this, center, zoom, options);
     }
     this.addMarker(); //add my marker
+    this.addOtherMarkers() //add other prople marker
 
     setTimeout(() => {
       const search = GeoSearch.GeoSearchControl({
@@ -188,7 +191,7 @@ export class HomePage implements OnInit {
       'width': '200',
       'className': 'popupCustom',
     }
-    if(this.myMarker!= undefined){
+    if (this.myMarker != undefined) {
       this.map.removeLayer(this.myMarker);
     }
     this.myMarker = new DriftMarker([coordinates.coords.latitude, coordinates.coords.longitude], {
@@ -206,6 +209,33 @@ export class HomePage implements OnInit {
       // });
     }
     this.map.on('click', onMapClick);
+  }
+
+  addOtherMarkers() {
+    let locations = [
+      ["LOCATION_1", 24.902001, 67.075012],
+      ["LOCATION_2", 24.902546, 67.075817],
+      ["LOCATION_3", 24.902906, 67.074192],
+      ["LOCATION_4", 24.903587, 67.075377],
+      ["LOCATION_5", 24.895965, 67.081478]
+    ];
+
+
+    for (let i = 0; i < locations.length; i++) {
+      // this.otherMarkers = new Leaflet.marker([locations[i][1], locations[i][2]])
+      //   .bindPopup(locations[i][0])
+      //   .addTo(this.map);
+      const icon = Leaflet.icon({
+        iconUrl: 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png',
+        iconSize: [50, 50], // size of the icon
+        popupAnchor: [13, 0],
+      });
+      this.myMarker = new DriftMarker([locations[i][1], locations[i][2]], {
+        draggable: true,
+        icon: icon
+      })//@ts-ignore
+        .addTo(this.map);
+    }
   }
 
   setGrid(m) {
