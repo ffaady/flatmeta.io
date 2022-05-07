@@ -41,6 +41,7 @@ export class HomePage implements OnInit {
   qEditor: any;
 
   avatar: string;
+  myMarker: any;
 
   constructor(
     public routerOutlet: IonRouterOutlet,
@@ -54,7 +55,7 @@ export class HomePage implements OnInit {
   ngOnInit() { }
 
   ionViewWillEnter() {
-    this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.avatar : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png';
+    this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.avatar != null ? GlobaldataService.userObject.avatar : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png' : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png';
     if (this.tiles != undefined) {
       this.map.removeLayer(this.tiles);
       this.imgSelection = false;
@@ -87,6 +88,7 @@ export class HomePage implements OnInit {
         this.showBuyBtn = true;
       } else {
         this.showBuyBtn = false;
+        this.addMarker();
         if (this.tiles != undefined) {
           this.selectedBoxs = [];
           this.myBoxs = [];
@@ -101,6 +103,7 @@ export class HomePage implements OnInit {
   showGrid() {
     if (this.tiles == undefined) {
       this.setGrid(this.map);
+      this.map.removeLayer(this.myMarker);
     }
   }
 
@@ -186,14 +189,14 @@ export class HomePage implements OnInit {
       'className': 'popupCustom',
     }
 
-    const marker = new DriftMarker([coordinates.coords.latitude, coordinates.coords.longitude], {
+    this.myMarker = new DriftMarker([coordinates.coords.latitude, coordinates.coords.longitude], {
       draggable: true,
       icon: icon
     })//@ts-ignore
       .bindPopup(customPopup, customOptions).addTo(this.map);
 
     const onMapClick = (e) => {
-      marker.slideTo(e.latlng, { duration: 1500 });
+      this.myMarker.slideTo(e.latlng, { duration: 1500 });
       // Update marker on changing it's position
       // marker.on('dragend', function (ev) {
       //   let chagedPos = ev.target.getLatLng();
@@ -276,7 +279,6 @@ export class HomePage implements OnInit {
               that.myBoxs.push(cb);
             }
           } else {
-            //e.srcElement.classList.toggle('selected-box');
             let pop = undefined;
             pop = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng);
             const Micon = Leaflet.icon({
@@ -534,8 +536,5 @@ export class HomePage implements OnInit {
       console.log(e)
     })
   }
-
-
-
 
 }
