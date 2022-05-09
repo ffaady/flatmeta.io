@@ -102,12 +102,12 @@ export class HomePage implements OnInit {
           this.tiles = undefined;
         }
       }
-      if(Capacitor.isNativePlatform()){
-        if(res.target._zoom < 8){
+      if (Capacitor.isNativePlatform()) {
+        if (res.target._zoom < 8) {
           this.map.setZoom(5)
-        }else if(res.target._zoom >= 8 && res.target._zoom <= 11){
+        } else if (res.target._zoom >= 8 && res.target._zoom <= 11) {
           this.map.setZoom(10)
-        }else if(res.target._zoom >= 12 && res.target._zoom <= 15){
+        } else if (res.target._zoom >= 12 && res.target._zoom <= 15) {
           this.map.setZoom(15)
         }
       }
@@ -169,7 +169,7 @@ export class HomePage implements OnInit {
       }
     } else {
       coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-    }    
+    }
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
     let allowZooms = [5, 10, 15];
     this.map.setView = function (center, zoom, options) {
@@ -199,7 +199,7 @@ export class HomePage implements OnInit {
     }, 1000)
   }
 
-  async getCurrentLocation(){
+  async getCurrentLocation() {
     const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
   }
