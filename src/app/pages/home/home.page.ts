@@ -42,7 +42,7 @@ export class HomePage implements OnInit {
 
   avatar: string;
   myMarker: any;
-  otherMarkers: any;
+  otherMarkers = [];
 
   constructor(
     public routerOutlet: IonRouterOutlet,
@@ -105,7 +105,14 @@ export class HomePage implements OnInit {
   showGrid() {
     if (this.tiles == undefined) {
       this.setGrid(this.map);
-      this.map.removeLayer(this.myMarker);
+      if (this.myMarker != undefined) {
+        this.map.removeLayer(this.myMarker);
+      }
+      if (this.otherMarkers.length > 0) {
+        this.otherMarkers.map((marker) => {
+          this.map.removeLayer(marker)
+        })
+      }
     }
   }
 
@@ -220,21 +227,25 @@ export class HomePage implements OnInit {
       ["LOCATION_5", 24.895965, 67.081478]
     ];
 
+    if (this.otherMarkers.length > 0) {
+      this.otherMarkers.map((marker) => {
+        this.map.removeLayer(marker)
+      })
+    }
 
     for (let i = 0; i < locations.length; i++) {
-      // this.otherMarkers = new Leaflet.marker([locations[i][1], locations[i][2]])
-      //   .bindPopup(locations[i][0])
-      //   .addTo(this.map);
       const icon = Leaflet.icon({
         iconUrl: 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png',
         iconSize: [50, 50], // size of the icon
         popupAnchor: [13, 0],
       });
-      this.myMarker = new DriftMarker([locations[i][1], locations[i][2]], {
-        draggable: true,
+      let marker = new DriftMarker([locations[i][1], locations[i][2]], {
+        draggable: false,
         icon: icon
       })//@ts-ignore
         .addTo(this.map);
+
+      this.otherMarkers.push(marker);
     }
   }
 
