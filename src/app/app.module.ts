@@ -12,6 +12,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { QuillModule } from 'ngx-quill'
+import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { QuillModule } from 'ngx-quill'
     })],
   providers: [
     InAppBrowser,
+    LocationAccuracy,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent],

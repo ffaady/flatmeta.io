@@ -6,5 +6,9 @@
     <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser"/>
   </feature>
 
+  <feature name="RequestLocationAccuracy">
+    <param name="android-package" value="cordova.plugin.RequestLocationAccuracy"/>
+  </feature>
+
   
 </widget>

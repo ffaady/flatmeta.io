@@ -1,15 +1,18 @@
 import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { IonRouterOutlet } from '@ionic/angular';
+import { Geolocation } from '@capacitor/geolocation';
+import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
+import { InAppBrowser, InAppBrowserOptions } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
-import * as Leaflet from 'leaflet';
-import { Geolocation } from '@capacitor/geolocation';
 import { GlobaldataService } from 'src/app/providers/globaldata.service';
+import { Capacitor } from '@capacitor/core';
+import * as Leaflet from 'leaflet';
 import * as GeoSearch from 'leaflet-geosearch';
-import { InAppBrowser, InAppBrowserOptions } from '@awesome-cordova-plugins/in-app-browser/ngx';
-const provider = new GeoSearch.OpenStreetMapProvider();
 import DriftMarker from "leaflet-drift-marker";
+
+const provider = new GeoSearch.OpenStreetMapProvider();
 
 
 @Component({
@@ -50,6 +53,7 @@ export class HomePage implements OnInit {
     public general: GeneralService,
     public http: HttpService,
     private iab: InAppBrowser,
+    private locationAccuracy: LocationAccuracy,
     private zone: NgZone
   ) { }
 
@@ -117,14 +121,12 @@ export class HomePage implements OnInit {
   }
 
   getSoldBox() {
-    this.http.get2('GetSelectedTiles', true).subscribe((res: any) => {
-      this.general.stopLoading();
+    this.http.get2('GetSelectedTiles', false).subscribe((res: any) => {
       if (res.status == true) {
         this.soldBoxes = res.data.tiles;
       }
     },
       (e) => {
-        this.general.stopLoading();
         console.log(e)
       })
   }
@@ -142,10 +144,24 @@ export class HomePage implements OnInit {
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
     this.map.attributionControl.setPrefix('FlatMeta.io');
+    let coordinates;
 
-    const coordinates = await Geolocation.getCurrentPosition();
+    if (Capacitor.isNativePlatform()) {
+      const canRequest: boolean = await this.locationAccuracy.canRequest();
+      if (canRequest) {
+        let req = await this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
+        if (req.code == 1 || req.code == 0) {
+          coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+        } else {
+          this.general.presentAlert('Warning!', 'Please Grant Location Permission. Otherwise App will not work as expected!')
+        }
+      } else {
+        coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+      }
+    } else {
+      coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+    }    
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
-
     let allowZooms = [5, 10, 15];
     this.map.setView = function (center, zoom, options) {
       if ((zoom) && (allowZooms.indexOf(zoom) === -1)) {
@@ -160,7 +176,7 @@ export class HomePage implements OnInit {
       return Leaflet.Map.prototype.setView.call(this, center, zoom, options);
     }
     this.addMarker(); //add my marker
-    this.addOtherMarkers() //add other prople marker
+    this.addOtherMarkers() //add other prople marker 
 
     setTimeout(() => {
       const search = GeoSearch.GeoSearchControl({
