@@ -19,6 +19,12 @@
     </div>
   </ng-container>
 
+  <ng-container >
+    <div class="locatebtn" (click)="getCurrentLocation()">
+      <ion-icon name="locate-outline"></ion-icon>
+    </div>
+  </ng-container>
+
   <ng-container *ngIf="selectedBoxs.length > 0">
     <div class="position ion-padding">
       <div class="icon" (click)="removeSelectedBoxes()">

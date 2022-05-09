@@ -81,11 +81,26 @@
     position: absolute;
     top: 13%;
     z-index: 999;
-    left: 2.5%;
+    left: 10px;
     border-radius: 5px;
     text-align: center;
     background-color: var(--ion-color-light);
     padding: 2px;
+    border: 1px solid darkgrey;
+    ion-icon{
+        font-size: 20px;
+    }
+}
+
+.locatebtn{
+    position: absolute;
+    top: 20%;
+    z-index: 999;
+    left: 10px;
+    border-radius: 5px;
+    text-align: center;
+    background-color: var(--ion-color-light);
+    padding: 5px;
     border: 1px solid darkgrey;
     ion-icon{
         font-size: 20px;

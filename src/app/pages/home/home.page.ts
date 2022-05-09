@@ -199,6 +199,11 @@ export class HomePage implements OnInit {
     }, 1000)
   }
 
+  async getCurrentLocation(){
+    const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+    this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
+  }
+
   async addMarker() {
     const coordinates = await Geolocation.getCurrentPosition();
     const icon = Leaflet.icon({
