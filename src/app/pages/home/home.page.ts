@@ -102,6 +102,15 @@ export class HomePage implements OnInit {
           this.tiles = undefined;
         }
       }
+      if(Capacitor.isNativePlatform()){
+        if(res.target._zoom < 8){
+          this.map.setZoom(5)
+        }else if(res.target._zoom >= 8 && res.target._zoom <= 11){
+          this.map.setZoom(10)
+        }else if(res.target._zoom >= 12 && res.target._zoom <= 15){
+          this.map.setZoom(15)
+        }
+      }
     });
 
   }
