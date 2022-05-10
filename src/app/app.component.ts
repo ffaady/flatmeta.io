@@ -43,17 +43,32 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.checkUserLogin();
+      this.getLoginUser();
       this.checkdarkMode();
     });
   }
 
-  async checkUserLogin() {
-    let res = await this.storage.getObject('userObject')
+  async getLoginUser() {
+    let res: any = await this.storage.getObject('login_token');
     if (res != null) {
-      GlobaldataService.userObject = res;
-      this.profile = res;
+      GlobaldataService.loginToken = res;
+      this.getUserDetails();
+    } else {
+      this.storage.removeItem('userObject');
+      this.storage.removeItem('login_token');
     }
+  }
+
+  getUserDetails() {
+    this.http.get('getuserbytoken', false).subscribe((res: any) => {
+      if (res.status == true) {
+        GlobaldataService.userObject = res.data;
+        this.storage.setObject('userObject', res.data);
+        this.events.publishLogin(res.data) 
+      }
+    }, (e) => {
+      console.log(e);
+    })
   }
 
   checkdarkMode() {

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { EventsService } from 'src/app/providers/events.service';
 import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
@@ -20,38 +21,40 @@ export class ProfilePage implements OnInit {
     public general: GeneralService,
     public http: HttpService,
     public formBuilder: FormBuilder,
-    private storage: StorageService
+    private storage: StorageService,
+    public events: EventsService
   ) { }
 
   ngOnInit() {
     this.initSignupForm();
+    this.events.receiveLogin().subscribe((res: any) => {
+      if (res) {
+        this.profileForm.patchValue(res);
+        this.profileImg = res.user_image;
+      }
+    })
   }
 
   ionViewDidEnter() {
     if (GlobaldataService.userObject != undefined) {
       this.profileForm.patchValue({
-        id: GlobaldataService.userObject.id,
-        full_name: GlobaldataService.userObject.full_name,
-        email_address: GlobaldataService.userObject.email_address,
-        user_name: GlobaldataService.userObject.user_name,
-        phone_number: GlobaldataService.userObject.phone_number,
-        avatar: GlobaldataService.userObject.avatar
+        user_id: GlobaldataService.userObject.user_id,
+        fullname: GlobaldataService.userObject.fullname,
+        username: GlobaldataService.userObject.username,
+        email: GlobaldataService.userObject.email,
+        user_image: GlobaldataService.userObject.user_image
       });
-      this.profileImg = GlobaldataService.userObject.avatar;
-    } else {
-      this.general.presentToast('Login to Continue!');
-      this.general.goToPage('login');
+      this.profileImg = GlobaldataService.userObject.user_image;
     }
   }
 
   initSignupForm() {
     this.profileForm = this.formBuilder.group({
-      avatar: '',
-      id: '',
-      full_name: ['', [Validators.required]],
-      user_name: ['', [Validators.required]],
-      email_address: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
-      phone_number: '',
+      user_id: '',
+      fullname: ['', [Validators.required]],
+      username: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+      user_image: ''
     })
   }
 
@@ -67,12 +70,12 @@ export class ProfilePage implements OnInit {
     if (e.target.files.length > 0) {
       this.general.presentLoading();
       for (let i = 0; i < e.target.files.length; i++) {
-        this.http.uploadImages(e.target.files[i], 'UploadAvatar').subscribe((res: any) => {
+        this.http.uploadImages(e.target.files[i], 'UploadUserImage').subscribe((res: any) => {
           this.general.stopLoading();
           if (res.status == true) {
-            this.profileImg = res.data;
+            this.profileImg = res.data.user_image;
             this.profileForm.patchValue({
-              avatar: res.data
+              user_image: res.data.file_name
             })
             this.general.presentToast('Image Uploaded!')
           } else {
@@ -90,11 +93,11 @@ export class ProfilePage implements OnInit {
     if (this.profileForm.invalid) {
       return;
     }
-    this.http.post2('UpdateProfile', this.profileForm.value, true).subscribe((res: any) => {
+    this.http.post('UpdateUser', this.profileForm.value, true).subscribe((res: any) => {
       this.general.stopLoading();
       if (res.status == true) {
         this.profileForm.patchValue(res.data);
-        this.profileImg = res.data.avatar;
+        this.profileImg = res.data.user_image;
         GlobaldataService.userObject = res.data;
         this.storage.setObject('userObject', res.data);
       } else {

@@ -31,7 +31,7 @@ export class LoginPage implements OnInit {
 
   initLoginForm() {
     this.loginForm = this.formBuilder.group({
-      email_address: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
       password: ['', [Validators.required]]
     })
   }
@@ -51,13 +51,12 @@ export class LoginPage implements OnInit {
       return
     };
     this.loading = true;
-    this.http.post2('AppLogin', this.loginForm.value, false).subscribe((res: any) => {
+    this.http.post2('login', this.loginForm.value, false).subscribe((res: any) => {
       if (res.status == true) {
         this.loading = false;
-        this.storage.setObject('userObject', res.data);
-        GlobaldataService.userObject = res.data;
-        this.events.publishLogin(res.data)
-        this.general.goToPage('t/home');
+        GlobaldataService.loginToken = res.access_token;
+        this.storage.setObject('login_token', res.access_token);
+        this.getUserDetails();
       } else {
         this.loading = false;
         this.general.presentToast(res.message);
@@ -67,5 +66,17 @@ export class LoginPage implements OnInit {
     })
   }
 
+  getUserDetails() {
+    this.http.get('getuserbytoken', false).subscribe((res: any) => {
+      if (res.status == true) {
+        GlobaldataService.userObject = res.data;
+        this.storage.setObject('userObject', res.data);
+        this.events.publishLogin(res.data)
+        this.general.goToPage('t/home');
+      }
+    }, (e) => {
+      console.log(e);
+    })
+  }
 
 }

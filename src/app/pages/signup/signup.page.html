@@ -14,37 +14,37 @@
           <ion-label position="floating">
             <ion-icon slot="start" name="person-outline"></ion-icon>
             Full Name
-            <ng-container *ngIf="getControl.full_name.touched">
+            <ng-container *ngIf="getControl.fullname.touched">
               <span class="text-danger"
-                *ngIf="getControl.full_name.errors?.required">Full Name is Required*</span>
+                *ngIf="getControl.fullname.errors?.required">Full Name is Required*</span>
             </ng-container>
           </ion-label>
-          <ion-input placeholder="Enter Full Name" type="text" formControlName="full_name"></ion-input>
+          <ion-input placeholder="Enter Full Name" type="text" formControlName="fullname"></ion-input>
         </ion-item>
 
         <ion-item mode="md">
           <ion-label position="floating">
             <ion-icon slot="start" name="person-add-outline"></ion-icon>
             Username
-            <ng-container *ngIf="getControl.user_name.touched">
+            <ng-container *ngIf="getControl.username.touched">
               <span class="text-danger"
-                *ngIf="getControl.user_name.errors?.required">Username is Required*</span>
+                *ngIf="getControl.username.errors?.required">Username is Required*</span>
             </ng-container>
           </ion-label>
-          <ion-input placeholder="Enter Username" type="text" formControlName="user_name"></ion-input>
+          <ion-input placeholder="Enter Username" type="text" formControlName="username"></ion-input>
         </ion-item>
 
         <ion-item mode="md">
           <ion-label position="floating">
             <ion-icon slot="start" name="mail-outline"></ion-icon>
             Email Address
-            <ng-container *ngIf="getControl.email_address.touched">
-              <span class="text-danger" *ngIf="getControl.email_address.errors?.required">Email is Required*</span>
+            <ng-container *ngIf="getControl.email.touched">
+              <span class="text-danger" *ngIf="getControl.email.errors?.required">Email is Required*</span>
               <span class="text-danger"
-                *ngIf="(getControl.email_address.invalid && !getControl.email_address.errors?.required)">Invalid Email*</span>
+                *ngIf="(getControl.email.invalid && !getControl.email.errors?.required)">Invalid Email*</span>
             </ng-container>
           </ion-label>
-          <ion-input placeholder="Enter Email" type="email" formControlName="email_address"></ion-input>
+          <ion-input placeholder="Enter Email" type="email" formControlName="email"></ion-input>
         </ion-item>
 
         <ion-item mode="md">

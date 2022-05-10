@@ -27,9 +27,9 @@ export class SignupPage implements OnInit {
 
   initSignupForm() {
     this.signupForm = this.formBuilder.group({
-      full_name: ['', [Validators.required]],
-      user_name: ['', [Validators.required]],
-      email_address: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+      fullname: ['', [Validators.required]],
+      username: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
       // phone_number: ['', [Validators.required]],
       // date_of_birth: ['', [Validators.required]],
       password: ['', [
@@ -60,10 +60,10 @@ export class SignupPage implements OnInit {
       return;
     }
 
-    this.http.post2('SignUp', this.signupForm.value, true).subscribe((res: any) => {
+    this.http.post2('register', this.signupForm.value, true).subscribe((res: any) => {
       this.general.stopLoading();
-      console.log(res)
       if (res.status == true) {
+        this.general.presentToast(res.message);
         this.general.goToPage('login');
       } else {
         this.general.presentToast(res.message);
