@@ -381,7 +381,7 @@ export class HomePage implements OnInit {
             e.srcElement.classList.toggle('border-show');
           } else {
             e.srcElement.classList.toggle('border-show');
-            that.selectedBoxs.push({ lat: nw.lat, lng: nw.lng, img: null });
+            that.selectedBoxs.push({ lat: nw.lat, lng: nw.lng });
           }
         }
       });
@@ -536,15 +536,13 @@ export class HomePage implements OnInit {
       return
     }
     let save = {
-      boxs: this.selectedBoxs,
-      user_id: GlobaldataService.userObject.id,
+      tiles: this.selectedBoxs,
     };
-
-    this.http.post2('AddToCart', save, true).subscribe((res: any) => {
+    this.http.post('AddToCart', save, true).subscribe((res: any) => {
       this.general.stopLoading();
       if (res.status == true) {
         this.getSoldBox();
-        this.general.presentToast('Boxes added to cart successfully!');
+        this.general.presentToast(res.data.message);
         this.map.removeLayer(this.tiles);
         this.soldBoxes = [];
         this.selectedBoxs = [];
@@ -553,7 +551,6 @@ export class HomePage implements OnInit {
           this.setGrid(this.map);
         }, 2000)
       }
-
     }, (e) => {
       this.general.stopLoading();
       console.log(e)
