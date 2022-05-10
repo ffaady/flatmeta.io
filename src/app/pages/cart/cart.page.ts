@@ -23,17 +23,12 @@ export class CartPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    if (GlobaldataService.userObject != undefined) {
-      this.getCart(GlobaldataService.userObject.id)
-    } else {
-      this.general.presentToast('Please Login to Continue!');
-      this.general.goToPage('login');
-    }
+    this.getCart()
   }
 
-  getCart(id) {
-    this.http.post2('GetCart', { user_id: id }, true).subscribe((res: any) => {
-      this.general.stopLoading()
+  getCart() {
+    this.http.get('GetCartByUser', true).subscribe((res: any) => {
+      this.general.stopLoading();
       if (res.status == true) {
         this.cartData = res.data.tiles;
       }
@@ -61,23 +56,16 @@ export class CartPage implements OnInit {
       })
   }
 
-
-  removeFromCart(rmCheck: boolean){
-    let save = {
-      boxs: this.cartData,
-      user_id: GlobaldataService.userObject.id,
-    };
-    this.http.post2('RemoveFromCart', save, rmCheck).subscribe((res:any)=>{
-      if(rmCheck == true){
+  removeFromCart() {
+    this.http.get('RemoveUserCart', true).subscribe((res: any) => {
+      if (res.status == true) {
         this.general.stopLoading();
-        this.general.presentToast('Cart Crealed!')
+        this.general.presentToast(res.data.message);
+        this.cartData = [];
+        this.general.goBack();
       }
-      this.cartData = [];
-      this.general.goBack();
-    }, (e)=>{
-      if(rmCheck == true){
-        this.general.stopLoading();
-      }
+    }, (e) => {
+      this.general.stopLoading();
       this.general.presentToast('Something went wrong!')
     })
   }
