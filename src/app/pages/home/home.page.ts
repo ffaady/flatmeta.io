@@ -32,7 +32,7 @@ export class HomePage implements OnInit {
   soldBoxes = [];
   myBoxs = [];
 
-  user_id = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.id : null;
+  user_id = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null;
 
   imgSelection: boolean = false;
   boxImgs = [];
@@ -86,7 +86,7 @@ export class HomePage implements OnInit {
 
   ionViewDidEnter() {
     this.getSoldBox();
-    this.getBoxImgs();
+    //this.getBoxImgs();
     this.loadMap();
     this.map.on('zoomend', (res) => {
       if (res.target._zoom == 15) {
@@ -130,7 +130,7 @@ export class HomePage implements OnInit {
   }
 
   getSoldBox() {
-    this.http.get2('GetSelectedTiles', false).subscribe((res: any) => {
+    this.http.get2('PurchasedTiles', false).subscribe((res: any) => {
       if (res.status == true) {
         this.soldBoxes = res.data.tiles;
       }
@@ -302,15 +302,15 @@ export class HomePage implements OnInit {
       nwPoint.clientWidth = 80;
       // calculate geographic coordinates of top left tile pixel
       var nw = m.unproject(nwPoint, coords.z);
-      let fb = undefined;
-      fb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
-      if (fb != undefined) {
-        let mb = undefined;
-        mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.id : null));
+      let sb = undefined; //sold box
+      sb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng);
+      if (sb != undefined) {
+        let mb = undefined; //my box
+        mb = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
         if (mb != undefined) {
-          if (mb.img != '') {
+          if (mb.image != '') {
             let im = new Image();
-            im.src = mb.img;
+            im.src = mb.image;
             setTimeout(() => {
               ctx.drawImage(im, 0, 0, 40, 40);
             }, 250)
@@ -338,7 +338,7 @@ export class HomePage implements OnInit {
         if (cb != undefined) {
           //check here if this box exists in my bought boxes add orange class or else unselect it
           let mb = undefined;
-          mb = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng && d.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.id : null));
+          mb = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng && d.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
           if (mb != undefined) { // checking if box i bought by me
             let m = undefined;
             m = that.myBoxs.filter(h => nw.lat == h.lat && nw.lng == h.lng);
@@ -488,7 +488,7 @@ export class HomePage implements OnInit {
   makeBuy() {
     let save = {
       boxs: this.selectedBoxs,
-      user_id: GlobaldataService.userObject.id,
+      user_id: GlobaldataService.userObject.user_id,
     };
     this.http.post2('AddTiles', save, true).subscribe((res: any) => {
       this.general.stopLoading()
@@ -535,8 +535,12 @@ export class HomePage implements OnInit {
       this.general.presentToast('Please Login to Continue!')
       return
     }
+    let t = [];
+    this.selectedBoxs.map((e) => {
+      t.push({ lat: e.lat.toString(), lng: e.lng.toString() })
+    })
     let save = {
-      tiles: this.selectedBoxs,
+      tiles: t,
     };
     this.http.post('AddToCart', save, true).subscribe((res: any) => {
       this.general.stopLoading();

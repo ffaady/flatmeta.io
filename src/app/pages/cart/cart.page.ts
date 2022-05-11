@@ -39,14 +39,10 @@ export class CartPage implements OnInit {
   }
 
   makeBuy() {
-    let save = {
-      boxs: this.cartData,
-      user_id: GlobaldataService.userObject.id,
-    };
-    this.http.post2('AddTiles', save, true).subscribe((res: any) => {
-      this.general.stopLoading()
+    this.http.get('BuyNow', true).subscribe((res: any) => {
+      this.general.stopLoading();
       if (res.status == true) {
-        this.general.presentToast('Boxes bought successfully!');
+        this.general.presentToast(res.data.message);
         this.general.goToPage('t/home');
       }
     },
