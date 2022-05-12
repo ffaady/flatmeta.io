@@ -36,7 +36,7 @@ export class HomePage implements OnInit {
 
   imgSelection: boolean = false;
   boxImgs = [];
-  selectedImg:any = undefined;
+  selectedImg: any = undefined;
   showUplaodedImage: boolean = false;
 
   showEditor: boolean = false;
@@ -343,13 +343,29 @@ export class HomePage implements OnInit {
           mb = that.soldBoxes.filter(d => cb.order_id == d.order_id && d.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
           if (mb != undefined) { // checking if box i bought by me
             that.qEditor = cb.custom_details;
-            that.myTiles.forEach((v) => {
-              if (v.id == mb[0].order_id) {
-                v.classList.add('my-box');
-              }else{
-                v.classList.remove('my-box');
+            if (that.myBoxs.length > 0) {
+              if (that.myBoxs[0].order_id == mb[0].order_id) {
+                that.myTiles.forEach((v) => {
+                  v.classList.remove('my-box');
+                });
+              } else {
+                that.myTiles.forEach((v) => {
+                  if (v.id == mb[0].order_id) {
+                    v.classList.add('my-box');
+                  } else {
+                    v.classList.remove('my-box');
+                  }
+                });
               }
-            });
+            } else {
+              that.myTiles.forEach((v) => {
+                if (v.id == mb[0].order_id) {
+                  v.classList.add('my-box');
+                } else {
+                  v.classList.remove('my-box');
+                }
+              });
+            }
             if (that.myBoxs.length > 0 && that.myBoxs[0].order_id == mb[0].order_id) {
               that.myBoxs = [];
             } else {
