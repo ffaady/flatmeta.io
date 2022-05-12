@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@an
 import { IonRouterOutlet } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
-import { InAppBrowser, InAppBrowserOptions } from '@awesome-cordova-plugins/in-app-browser/ngx';
+
 import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
@@ -36,7 +36,7 @@ export class HomePage implements OnInit {
 
   imgSelection: boolean = false;
   boxImgs = [];
-  selectedImg: string = undefined;
+  selectedImg:any = undefined;
   showUplaodedImage: boolean = false;
 
   showEditor: boolean = false;
@@ -54,7 +54,6 @@ export class HomePage implements OnInit {
     public storage: StorageService,
     public general: GeneralService,
     public http: HttpService,
-    private iab: InAppBrowser,
     private locationAccuracy: LocationAccuracy,
     private zone: NgZone
   ) { }
@@ -88,7 +87,7 @@ export class HomePage implements OnInit {
 
   ionViewDidEnter() {
     this.getSoldBox();
-    //this.getBoxImgs();
+    this.getBoxImgs();
     this.loadMap();
     this.map.on('zoomend', (res) => {
       if (res.target._zoom == 15) {
@@ -409,17 +408,6 @@ export class HomePage implements OnInit {
     }, 250)
   }
 
-  buyNow() {
-    if (GlobaldataService.userObject == undefined) {
-      this.general.presentToast('Please Login to Continue');
-      this.general.goToPage('login');
-    } else {
-      let amt = this.selectedBoxs.length * 0.1;
-      this.makePayment(amt);
-    }
-  }
-
-  /** Remove map when we have multiple map object */
   ngOnDestroy() {
     this.map.remove();
   }
@@ -427,7 +415,7 @@ export class HomePage implements OnInit {
   getBoxImgs() {
     this.http.get2('BoxImages', false).subscribe((res: any) => {
       if (res.status == true) {
-        this.boxImgs = res.data;
+        this.boxImgs = res.data.images;
       }
     }, (e) => {
       console.log(e)
@@ -435,10 +423,11 @@ export class HomePage implements OnInit {
   }
 
   confirmImg() {
-    this.myBoxs.forEach(e => {
-      e.img = this.selectedImg;
-    })
-    this.http.post2('AddTileImage', this.myBoxs, true).subscribe((res: any) => {
+    let imgObj = {
+      order_id: this.myBoxs[0].order_id,
+      image: this.selectedImg.name
+    }
+    this.http.post('UpdateBoxImage', imgObj, true).subscribe((res: any) => {
       this.general.stopLoading();
       if (res.status == true) {
         this.getSoldBox();
@@ -459,60 +448,6 @@ export class HomePage implements OnInit {
       console.log(e)
     })
 
-  }
-
-  makePayment(amt) {
-    const options: InAppBrowserOptions = {
-      zoom: 'no',
-      location: 'no',
-      toolbar: 'no',
-      fullscreen: 'yes',
-      clearcache: 'no',
-      clearsessioncache: 'no',
-      cleardata: 'no',
-      hardwareback: 'yes',
-      useWideViewPort: 'no',
-      enableViewportScale: 'yes',
-      presentationstyle: 'fullscreen'
-    };
-
-    const browser = this.iab.create('https://cocoon-paypal.herokuapp.com/pay/' + amt, '_blank', options);
-
-    browser.on('loadstart').subscribe((res) => {
-
-      let uri = res.url.split('?');
-      if (uri[0] == 'https://cocoon-paypal.herokuapp.com/success') {
-        browser.close();
-        this.makeBuy();
-      }
-    }, err => {
-      console.error(err);
-    });
-  }
-
-  makeBuy() {
-    let save = {
-      boxs: this.selectedBoxs,
-      user_id: GlobaldataService.userObject.user_id,
-    };
-    this.http.post2('AddTiles', save, true).subscribe((res: any) => {
-      this.general.stopLoading()
-      if (res.status == true) {
-        this.getSoldBox();
-        this.general.presentToast('Boxes bought successfully!');
-        this.map.removeLayer(this.tiles);
-        this.soldBoxes = [];
-        this.selectedBoxs = [];
-        this.tiles = undefined;
-        setTimeout(() => {
-          this.setGrid(this.map);
-        }, 2000)
-      }
-    },
-      (e) => {
-        this.general.stopLoading()
-        console.log(e)
-      })
   }
 
   chooseFile() {
