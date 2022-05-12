@@ -473,8 +473,10 @@ export class HomePage implements OnInit {
   choosePhoto = async (e) => {
     if (e.target.files.length > 0) {
       for (let i = 0; i < e.target.files.length; i++) {
-        this.http.uploadImages(e.target.files[i], 'UploadImage').subscribe((res: any) => {
+        this.http.uploadImages(e.target.files[i], 'UploadBoxesImage').subscribe((res: any) => {
+          console.log(res);
           if (res.status == true) {
+            this.boxImgs.push(res.data);
             this.selectedImg = res.data;
             this.showUplaodedImage = true;
             this.general.presentToast('Image Uploaded!')
