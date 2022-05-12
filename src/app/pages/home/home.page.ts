@@ -47,6 +47,8 @@ export class HomePage implements OnInit {
   myMarker: any;
   otherMarkers = [];
 
+  myTiles = [];
+
   constructor(
     public routerOutlet: IonRouterOutlet,
     public storage: StorageService,
@@ -318,6 +320,8 @@ export class HomePage implements OnInit {
           } else {
             ctx.strokeStyle = 'green'; // if my box
           }
+          tile.id = mb.order_id;
+          that.myTiles.push(tile);
         } else {
           ctx.strokeStyle = 'red'; // if other user box
         }
@@ -331,26 +335,29 @@ export class HomePage implements OnInit {
       ctx.lineTo(0, size.y - 1);
       ctx.closePath();
       ctx.stroke();
+      //console.log(tile)
       tile.addEventListener('click', (e) => {
         let cb = undefined;
         cb = that.soldBoxes.find(c => nw.lat == c.lat && nw.lng == c.lng);
-
         if (cb != undefined) {
           //check here if this box exists in my bought boxes add orange class or else unselect it
           let mb = undefined;
-          mb = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng && d.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
+          mb = that.soldBoxes.filter(d => cb.order_id == d.order_id && d.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
           if (mb != undefined) { // checking if box i bought by me
-            let m = undefined;
-            m = that.myBoxs.filter(h => nw.lat == h.lat && nw.lng == h.lng);
-            if (m.length != 0) {
-              let i = that.myBoxs.findIndex(i => (i.lat == nw.lat && i.lng == nw.lng));
-              that.myBoxs.splice(i, 1);
-              e.srcElement.classList.toggle('my-box');
+            that.qEditor = cb.data;
+            that.myTiles.forEach((v) => {
+              if (v.id == mb[0].order_id) {
+                v.classList.add('my-box');
+              }else{
+                v.classList.remove('my-box');
+              }
+            });
+            if (that.myBoxs.length > 0 && that.myBoxs[0].order_id == mb[0].order_id) {
+              that.myBoxs = [];
             } else {
-              e.srcElement.classList.toggle('my-box');
-              that.qEditor = cb.data;
-              that.myBoxs.push(cb);
+              that.myBoxs = mb;
             }
+            console.log(that.myBoxs)
           } else {
             let pop = undefined;
             pop = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng);
