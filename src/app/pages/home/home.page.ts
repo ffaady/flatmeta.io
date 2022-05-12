@@ -335,7 +335,6 @@ export class HomePage implements OnInit {
       ctx.lineTo(0, size.y - 1);
       ctx.closePath();
       ctx.stroke();
-      //console.log(tile)
       tile.addEventListener('click', (e) => {
         let cb = undefined;
         cb = that.soldBoxes.find(c => nw.lat == c.lat && nw.lng == c.lng);
@@ -344,7 +343,7 @@ export class HomePage implements OnInit {
           let mb = undefined;
           mb = that.soldBoxes.filter(d => cb.order_id == d.order_id && d.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
           if (mb != undefined) { // checking if box i bought by me
-            that.qEditor = cb.data;
+            that.qEditor = cb.custom_details;
             that.myTiles.forEach((v) => {
               if (v.id == mb[0].order_id) {
                 v.classList.add('my-box');
@@ -357,7 +356,6 @@ export class HomePage implements OnInit {
             } else {
               that.myBoxs = mb;
             }
-            console.log(that.myBoxs)
           } else {
             let pop = undefined;
             pop = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng);
@@ -569,10 +567,11 @@ export class HomePage implements OnInit {
   }
 
   editorSubmit() {
-    this.myBoxs.forEach(e => {
-      e.data = this.qEditor;
-    });
-    this.http.post2('AddTileContent', this.myBoxs, true).subscribe((res: any) => {
+    let data = {
+      order_id: this.myBoxs[0].order_id,
+      custom_details: this.qEditor
+    }
+    this.http.post('UpdateCustomDetails', data, true).subscribe((res: any) => {
       this.general.stopLoading();
       if (res.status == true) {
         this.getSoldBox();
