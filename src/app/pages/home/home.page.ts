@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@an
 import { IonRouterOutlet } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
-
 import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
@@ -281,6 +280,16 @@ export class HomePage implements OnInit {
 
       this.otherMarkers.push(marker);
     }
+    console.log(this.otherMarkers);
+    this.animateOther();
+  }
+
+  animateOther(){
+    setInterval(()=>{
+      this.otherMarkers.forEach((marker)=>{       
+        marker.slideTo(this.general.randomLatLng(marker._latlng.lat, marker._latlng.lng), { duration: 1500 });
+      })
+    }, 3000)    
   }
 
   setGrid(m) {
