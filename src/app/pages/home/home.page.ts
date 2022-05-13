@@ -114,6 +114,9 @@ export class HomePage implements OnInit {
       }
     });
 
+    this.map.on("moveend",  (e)=>{
+      this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
+    });
   }
 
   showGrid() {
