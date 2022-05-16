@@ -18,12 +18,16 @@ export class AppComponent {
 
   pages = [
     {
-      title: "Profile",
-      url: '/t/profile'
-    },
-    {
       title: "My Cart",
       url: '/t/cart'
+    },
+    {
+      title: "Friend Requests",
+      url: '/t/friendrequest'
+    },
+    {
+      title: "Profile",
+      url: '/t/profile'
     }
   ];
 

@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Friend Request</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-card mode="ios" *ngFor="let r of requests">
+    <ion-card-content>
+      <div class="flex">
+        <div>
+          <img [src]="r?.image" class="img">
+        </div>
+        <div class="flex msg-box">
+          <div>{{r?.message}}</div>
+          <div class="flex btns" *ngIf="r?.status == '2'">
+            <div>
+              <ion-button color="danger" size="small" expand="block" (click)="updateRequest(r?.request_id, 3)">Decline
+              </ion-button>
+            </div>
+            <div>
+              <ion-button color="primary" size="small" expand="block" (click)="updateRequest(r?.request_id, 1)">Accept
+              </ion-button>
+            </div>
+          </div>
+          <ion-text *ngIf="r?.status == '1' || r?.status == '3'" [color]="r?.status == '1' ? 'success' : 'danger'">
+            {{ r?.status == '1' ? 'Accepted' : 'Declined'}}
+          </ion-text>
+        </div>
+      </div>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

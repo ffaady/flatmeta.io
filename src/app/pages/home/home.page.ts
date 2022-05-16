@@ -60,7 +60,6 @@ export class HomePage implements OnInit {
   ngOnInit() { }
 
   ionViewWillEnter() {
-    this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.avatar != null ? GlobaldataService.userObject.avatar : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png' : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png';
     if (this.tiles != undefined) {
       this.map.removeLayer(this.tiles);
       this.imgSelection = false;
@@ -114,7 +113,9 @@ export class HomePage implements OnInit {
     });
 
     this.map.on("moveend",  (e)=>{
-      this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
+      if(this.myMarker){
+        this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
+      }
     });
   }
 
@@ -209,6 +210,7 @@ export class HomePage implements OnInit {
 
   async addMarker() {
     const coordinates = await Geolocation.getCurrentPosition();
+    this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_image != null ? GlobaldataService.userObject.user_image : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png' : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png';
     const icon = Leaflet.icon({
       iconUrl: this.avatar,
       iconSize: [50, 50], // size of the icon

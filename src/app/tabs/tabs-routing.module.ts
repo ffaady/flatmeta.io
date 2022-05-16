@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/cart/cart.module').then(m => m.CartPageModule)
       },
       {
+        path: 'friendrequest',
+        loadChildren: () => import('../pages/friendrequest/friendrequest.module').then(m => m.FriendrequestPageModule)
+      },
+      {
         path: '',
         redirectTo: '/t/h',
         pathMatch: 'full'

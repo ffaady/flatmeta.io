@@ -6,51 +6,34 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content [fullscreen]="true">
 
-  <ion-card mode="ios" *ngFor="let c of tilesList; let i = index;">
-    <ion-card-content>
-
-      <div class="flex cards">
-        <div class="sale">on Sale</div>
-        <div>
-          <img [src]=" c.image != ''? c.image : 'https://via.placeholder.com/150' " class="img" />
-        </div>
-        <div>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" *ngFor="let c of tilesList; let i = index;">
+        <div class="flex box">
           <div>
-            Titles: <b>{{c?.tiles}}</b>
+            <img [src]="c?.image" class="tile-img">
           </div>
           <div>
-            Buying Price: <b>$0.1</b>
+            <div>
+              Tiles: {{c?.no_of_tiles}}
+            </div>
+            <div>
+              Value: ${{c?.amount}}
+            </div>
           </div>
-          <div>
-            Current Price: <b>${{(c?.tiles * 0.1).toFixed(1)}}</b>
+          <div class="flex">
+            <div>
+              <ion-button expand="block" fill="outline" size="small" color="dark">View</ion-button>
+            </div>
+            <div>
+              <ion-button expand="block" fill="outline" size="small" color="dark">Buy</ion-button>
+            </div>
           </div>
         </div>
-      </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-      <!-- <ion-button color="dark" expand="block" size="small">
-        Send Offer
-      </ion-button> -->
-
-      <!-- <div class="flex btns">
-        <div *ngIf="i % 2 != 0">
-          <ion-button fill="outline" color="dark" expand="block" size="small">
-            Sell Boxes
-          </ion-button>
-        </div>
-
-        <div  *ngIf="i % 2 == 0">
-          <ion-button fill="outline" color="dark" expand="block" size="small">
-            Remove from Sale
-          </ion-button>
-        </div>
-        <div>
-          <ion-button color="dark" expand="block" size="small">
-            View Details
-          </ion-button>
-        </div>
-      </div> -->
-    </ion-card-content>
-  </ion-card>
 </ion-content>
