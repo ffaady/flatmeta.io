@@ -48,6 +48,9 @@ export class HomePage implements OnInit {
 
   myTiles = [];
 
+  showSellModal: boolean = false;
+  tilePrice: number = 0.1;
+
   constructor(
     public routerOutlet: IonRouterOutlet,
     public storage: StorageService,
@@ -618,6 +621,32 @@ export class HomePage implements OnInit {
       }
     }, (e) => {
       console.log(e)
+    })
+  }
+
+  sellModal() {
+    this.showSellModal = true;
+    console.log(this.myBoxs)
+  }
+
+  submitPrice() {
+    if (this.tilePrice == null) {
+      this.general.presentToast('Please Enter Correct Price!');
+      return
+    };
+    let d = {
+      order_id: this.myBoxs[0].order_id,
+      sale_price: this.tilePrice
+    };
+    this.http.post('UpdateSalePrice', d, true).subscribe((res: any) => {
+      this.general.stopLoading();
+      if (res.status == true) {
+        this.general.presentToast(res.data.message);
+        this.showSellModal = false;
+      }
+    }, (e) => {
+      this.general.stopLoading();
+      console.log(e);
     })
   }
 

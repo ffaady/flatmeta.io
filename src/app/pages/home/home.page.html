@@ -51,16 +51,16 @@
     </div>
   </ng-container>
 
-  <!-- <ng-container *ngIf="myBoxs.length == 2">
-    <div class="swipe" (click)="swipeImg()">
-      <ion-icon name="swap-vertical-outline"></ion-icon>
+  <ng-container *ngIf="myBoxs.length > 0">
+    <div class="swipe" (click)="sellModal()">
+      <ion-icon name="card-outline"></ion-icon>
       <br />
-      Swap
+      Sell
     </div>
-  </ng-container> -->
+  </ng-container>
 
 
-  <!-- Sheet Modal -->
+  <!-- Image Selection Modal -->
   <ion-modal [isOpen]="imgSelection" [breakpoints]="[0.1, 0.5, 1]" [initialBreakpoint]="1" mode="ios">
     <ng-template>
       <ion-header>
@@ -106,6 +106,7 @@
     </ng-template>
   </ion-modal>
 
+  <!-- Editor Modal -->
   <ion-modal [isOpen]="showEditor" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios">
     <ng-template>
       <ion-header>
@@ -124,6 +125,52 @@
       <ion-footer collapse="fade" mode="ios">
         <ion-toolbar>
           <ion-button expand="block" (click)="editorSubmit()">Submit</ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+  <!-- sell modal -->
+  <ion-modal [isOpen]="showSellModal" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Sell Your Boxes </ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showSellModal = false">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="ion-text-center">
+          <img [src]="myBoxs[0]?.image" class="sell-tile-img">
+        </div>
+        <div>
+          Total Tiles: {{myBoxs?.length}}
+        </div>
+        <div>
+          Current Price: {{myBoxs?.length * 0.1}}
+        </div>
+
+        <ion-item mode="ios">
+          <ion-label position="floating">Price per Tile:</ion-label>
+          <ion-input type="number" [(ngModel)]="tilePrice"></ion-input>
+        </ion-item>
+
+        <p>
+          <strong>
+            <ion-text class="ion-text-center" color="danger">
+              Note: Update Price to put your tiles on Sell. Entered Price will be for each tile in your selected tiles group.
+            </ion-text>
+          </strong> 
+        </p>
+
+      </ion-content>
+      <ion-footer collapse="fade" mode="ios">
+        <ion-toolbar>
+          <ion-button expand="block" (click)="submitPrice()">Submit</ion-button>
         </ion-toolbar>
       </ion-footer>
     </ng-template>
