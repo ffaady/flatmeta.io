@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { IonRouterOutlet } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
@@ -54,7 +54,8 @@ export class HomePage implements OnInit {
     public general: GeneralService,
     public http: HttpService,
     private locationAccuracy: LocationAccuracy,
-    private zone: NgZone
+    private zone: NgZone,
+    private renderer: Renderer2
   ) { }
 
   ngOnInit() { }
@@ -112,8 +113,8 @@ export class HomePage implements OnInit {
       }
     });
 
-    this.map.on("moveend",  (e)=>{
-      if(this.myMarker){
+    this.map.on("moveend", (e) => {
+      if (this.myMarker) {
         this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
       }
     });
@@ -274,24 +275,60 @@ export class HomePage implements OnInit {
         iconSize: [50, 50], // size of the icon
         popupAnchor: [13, 0],
       });
+
+      let customPopup = this.addCustomPopup(locations[i]);
+
+      // specify popup options 
+      let customOptions = {
+        'maxWidth': '400',
+        'width': '200',
+        'className': 'popupCustom',
+      }
+
       let marker = new DriftMarker([locations[i][1], locations[i][2]], {
         draggable: false,
         icon: icon
       })//@ts-ignore
-        .addTo(this.map);
+        .bindPopup(customPopup, customOptions).addTo(this.map);
 
       this.otherMarkers.push(marker);
     }
-    console.log(this.otherMarkers);
     this.animateOther();
   }
 
-  animateOther(){
-    setInterval(()=>{
-      this.otherMarkers.forEach((marker)=>{       
+  addCustomPopup(l) {
+    const p1 = this.renderer.createElement('p');
+    const p1Text = this.renderer.createText(`ID: ${l[0]}`);
+    this.renderer.appendChild(p1, p1Text);
+
+    const p2 = this.renderer.createElement('p');
+    const p2Text = this.renderer.createText(`Lat: ${l[1]} \n Lng: ${l[2]}`);
+    this.renderer.appendChild(p2, p2Text);
+
+    const button = this.renderer.createElement('ion-button');
+    const buttonText = this.renderer.createText('Send Request');
+    button.size = 'small';
+    button.fill = 'outline';
+
+    button.onclick = function () {
+      console.log(l)
+    };
+    this.renderer.appendChild(button, buttonText);
+
+    const container = this.renderer.createElement('div');
+    this.renderer.appendChild(container, p1);
+    this.renderer.appendChild(container, p2);
+    this.renderer.appendChild(container, button);
+
+    return container;
+  }
+
+  animateOther() {
+    setInterval(() => {
+      this.otherMarkers.forEach((marker) => {
         marker.slideTo(this.general.randomLatLng(marker._latlng.lat, marker._latlng.lng), { duration: 1500 });
       })
-    }, 3000)    
+    }, 3000)
   }
 
   setGrid(m) {
