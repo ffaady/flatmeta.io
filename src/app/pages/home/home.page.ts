@@ -51,6 +51,8 @@ export class HomePage implements OnInit {
   showSellModal: boolean = false;
   tilePrice: number = 0.1;
 
+  showChatModal: boolean = false;
+
   constructor(
     public routerOutlet: IonRouterOutlet,
     public storage: StorageService,
@@ -308,20 +310,39 @@ export class HomePage implements OnInit {
     const p2Text = this.renderer.createText(`Lat: ${l[1]} \n Lng: ${l[2]}`);
     this.renderer.appendChild(p2, p2Text);
 
-    const button = this.renderer.createElement('ion-button');
-    const buttonText = this.renderer.createText('Send Request');
-    button.size = 'small';
-    button.fill = 'outline';
 
-    button.onclick = function () {
+
+    const button1 = this.renderer.createElement('ion-button');
+    const button1Text = this.renderer.createText('Message');
+    button1.size = 'small';
+    button1.fill = 'outline';
+    button1.expand = 'block'
+
+    button1.onclick = () => {
+      this.showChat();
+    };
+    this.renderer.appendChild(button1, button1Text);
+
+    const button2 = this.renderer.createElement('ion-button');
+    const button2Text = this.renderer.createText('Send Request');
+    button2.size = 'small';
+    button2.fill = 'outline';
+    button2.expand = 'block'
+
+    button2.onclick = () => {
       console.log(l)
     };
-    this.renderer.appendChild(button, buttonText);
+    this.renderer.appendChild(button2, button2Text);
+
+    const d1 = this.renderer.createElement('div');
+    //this.renderer.addClass(d1, 'flex');
+    this.renderer.appendChild(d1, button1);
+    this.renderer.appendChild(d1, button2);
 
     const container = this.renderer.createElement('div');
     this.renderer.appendChild(container, p1);
     this.renderer.appendChild(container, p2);
-    this.renderer.appendChild(container, button);
+    this.renderer.appendChild(container, d1);
 
     return container;
   }
@@ -648,6 +669,10 @@ export class HomePage implements OnInit {
       this.general.stopLoading();
       console.log(e);
     })
+  }
+
+  showChat() {
+    this.showChatModal = true;
   }
 
 }

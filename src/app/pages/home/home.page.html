@@ -19,7 +19,7 @@
     </div>
   </ng-container>
 
-  <ng-container >
+  <ng-container>
     <div class="locatebtn" (click)="getCurrentLocation()">
       <ion-icon name="locate-outline"></ion-icon>
     </div>
@@ -162,9 +162,10 @@
         <p>
           <strong>
             <ion-text class="ion-text-center" color="danger">
-              Note: Update Price to put your tiles on Sell. Entered Price will be for each tile in your selected tiles group.
+              Note: Update Price to put your tiles on Sell. Entered Price will be for each tile in your selected tiles
+              group.
             </ion-text>
-          </strong> 
+          </strong>
         </p>
 
       </ion-content>
@@ -175,4 +176,55 @@
       </ion-footer>
     </ng-template>
   </ion-modal>
+
+  <ion-modal [isOpen]="showChatModal" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Chat</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showChatModal = false">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding chat-content">
+
+        <ion-grid>
+          <ion-row>
+
+            <ion-col size="9" style="background-color: skyblue; border-radius: 10px;">
+              <span>Hello World</span>
+
+              <div class="time">12:00 am</div>
+            </ion-col>
+
+            <ion-col offset="3" size="9" style="background-color: darkseagreen; border-radius: 10px;">
+
+              <span>Hello from other Side</span>
+
+              <div class="time">12:01 am</div>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+      </ion-content>
+      <ion-footer>
+        <ion-toolbar>
+
+          <ion-item lines="none">
+            <ion-input type="text" placeholder="Message" autocomplete="on" autocorrect="on"></ion-input>
+
+            <ion-button fill="clear" slot="end">
+              <ion-icon icononly name="send-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+
 </ion-content>
