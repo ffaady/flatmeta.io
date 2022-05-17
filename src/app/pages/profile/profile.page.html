@@ -8,7 +8,7 @@
   <div id="container">
 
     <div class="gett" (click)="chooseFile()">
-      <img [src]="profileImg || 'https://picsum.photos/200'" />
+      <img [src]="profileImg" *ngIf="profileImg"/>
       <ion-icon class="icon" name="camera-outline"></ion-icon>
       Your Avatar
     </div>
