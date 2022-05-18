@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { IonRouterOutlet } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
@@ -10,6 +10,9 @@ import { Capacitor } from '@capacitor/core';
 import * as Leaflet from 'leaflet';
 import * as GeoSearch from 'leaflet-geosearch';
 import DriftMarker from "leaflet-drift-marker";
+
+import { Socket } from 'ngx-socket-io';
+import { Observable } from 'rxjs';
 
 const provider = new GeoSearch.OpenStreetMapProvider();
 
@@ -59,7 +62,7 @@ export class HomePage implements OnInit {
     public general: GeneralService,
     public http: HttpService,
     private locationAccuracy: LocationAccuracy,
-    private zone: NgZone,
+    private socket: Socket,
     private renderer: Renderer2
   ) { }
 

@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +13,8 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { QuillModule } from 'ngx-quill'
 import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+const config: SocketIoConfig = { url: 'https://api.flatmeta.io/', options: {} };
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +27,7 @@ import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx
     HttpClientModule,
     ReactiveFormsModule,
     QuillModule.forRoot(),
+    SocketIoModule.forRoot(config),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
