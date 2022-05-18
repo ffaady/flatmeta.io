@@ -16,7 +16,8 @@
     margin: 0 auto;
     left: 50%;
     transform: translate(-50%, 1%);
-    .icon{
+
+    .icon {
         position: absolute;
         right: 5px;
         top: 5px;
@@ -35,16 +36,18 @@
     left: 50%;
     transform: translate(-50%, 0%);
 
-    .icon{
+    .icon {
         position: absolute;
         right: 5px;
         top: 5px;
     }
+
     .my-b {
         overflow-y: scroll;
         align-items: center;
         justify-content: center;
         margin: 10px 0px;
+
         img {
             width: 50px;
             border-radius: 50px;
@@ -53,17 +56,17 @@
     }
 }
 
-.box-img{
+.box-img {
     width: 150px;
     height: 100px;
     object-fit: contain;
 }
 
-.selectImg{
+.selectImg {
     border: 1px solid red;
 }
 
-.swipe{
+.swipe {
     position: absolute;
     top: 50%;
     z-index: 999;
@@ -72,12 +75,13 @@
     text-align: center;
     background-color: var(--ion-color-light);
     padding: 5px;
-    ion-icon{
+
+    ion-icon {
         font-size: 20px;
     }
 }
 
-.buybtn{
+.buybtn {
     position: absolute;
     top: 13%;
     z-index: 999;
@@ -87,12 +91,13 @@
     background-color: var(--ion-color-light);
     padding: 2px;
     border: 1px solid darkgrey;
-    ion-icon{
+
+    ion-icon {
         font-size: 20px;
     }
 }
 
-.locatebtn{
+.locatebtn {
     position: absolute;
     top: 20%;
     z-index: 999;
@@ -102,54 +107,37 @@
     background-color: var(--ion-color-light);
     padding: 5px;
     border: 1px solid darkgrey;
-    ion-icon{
+
+    ion-icon {
         font-size: 20px;
     }
 }
 
-.sell-tile-img{
+.sell-tile-img {
     width: 100px;
     height: 100px;
     object-fit: contain;
     border-radius: 50%;
 }
 
-.chat-content{
-    .user_name {
-        color: #fff;
-        font-size: 12px;
+.chat-content {
+    .col-1 {
+        background-color: var(--ion-color-secondary);
+        border-radius: 10px;
     }
-    .user_name2 {
-        color: #00000082;
-        font-size: 12px;
+
+    .col-2 {
+        background-color: var(--ion-color-success-tint);
+        border-radius: 10px;
     }
-    .message {
-        padding: 10px !important;
-        transition: all 250ms ease-in-out !important;
-        border-radius: 10px !important;
-        margin-bottom: 4px !important;
-    }
-    .my_message {
-        background: red;
-        color: #000 !important;
-    }
-    .other_message {
-        background: #dcdcdc !important;
-        color: #000 !important;
-    }
+
     .time {
-        color: #afafaf;
+        color: var(--ion-color-medium);
         float: right;
         font-size: small;
     }
-    .message_row {
-        background-color: #fff;
-    }
-    .sendbtn{
-        text-align: center;
-    }
-    
-    ion-col{
+
+    ion-col {
         margin-bottom: 10px;
     }
 }

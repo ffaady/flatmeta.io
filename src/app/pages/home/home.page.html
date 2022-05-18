@@ -192,37 +192,39 @@
       <ion-content class="ion-padding chat-content">
 
         <ion-grid>
-          <ion-row>
+          <ion-row *ngFor="let m of chats">
 
-            <ion-col size="9" style="background-color: skyblue; border-radius: 10px;">
-              <span>Hello World</span>
+            <ion-col size="9" class="col-1" *ngIf="m?.senderId != senderId">
+              <span>{{m?.message}}</span>
 
-              <div class="time">12:00 am</div>
+              <div class="time">{{m?.created_at | date: 'hh:mm a'}}</div>
             </ion-col>
 
-            <ion-col offset="3" size="9" style="background-color: darkseagreen; border-radius: 10px;">
+            <ion-col offset="3" size="9" class="col-2" *ngIf="m?.senderId == senderId">
 
-              <span>Hello from other Side</span>
-
-              <div class="time">12:01 am</div>
+              <span>{{m?.message}}</span>
+              
+              <div class="time">{{m?.created_at | date: 'hh:mm a'}}</div>
             </ion-col>
 
           </ion-row>
         </ion-grid>
+
       </ion-content>
       <ion-footer>
         <ion-toolbar>
 
           <ion-item lines="none">
-            <ion-input type="text" placeholder="Message" autocomplete="on" autocorrect="on"></ion-input>
-
-            <ion-button fill="clear" slot="end">
+            <ion-input type="text" placeholder="Message" [(ngModel)]="newMessage" autocomplete="on" autocorrect="on">
+            </ion-input>
+            <ion-button (mousedown)="sendMessage(newMessage); $event.preventDefault()" fill="clear" slot="end">
               <ion-icon icononly name="send-outline"></ion-icon>
             </ion-button>
           </ion-item>
 
         </ion-toolbar>
       </ion-footer>
+
     </ng-template>
   </ion-modal>
 

@@ -56,6 +56,11 @@ export class HomePage implements OnInit {
 
   showChatModal: boolean = false;
 
+  senderId: string = '';
+  chats = [];
+  roomId: string = '';
+  newMessage: string = '';
+
   constructor(
     public routerOutlet: IonRouterOutlet,
     public storage: StorageService,
@@ -64,7 +69,14 @@ export class HomePage implements OnInit {
     private locationAccuracy: LocationAccuracy,
     private socket: Socket,
     private renderer: Renderer2
-  ) { }
+  ) {
+    this.getMessages().subscribe((message: any) => {
+      this.chats.push(message);
+      // setTimeout(() => {
+      //   this.myContent.scrollToBottom(100);
+      // }, 250)
+    });
+   }
 
   ngOnInit() { }
 
@@ -684,7 +696,27 @@ export class HomePage implements OnInit {
   }
 
   showChat() {
+    this.senderId = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null;
+    console.log(this.senderId)
     this.showChatModal = true;
   }
+
+  sendMessage(msg: string) {
+    this.socket.emit("message", { message: msg, senderId: GlobaldataService.userObject.user_id, roomId: 123 });
+    this.newMessage = '';
+    // setTimeout(() => {
+    //   this.myContent.scrollToBottom(100);
+    // }, 500)
+  }
+
+  getMessages() {
+    let observable = new Observable(observer => {
+      this.socket.on('message', (data) => {
+        observer.next(data);
+      });
+    })
+    return observable;
+  }
+
 
 }
