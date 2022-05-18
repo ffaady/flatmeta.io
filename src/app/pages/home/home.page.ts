@@ -136,6 +136,15 @@ export class HomePage implements OnInit {
           this.map.removeLayer(marker)
         })
       }
+    }else{     
+      this.addMarker();
+      this.addOtherMarkers();
+      if (this.tiles != undefined) {
+        this.selectedBoxs = [];
+        this.myBoxs = [];
+        this.map.removeLayer(this.tiles);
+        this.tiles = undefined;
+      }
     }
   }
 
