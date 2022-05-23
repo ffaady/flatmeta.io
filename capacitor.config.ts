@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.leaflet.example',
-  appName: 'leafletmap',
+  appName: 'Flatmeta',
   webDir: 'www',
   bundledWebRuntime: false
 };
