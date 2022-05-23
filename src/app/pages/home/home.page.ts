@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/providers/storage.service';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
 import { GlobaldataService } from 'src/app/providers/globaldata.service';
+import { EventsService } from 'src/app/providers/events.service';
 import { Capacitor } from '@capacitor/core';
 import * as Leaflet from 'leaflet';
 import * as GeoSearch from 'leaflet-geosearch';
@@ -66,7 +67,8 @@ export class HomePage implements OnInit {
     private locationAccuracy: LocationAccuracy,
     private socket: Socket,
     private renderer: Renderer2,
-    public modalController: ModalController
+    public modalController: ModalController,
+    public events: EventsService
   ) {
     
     this.getEmitLocation().subscribe((data: any) => {
@@ -74,7 +76,13 @@ export class HomePage implements OnInit {
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.events.receiveToHome().subscribe((res: boolean) => {
+      if (res == true) {        
+        this.map.flyTo([51.509720, -0.104317], 15);
+      }
+    })
+   }
 
   ionViewWillEnter() {
     if (this.tiles != undefined) {
@@ -663,30 +671,6 @@ export class HomePage implements OnInit {
         this.myBoxs = [];
         this.tiles = undefined;
         this.showEditor = false;
-        setTimeout(() => {
-          this.setGrid(this.map);
-        }, 2000)
-      }
-    }, (e) => {
-      console.log(e)
-    })
-  }
-
-  swipeImg() {
-    let r = this.general.swapArray(this.myBoxs, 0, 1);
-    this.http.post2('SwapImages', r, true).subscribe((res: any) => {
-      this.general.stopLoading();
-      if (res.status == true) {
-        this.getSoldBox();
-        this.general.presentToast('Box Image Update successfully!');
-        this.map.removeLayer(this.tiles);
-        this.imgSelection = false;
-        this.selectedImg = '';
-        this.soldBoxes = [];
-        this.selectedBoxs = [];
-        this.myBoxs = [];
-        this.tiles = undefined;
-        this.showUplaodedImage = false;
         setTimeout(() => {
           this.setGrid(this.map);
         }, 2000)
