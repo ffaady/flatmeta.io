@@ -14,8 +14,8 @@ import { QuillModule } from 'ngx-quill'
 import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-//const config: SocketIoConfig = { url: 'https://idevsocket.herokuapp.com/', options: {} }
-const config: SocketIoConfig = { url: 'http://localhost:3500/', options: {} };
+const config: SocketIoConfig = { url: 'https://idevsocket.herokuapp.com/', options: {} }
+//const config: SocketIoConfig = { url: 'http://localhost:3500/', options: {} };
 
 @NgModule({
   declarations: [AppComponent],

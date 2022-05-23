@@ -113,7 +113,9 @@ export class HomePage implements OnInit {
   ionViewDidEnter() {
     this.getSoldBox();
     this.getBoxImgs();
-    this.getMapUser();
+    setTimeout(()=>{
+      this.getMapUser();
+    }, 1500)
     this.loadMap();
     this.getCurrentLocation();
     this.map.on('zoomend', (res) => {
@@ -291,17 +293,19 @@ export class HomePage implements OnInit {
   }
 
   getMapUser() {
-    this.http.get('GetAllUser', false).subscribe((res: any) => {
-      if (res.status == true) {
-        this.otherUsers = res.data.users;
-      }
-    }, (e) => {
-      console.log(e)
-    })
+    if(GlobaldataService.userObject != undefined){
+      this.http.post2('GetAllUser',{user_id: GlobaldataService.userObject.user_id}, false).subscribe((res: any) => {
+        if (res.status == true) {
+          this.otherUsers = res.data.users;
+        }
+      }, (e) => {
+        console.log(e)
+      })
+    }
   }
 
   addOtherMarkers(data) {
-    if (GlobaldataService.userObject != undefined && GlobaldataService.userObject.user_id != data.userId) {
+    if (GlobaldataService.userObject != undefined && GlobaldataService.userObject.user_id != data.userId && this.otherUsers.length > 0) {
 
       let user = this.otherUsers.find(item => item.id == data.userId);
       user = { ...user, latLng: data.location };
@@ -348,9 +352,22 @@ export class HomePage implements OnInit {
   }
 
   addCustomPopup(user) {
+
+    const im = this.renderer.createElement('img');
+    this.renderer.addClass(im, 'popImgClass');
+    this.renderer.setAttribute(im, "src", user.image);
+    
     const p1 = this.renderer.createElement('p');
-    const p1Text = this.renderer.createText(`Name: ${user.fullname}`);
+    const p1Text = this.renderer.createText(`${user.fullname}`);
     this.renderer.appendChild(p1, p1Text);
+
+    const mDiv = this.renderer.createElement('div');
+    this.renderer.addClass(mDiv, 'flex');
+    this.renderer.addClass(mDiv, 'mdiv');
+
+    this.renderer.appendChild(mDiv, im);
+    this.renderer.appendChild(mDiv, p1);
+
 
     const p2 = this.renderer.createElement('p');
     const p2Text = this.renderer.createText(`Lat: ${user.latLng.lat} \n Lng: ${user.latLng.lng}`);
@@ -363,10 +380,15 @@ export class HomePage implements OnInit {
     button1.expand = 'block'
 
     button1.onclick = () => {
-      this.showChat();
+      if(GlobaldataService.userObject != undefined){
+        this.showChat(GlobaldataService.userObject.user_id);
+      }else{
+        this.general.presentToast('Please login to continue!')
+      }
     };
     this.renderer.appendChild(button1, button1Text);
 
+    
     const button2 = this.renderer.createElement('ion-button');
     const button2Text = this.renderer.createText('Send Request');
     button2.size = 'small';
@@ -374,17 +396,21 @@ export class HomePage implements OnInit {
     button2.expand = 'block'
 
     button2.onclick = () => {
-      console.log(user)
+      this.sendRequest(user.id)
     };
     this.renderer.appendChild(button2, button2Text);
 
     const d1 = this.renderer.createElement('div');
     //this.renderer.addClass(d1, 'flex');
-    this.renderer.appendChild(d1, button1);
-    this.renderer.appendChild(d1, button2);
+    if(user.friends == true){
+      this.renderer.appendChild(d1, button1);
+    }else{
+      this.renderer.appendChild(d1, button2);
+    }
 
     const container = this.renderer.createElement('div');
-    this.renderer.appendChild(container, p1);
+    //this.renderer.appendChild(container, im);
+    this.renderer.appendChild(container, mDiv);
     this.renderer.appendChild(container, p2);
     this.renderer.appendChild(container, d1);
 
@@ -705,9 +731,21 @@ export class HomePage implements OnInit {
     })
   }
 
-  showChat() {
-    this.senderId = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null;
+  showChat(id) {
+    this.senderId = id;
     this.showChatModal = true;
+  }
+
+  sendRequest(id) {
+    this.http.post('SendFriendRequest', { follower_user_id: id }, true).subscribe((res: any) => {
+      this.general.stopLoading();
+      if (res.status == true) {
+        this.general.presentToast(res.data.message)
+      }
+    }, (e) => {
+      this.general.stopLoading();
+      console.log(e)
+    })
   }
 
   sendMessage(msg: string) {
@@ -737,7 +775,9 @@ export class HomePage implements OnInit {
   }
 
   emitLocation(latLng) {
-    this.socket.emit("emitLocation", { userId: GlobaldataService.userObject.user_id, location: latLng });
+    if (GlobaldataService.userObject != undefined) {
+      this.socket.emit("emitLocation", { userId: GlobaldataService.userObject.user_id, location: latLng });
+    }
   }
 
 }
