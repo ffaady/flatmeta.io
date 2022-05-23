@@ -11,6 +11,9 @@ import * as Leaflet from 'leaflet';
 import * as GeoSearch from 'leaflet-geosearch';
 import DriftMarker from "leaflet-drift-marker";
 
+import { ModalController } from '@ionic/angular';
+import { ChatComponent } from 'src/app/components/chat/chat.component';
+
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
 
@@ -57,10 +60,7 @@ export class HomePage implements OnInit {
 
   showChatModal: boolean = false;
 
-  senderId: string = '';
-  chats = [];
-  roomId: string = '';
-  newMessage: string = '';
+  
 
   constructor(
     public routerOutlet: IonRouterOutlet,
@@ -69,14 +69,10 @@ export class HomePage implements OnInit {
     public http: HttpService,
     private locationAccuracy: LocationAccuracy,
     private socket: Socket,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    public modalController: ModalController
   ) {
-    this.getMessages().subscribe((message: any) => {
-      this.chats.push(message);
-      // setTimeout(() => {
-      //   this.myContent.scrollToBottom(100);
-      // }, 250)
-    });
+    
 
     this.getEmitLocation().subscribe((data: any) => {
       this.addOtherMarkers(data.data);
@@ -731,9 +727,14 @@ export class HomePage implements OnInit {
     })
   }
 
-  showChat(id) {
-    this.senderId = id;
-    this.showChatModal = true;
+  async showChat(id) {
+    const modal = await this.modalController.create({
+      component: ChatComponent,
+      mode: 'ios',
+      presentingElement: this.routerOutlet.nativeEl,
+      componentProps: { id: id }
+    });
+    return await modal.present();
   }
 
   sendRequest(id) {
@@ -746,23 +747,6 @@ export class HomePage implements OnInit {
       this.general.stopLoading();
       console.log(e)
     })
-  }
-
-  sendMessage(msg: string) {
-    this.socket.emit("message", { message: msg, senderId: GlobaldataService.userObject.user_id, roomId: 123 });
-    this.newMessage = '';
-    // setTimeout(() => {
-    //   this.myContent.scrollToBottom(100);
-    // }, 500)
-  }
-
-  getMessages() {
-    let observable = new Observable(observer => {
-      this.socket.on('message', (data) => {
-        observer.next(data);
-      });
-    })
-    return observable;
   }
 
   getEmitLocation() {
