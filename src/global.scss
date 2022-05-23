@@ -28,6 +28,18 @@
 @import '~leaflet-geosearch/dist/geosearch.css';
 @import '~quill/dist/quill.snow.css';
 
+* {
+    outline: none;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+ion-app {
+    margin-top: env(safe-area-inset-top);
+}
+
 .leaflet-marker-icon,
 .leaflet-marker-shadow,
 .leaflet-image-layer,

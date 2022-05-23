@@ -58,10 +58,6 @@ export class HomePage implements OnInit {
   showSellModal: boolean = false;
   tilePrice: number = 0.1;
 
-  showChatModal: boolean = false;
-
-  
-
   constructor(
     public routerOutlet: IonRouterOutlet,
     public storage: StorageService,
@@ -73,11 +69,9 @@ export class HomePage implements OnInit {
     public modalController: ModalController
   ) {
     
-
     this.getEmitLocation().subscribe((data: any) => {
       this.addOtherMarkers(data.data);
     });
-
   }
 
   ngOnInit() { }
@@ -109,7 +103,7 @@ export class HomePage implements OnInit {
   ionViewDidEnter() {
     this.getSoldBox();
     this.getBoxImgs();
-    setTimeout(()=>{
+    setTimeout(() => {
       this.getMapUser();
     }, 1500)
     this.loadMap();
@@ -289,8 +283,8 @@ export class HomePage implements OnInit {
   }
 
   getMapUser() {
-    if(GlobaldataService.userObject != undefined){
-      this.http.post2('GetAllUser',{user_id: GlobaldataService.userObject.user_id}, false).subscribe((res: any) => {
+    if (GlobaldataService.userObject != undefined) {
+      this.http.post2('GetAllUser', { user_id: GlobaldataService.userObject.user_id }, false).subscribe((res: any) => {
         if (res.status == true) {
           this.otherUsers = res.data.users;
         }
@@ -352,7 +346,7 @@ export class HomePage implements OnInit {
     const im = this.renderer.createElement('img');
     this.renderer.addClass(im, 'popImgClass');
     this.renderer.setAttribute(im, "src", user.image);
-    
+
     const p1 = this.renderer.createElement('p');
     const p1Text = this.renderer.createText(`${user.fullname}`);
     this.renderer.appendChild(p1, p1Text);
@@ -376,15 +370,15 @@ export class HomePage implements OnInit {
     button1.expand = 'block'
 
     button1.onclick = () => {
-      if(GlobaldataService.userObject != undefined){
+      if (GlobaldataService.userObject != undefined) {
         this.showChat(GlobaldataService.userObject.user_id);
-      }else{
+      } else {
         this.general.presentToast('Please login to continue!')
       }
     };
     this.renderer.appendChild(button1, button1Text);
 
-    
+
     const button2 = this.renderer.createElement('ion-button');
     const button2Text = this.renderer.createText('Send Request');
     button2.size = 'small';
@@ -398,9 +392,9 @@ export class HomePage implements OnInit {
 
     const d1 = this.renderer.createElement('div');
     //this.renderer.addClass(d1, 'flex');
-    if(user.friends == true){
+    if (user.friends == true) {
       this.renderer.appendChild(d1, button1);
-    }else{
+    } else {
       this.renderer.appendChild(d1, button2);
     }
 
