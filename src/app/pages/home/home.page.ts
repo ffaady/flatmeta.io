@@ -47,6 +47,7 @@ export class HomePage implements OnInit {
 
   avatar: string;
   myMarker: any;
+  otherUsers = [];
   otherMarkers = [];
 
   myTiles = [];
@@ -76,7 +77,12 @@ export class HomePage implements OnInit {
       //   this.myContent.scrollToBottom(100);
       // }, 250)
     });
-   }
+
+    this.getEmitLocation().subscribe((data: any) => {
+      this.addOtherMarkers(data.data);
+    });
+
+  }
 
   ngOnInit() { }
 
@@ -107,14 +113,15 @@ export class HomePage implements OnInit {
   ionViewDidEnter() {
     this.getSoldBox();
     this.getBoxImgs();
+    this.getMapUser();
     this.loadMap();
+    this.getCurrentLocation();
     this.map.on('zoomend', (res) => {
       if (res.target._zoom == 15) {
         this.showBuyBtn = true;
       } else {
         this.showBuyBtn = false;
         this.addMarker();
-        this.addOtherMarkers();
         if (this.tiles != undefined) {
           this.selectedBoxs = [];
           this.myBoxs = [];
@@ -136,6 +143,7 @@ export class HomePage implements OnInit {
     this.map.on("moveend", (e) => {
       if (this.myMarker) {
         this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
+        this.emitLocation(this.map.getCenter())
       }
     });
   }
@@ -146,14 +154,13 @@ export class HomePage implements OnInit {
       if (this.myMarker != undefined) {
         this.map.removeLayer(this.myMarker);
       }
-      if (this.otherMarkers.length > 0) {
-        this.otherMarkers.map((marker) => {
-          this.map.removeLayer(marker)
-        })
-      }
-    }else{     
+      // if (this.otherMarkers.length > 0) {
+      //   this.otherMarkers.map((marker) => {
+      //     this.map.removeLayer(marker)
+      //   })
+      // }
+    } else {
       this.addMarker();
-      this.addOtherMarkers();
       if (this.tiles != undefined) {
         this.selectedBoxs = [];
         this.myBoxs = [];
@@ -219,7 +226,6 @@ export class HomePage implements OnInit {
       return Leaflet.Map.prototype.setView.call(this, center, zoom, options);
     }
     this.addMarker(); //add my marker
-    this.addOtherMarkers() //add other prople marker 
 
     setTimeout(() => {
       const search = GeoSearch.GeoSearchControl({
@@ -236,11 +242,15 @@ export class HomePage implements OnInit {
   async getCurrentLocation() {
     const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
+    if (GlobaldataService.userObject != undefined) {
+      this.emitLocation({ lat: coordinates.coords.latitude, lng: coordinates.coords.longitude })
+    }
   }
 
   async addMarker() {
     const coordinates = await Geolocation.getCurrentPosition();
-    this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_image != null ? GlobaldataService.userObject.user_image : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png' : 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png';
+    this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_image != null ? GlobaldataService.userObject.user_image : 'https://api.flatmeta.io/assets/uploads/users/noimage.png' : 'https://api.flatmeta.io/assets/uploads/users/noimage.png';
+
     const icon = Leaflet.icon({
       iconUrl: this.avatar,
       iconSize: [50, 50], // size of the icon
@@ -274,67 +284,77 @@ export class HomePage implements OnInit {
 
     const onMapClick = (e) => {
       this.myMarker.slideTo(e.latlng, { duration: 1500 });
+      this.emitLocation(e.latlng)
       // Update marker on changing it's position
-      // marker.on('dragend', function (ev) {
-      //   let chagedPos = ev.target.getLatLng();
-      //   this.bindPopup(chagedPos.toString()).openPopup();
-      // });
     }
     this.map.on('click', onMapClick);
   }
 
-  addOtherMarkers() {
-    let locations = [
-      ["LOCATION_1", 24.902001, 67.075012],
-      ["LOCATION_2", 24.902546, 67.075817],
-      ["LOCATION_3", 24.902906, 67.074192],
-      ["LOCATION_4", 24.903587, 67.075377],
-      ["LOCATION_5", 24.895965, 67.081478]
-    ];
+  getMapUser() {
+    this.http.get('GetAllUser', false).subscribe((res: any) => {
+      if (res.status == true) {
+        this.otherUsers = res.data.users;
+      }
+    }, (e) => {
+      console.log(e)
+    })
+  }
 
-    if (this.otherMarkers.length > 0) {
-      this.otherMarkers.map((marker) => {
-        this.map.removeLayer(marker)
-      })
-    }
+  addOtherMarkers(data) {
+    if (GlobaldataService.userObject != undefined && GlobaldataService.userObject.user_id != data.userId) {
 
-    for (let i = 0; i < locations.length; i++) {
+      let user = this.otherUsers.find(item => item.id == data.userId);
+      user = { ...user, latLng: data.location };
+
       const icon = Leaflet.icon({
-        iconUrl: 'https://leafletdemo.mewebe.net/API/assets/user/avataaars.png',
+        iconUrl: user.image,
         iconSize: [50, 50], // size of the icon
         popupAnchor: [13, 0],
       });
 
-      let customPopup = this.addCustomPopup(locations[i]);
+      let customPopup = this.addCustomPopup(user);
 
       // specify popup options 
       let customOptions = {
         'maxWidth': '400',
         'width': '200',
         'className': 'popupCustom',
+        'iconId': user.id
       }
 
-      let marker = new DriftMarker([locations[i][1], locations[i][2]], {
-        draggable: false,
-        icon: icon
-      })//@ts-ignore
-        .bindPopup(customPopup, customOptions).addTo(this.map);
+      if (this.otherMarkers.length > 0) {
+        this.otherMarkers.forEach((marker) => {
+          if (marker._popup.options.iconId == user.id) {
+            marker.slideTo(user.latLng, { duration: 1500 });
+          } else {
+            let marker = new DriftMarker([user.latLng.lat, user.latLng.lng], {
+              draggable: false,
+              icon: icon,
+            })//@ts-ignore
+              .bindPopup(customPopup, customOptions).addTo(this.map);
+            this.otherMarkers.push(marker);
+          }
+        })
+      } else {
+        let marker = new DriftMarker([user.latLng.lat, user.latLng.lng], {
+          draggable: false,
+          icon: icon,
+        })//@ts-ignore
+          .bindPopup(customPopup, customOptions).addTo(this.map);
 
-      this.otherMarkers.push(marker);
+        this.otherMarkers.push(marker);
+      }
     }
-    this.animateOther();
   }
 
-  addCustomPopup(l) {
+  addCustomPopup(user) {
     const p1 = this.renderer.createElement('p');
-    const p1Text = this.renderer.createText(`ID: ${l[0]}`);
+    const p1Text = this.renderer.createText(`Name: ${user.fullname}`);
     this.renderer.appendChild(p1, p1Text);
 
     const p2 = this.renderer.createElement('p');
-    const p2Text = this.renderer.createText(`Lat: ${l[1]} \n Lng: ${l[2]}`);
+    const p2Text = this.renderer.createText(`Lat: ${user.latLng.lat} \n Lng: ${user.latLng.lng}`);
     this.renderer.appendChild(p2, p2Text);
-
-
 
     const button1 = this.renderer.createElement('ion-button');
     const button1Text = this.renderer.createText('Message');
@@ -354,7 +374,7 @@ export class HomePage implements OnInit {
     button2.expand = 'block'
 
     button2.onclick = () => {
-      console.log(l)
+      console.log(user)
     };
     this.renderer.appendChild(button2, button2Text);
 
@@ -369,14 +389,6 @@ export class HomePage implements OnInit {
     this.renderer.appendChild(container, d1);
 
     return container;
-  }
-
-  animateOther() {
-    setInterval(() => {
-      this.otherMarkers.forEach((marker) => {
-        marker.slideTo(this.general.randomLatLng(marker._latlng.lat, marker._latlng.lng), { duration: 1500 });
-      })
-    }, 3000)
   }
 
   setGrid(m) {
@@ -573,7 +585,6 @@ export class HomePage implements OnInit {
     if (e.target.files.length > 0) {
       for (let i = 0; i < e.target.files.length; i++) {
         this.http.uploadImages(e.target.files[i], 'UploadBoxesImage').subscribe((res: any) => {
-          console.log(res);
           if (res.status == true) {
             this.boxImgs.push(res.data);
             this.selectedImg = res.data;
@@ -671,7 +682,6 @@ export class HomePage implements OnInit {
 
   sellModal() {
     this.showSellModal = true;
-    console.log(this.myBoxs)
   }
 
   submitPrice() {
@@ -697,7 +707,6 @@ export class HomePage implements OnInit {
 
   showChat() {
     this.senderId = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null;
-    console.log(this.senderId)
     this.showChatModal = true;
   }
 
@@ -718,5 +727,17 @@ export class HomePage implements OnInit {
     return observable;
   }
 
+  getEmitLocation() {
+    let observable = new Observable(observer => {
+      this.socket.on('emitLocation', (data) => {
+        observer.next(data);
+      });
+    })
+    return observable;
+  }
+
+  emitLocation(latLng) {
+    this.socket.emit("emitLocation", { userId: GlobaldataService.userObject.user_id, location: latLng });
+  }
 
 }

@@ -59,9 +59,10 @@ export class LoginPage implements OnInit {
         this.getUserDetails();
       } else {
         this.loading = false;
-        this.general.presentToast(res.message);
+        this.general.presentToast(res.data.message);
       }
     }, (e) => {
+      this.loading = false;
       console.log(e)
     })
   }
