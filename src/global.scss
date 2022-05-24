@@ -72,3 +72,13 @@ ion-app {
     color: var(--ion-color-danger);
     text-align: center;
 }
+
+.popupCustom{
+    .leaflet-popup-content{
+        overflow: scroll;
+        height: 250px;
+        width: 200px;
+        margin: 0;
+        padding: 10px;
+    }
+}

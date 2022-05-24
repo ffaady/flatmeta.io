@@ -70,7 +70,7 @@ export class HomePage implements OnInit {
     public modalController: ModalController,
     public events: EventsService
   ) {
-    
+
     this.getEmitLocation().subscribe((data: any) => {
       this.addOtherMarkers(data.data);
     });
@@ -78,11 +78,14 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.events.receiveToHome().subscribe((res: boolean) => {
-      if (res == true) {        
+      if (res == true) {
+        if (this.tiles != undefined) {
+          this.map.removeLayer(this.tiles);
+        }
         this.map.flyTo([51.509720, -0.104317], 15);
       }
     })
-   }
+  }
 
   ionViewWillEnter() {
     if (this.tiles != undefined) {
@@ -241,6 +244,9 @@ export class HomePage implements OnInit {
 
   async getCurrentLocation() {
     const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+    if (this.tiles != undefined) {
+      this.map.removeLayer(this.tiles);
+    }
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
     if (GlobaldataService.userObject != undefined) {
       this.emitLocation({ lat: coordinates.coords.latitude, lng: coordinates.coords.longitude })
@@ -458,7 +464,7 @@ export class HomePage implements OnInit {
           that.myTiles.push(tile);
         } else {
           let ob = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id !== (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
-          if(ob != undefined){
+          if (ob != undefined) {
             if (ob.image != '') {
               let im = new Image();
               im.src = ob.image;
@@ -466,7 +472,7 @@ export class HomePage implements OnInit {
                 ctx.drawImage(im, 0, 0, 40, 40);
               }, 250)
               ctx.strokeStyle = 'transparent';
-            } else{
+            } else {
               ctx.strokeStyle = 'red'; // if other user box
             }
           }
@@ -486,9 +492,9 @@ export class HomePage implements OnInit {
         cb = that.soldBoxes.find(c => nw.lat == c.lat && nw.lng == c.lng);
         if (cb != undefined) {
           //check here if this box exists in my bought boxes add orange class or else unselect it
-          let mb = undefined;
+          let mb = [];
           mb = that.soldBoxes.filter(d => cb.order_id == d.order_id && d.user_id == (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
-          if (mb != undefined) { // checking if box i bought by me
+          if (mb.length > 0) { // checking if box i bought by me
             that.qEditor = cb.custom_details;
             if (that.myBoxs.length > 0) {
               if (that.myBoxs[0].order_id == mb[0].order_id) {
@@ -525,7 +531,7 @@ export class HomePage implements OnInit {
               iconUrl: 'http://leafletdemo.mewebe.net/API/assets/img/map-icon.png',
               popupAnchor: [13, 0],
             });
-            let customPopup = pop.data;
+            let customPopup = pop.custom_details;
 
             // specify popup options 
             let customOptions = {
@@ -533,7 +539,8 @@ export class HomePage implements OnInit {
               'width': '200',
               'className': 'popupCustom',
             }
-            var marker = Leaflet.marker([nw.lat, nw.lng], { icon: Micon });
+            let marker = undefined;
+            marker = Leaflet.marker([nw.lat, nw.lng], { icon: Micon });
             marker.bindPopup(customPopup, customOptions).addTo(m);
             setTimeout(() => {
               marker.fire('click');
