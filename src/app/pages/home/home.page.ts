@@ -277,7 +277,7 @@ export class HomePage implements OnInit {
     let customOptions = {
       'maxWidth': '400',
       'width': '200',
-      'className': 'popupCustom',
+      'className': 'popupCustomMy',
     }
     if (this.myMarker != undefined) {
       this.map.removeLayer(this.myMarker);
@@ -326,7 +326,7 @@ export class HomePage implements OnInit {
       let customOptions = {
         'maxWidth': '400',
         'width': '200',
-        'className': 'popupCustom',
+        'className': 'popupCustomOther',
         'iconId': user.id
       }
 

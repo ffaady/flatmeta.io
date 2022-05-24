@@ -60,7 +60,7 @@
   </ng-container>
 
   <!-- Image Selection Modal -->
-  <ion-modal [isOpen]="imgSelection" [breakpoints]="[0.1, 0.5, 1]" [initialBreakpoint]="1" mode="ios">
+  <ion-modal [isOpen]="imgSelection" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios" backdrop-dismiss="false">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -106,7 +106,7 @@
   </ion-modal>
 
   <!-- Editor Modal -->
-  <ion-modal [isOpen]="showEditor" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios">
+  <ion-modal [isOpen]="showEditor" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios" backdrop-dismiss="false">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -130,7 +130,7 @@
   </ion-modal>
 
   <!-- sell modal -->
-  <ion-modal [isOpen]="showSellModal" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios">
+  <ion-modal [isOpen]="showSellModal" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios" backdrop-dismiss="false">
     <ng-template>
       <ion-header>
         <ion-toolbar>
