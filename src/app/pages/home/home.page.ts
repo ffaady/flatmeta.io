@@ -457,7 +457,19 @@ export class HomePage implements OnInit {
           tile.id = mb.order_id;
           that.myTiles.push(tile);
         } else {
-          ctx.strokeStyle = 'red'; // if other user box
+          let ob = that.soldBoxes.find(e => nw.lat == e.lat && nw.lng == e.lng && e.user_id !== (GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_id : null));
+          if(ob != undefined){
+            if (ob.image != '') {
+              let im = new Image();
+              im.src = ob.image;
+              setTimeout(() => {
+                ctx.drawImage(im, 0, 0, 40, 40);
+              }, 250)
+              ctx.strokeStyle = 'transparent';
+            } else{
+              ctx.strokeStyle = 'red'; // if other user box
+            }
+          }
         }
       } else {
         ctx.strokeStyle = 'grey'; // available box
