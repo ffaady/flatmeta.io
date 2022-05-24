@@ -89,8 +89,6 @@ export class HomePage implements OnInit {
         this.map.flyTo([51.509720, -0.104317], 15);
       }
     })
-
-
   }
 
   getUserTilesbyId(id) {
@@ -143,7 +141,6 @@ export class HomePage implements OnInit {
         this.getUserTilesbyId(params['id'])
       } else {
         this.loadMap();
-        this.getCurrentLocation();
       }
     })
 
