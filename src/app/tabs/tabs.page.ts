@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { GeneralService } from '../providers/general.service';
 import { EventsService } from '../providers/events.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-tabs',
@@ -10,12 +12,15 @@ import { EventsService } from '../providers/events.service';
 export class TabsPage {
 
   constructor(
+    private router: Router,
     public general: GeneralService,
     public events: EventsService
   ) { }
 
   toHome() {
-    this.events.publishToHome(true);
+    if(this.router.url == '/t/h/n/n'){
+      this.events.publishToHome(true)
+    }
   }
 
 }

@@ -8,9 +8,12 @@ import { HttpService } from 'src/app/providers/http.service';
 import { GlobaldataService } from 'src/app/providers/globaldata.service';
 import { EventsService } from 'src/app/providers/events.service';
 import { Capacitor } from '@capacitor/core';
+import { ActivatedRoute } from '@angular/router';
+
 import * as Leaflet from 'leaflet';
 import * as GeoSearch from 'leaflet-geosearch';
 import DriftMarker from "leaflet-drift-marker";
+
 
 import { ModalController } from '@ionic/angular';
 import { ChatComponent } from 'src/app/components/chat/chat.component';
@@ -60,6 +63,7 @@ export class HomePage implements OnInit {
   tilePrice: number = 0.1;
 
   constructor(
+    private route: ActivatedRoute,
     public routerOutlet: IonRouterOutlet,
     public storage: StorageService,
     public general: GeneralService,
@@ -84,6 +88,23 @@ export class HomePage implements OnInit {
         }
         this.map.flyTo([51.509720, -0.104317], 15);
       }
+    })
+
+
+  }
+
+  getUserTilesbyId(id) {
+    this.http.get2('GetUserTilesByOrderId/' + id, false).subscribe((res: any) => {
+      if (res.status == true) {
+        if (this.map == undefined) {
+          this.loadMap();
+        }
+        setTimeout(() => {
+          this.map.flyTo([res.data.tiles[0].lat, res.data.tiles[0].lng], 15);
+        }, 500)
+      }
+    }, (e) => {
+      console.log(e)
     })
   }
 
@@ -116,39 +137,16 @@ export class HomePage implements OnInit {
     this.getBoxImgs();
     setTimeout(() => {
       this.getMapUser();
-    }, 1500)
-    this.loadMap();
-    this.getCurrentLocation();
-    this.map.on('zoomend', (res) => {
-      if (res.target._zoom == 15) {
-        this.showBuyBtn = true;
+    }, 1500);
+    this.route.params.subscribe((params: any) => {
+      if (params['id'] != 'n') {
+        this.getUserTilesbyId(params['id'])
       } else {
-        this.showBuyBtn = false;
-        this.addMarker();
-        if (this.tiles != undefined) {
-          this.selectedBoxs = [];
-          this.myBoxs = [];
-          this.map.removeLayer(this.tiles);
-          this.tiles = undefined;
-        }
+        this.loadMap();
+        this.getCurrentLocation();
       }
-      if (Capacitor.isNativePlatform()) {
-        if (res.target._zoom < 8) {
-          this.map.setZoom(5)
-        } else if (res.target._zoom >= 8 && res.target._zoom <= 11) {
-          this.map.setZoom(10)
-        } else if (res.target._zoom >= 12 && res.target._zoom <= 15) {
-          this.map.setZoom(15)
-        }
-      }
-    });
+    })
 
-    this.map.on("moveend", (e) => {
-      if (this.myMarker) {
-        this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
-        this.emitLocation(this.map.getCenter())
-      }
-    });
   }
 
   showGrid() {
@@ -240,6 +238,37 @@ export class HomePage implements OnInit {
       });
       this.map.addControl(search);
     }, 1000)
+
+    this.map.on('zoomend', (res) => {
+      if (res.target._zoom == 15) {
+        this.showBuyBtn = true;
+      } else {
+        this.showBuyBtn = false;
+        this.addMarker();
+        if (this.tiles != undefined) {
+          this.selectedBoxs = [];
+          this.myBoxs = [];
+          this.map.removeLayer(this.tiles);
+          this.tiles = undefined;
+        }
+      }
+      if (Capacitor.isNativePlatform()) {
+        if (res.target._zoom < 8) {
+          this.map.setZoom(5)
+        } else if (res.target._zoom >= 8 && res.target._zoom <= 11) {
+          this.map.setZoom(10)
+        } else if (res.target._zoom >= 12 && res.target._zoom <= 15) {
+          this.map.setZoom(15)
+        }
+      }
+    });
+
+    this.map.on("moveend", (e) => {
+      if (this.myMarker) {
+        this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
+        this.emitLocation(this.map.getCenter())
+      }
+    });
   }
 
   async getCurrentLocation() {
