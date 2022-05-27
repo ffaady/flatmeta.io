@@ -18,11 +18,7 @@ export class TabsPage {
   ) { }
 
   toHome() {
-    if(this.router.url == '/t/h/n/n'){
-      this.events.publishToHome(true)
-    }else{
-      this.router.navigateByUrl('/t/h/n/n');
-    }
+    this.events.publishToHome(true);
   }
 
 }

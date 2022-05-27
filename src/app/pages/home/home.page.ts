@@ -83,20 +83,34 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.events.receiveToHome().subscribe((res: boolean) => {
       if (res == true) {
-        if (this.tiles != undefined) {
-          this.map.removeLayer(this.tiles);
-        }
-        this.map.flyTo([51.509720, -0.104317], 15);
+        setTimeout(()=>{
+          if (this.tiles != undefined) {
+            this.map.removeLayer(this.tiles);
+          }
+          this.map.flyTo([51.509720, -0.104317], 15);
+        }, 500)
+      }
+    });
+
+    this.events.receiveToUser().subscribe((res:any)=>{
+      if(res){
+        this.goTo("Home Page", "FlatMeta | Buy / Sell Virtual Land", `t/h/${res.id+'/'+res.username}`);
+        this.getUserTilesbyId(res.id);
       }
     })
+  }
+
+  goTo(page, title, url) {
+    if ("undefined" !== typeof history.pushState) {
+      history.pushState({page: page}, title, url);
+    } else {
+      window.location.assign(url);
+    }
   }
 
   getUserTilesbyId(id) {
     this.http.get2('GetUserTilesByOrderId/' + id, false).subscribe((res: any) => {
       if (res.status == true) {
-        if (this.map == undefined) {
-          this.loadMap();
-        }
         setTimeout(() => {
           this.map.flyTo([res.data.tiles[0].lat, res.data.tiles[0].lng], 15);
         }, 500)
@@ -136,14 +150,7 @@ export class HomePage implements OnInit {
     setTimeout(() => {
       this.getMapUser();
     }, 1500);
-    this.route.params.subscribe((params: any) => {
-      if (params['id'] != 'n') {
-        this.getUserTilesbyId(params['id'])
-      } else {
-        this.loadMap();
-      }
-    })
-
+    this.loadMap();
   }
 
   showGrid() {

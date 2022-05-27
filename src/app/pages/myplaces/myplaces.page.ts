@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GeneralService } from 'src/app/providers/general.service';
 import { HttpService } from 'src/app/providers/http.service';
+import { EventsService } from 'src/app/providers/events.service';
 
 @Component({
   selector: 'app-myplaces',
@@ -11,7 +12,8 @@ export class MyplacesPage implements OnInit {
 
   constructor(
     public general: GeneralService,
-    public http: HttpService
+    public http: HttpService,
+    public events: EventsService
   ) { }
 
   tilesList = [];
@@ -32,6 +34,12 @@ export class MyplacesPage implements OnInit {
     }, (e) => {
       this.general.stopLoading();
       console.log(e)
+    })
+  }
+
+  toUserPlace(c){
+    setTimeout(()=>{
+      this.events.publishToUser(c);
     })
   }
 

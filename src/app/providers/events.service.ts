@@ -9,6 +9,7 @@ export class EventsService {
   private LoginObj = new Subject<any>();
   private appTextObj = new Subject<any>();
   private toHome = new Subject<boolean>();
+  private toUser = new Subject<any>();
 
   constructor() { }
 
@@ -34,6 +35,14 @@ export class EventsService {
 
   receiveToHome(): Subject<boolean>{
    return this.toHome; 
+  }
+
+  publishToUser(data: any){
+    this.toUser.next(data);
+  }
+
+  receiveToUser(): Subject<any>{
+    return this.toUser;
   }
 
 
