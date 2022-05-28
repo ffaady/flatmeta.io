@@ -20,12 +20,14 @@ export class ChatComponent implements OnInit {
   newMessage: string = '';
 
   @Input() id: string;
+  @Input() name: String;
 
   constructor(
     public general: GeneralService,
     public http: HttpService,
     private socket: Socket
-  ) { 
+  ) {
+
     this.getMessages().subscribe((message: any) => {
       this.chats.push(message);
       setTimeout(() => {
@@ -35,14 +37,26 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.senderId  = GlobaldataService.userObject.user_id;
+    this.senderId = GlobaldataService.userObject.user_id;
+    this.getAllMessages(this.id);
+  }
+
+  getAllMessages(id) {
+    this.http.post('GetRoomId', { follower_user_id: id }, true).subscribe((res: any) => {
+      console.log(res)
+      this.general.stopLoading();
+      if(res.status == true){
+        this.chats = res.data.messages;
+        this.roomId = res.data.room_id;
+      }
+    })
   }
 
   sendMessage(msg: string) {
-    if(this.newMessage.trim() == ''){
+    if (this.newMessage.trim() == '') {
       return
     }
-    this.socket.emit("message", { message: msg, senderId: GlobaldataService.userObject.user_id, roomId: 123 });
+    this.socket.emit("message", { message: msg, senderId: GlobaldataService.userObject.user_id, roomId: this.roomId });
     this.newMessage = '';
     setTimeout(() => {
       this.myContent.scrollToBottom(100);

@@ -418,7 +418,7 @@ export class HomePage implements OnInit {
 
     button1.onclick = () => {
       if (GlobaldataService.userObject != undefined) {
-        this.showChat(GlobaldataService.userObject.user_id);
+        this.showChat(user.id, user.fullname);
       } else {
         this.general.presentToast('Please login to continue!')
       }
@@ -757,12 +757,12 @@ export class HomePage implements OnInit {
     })
   }
 
-  async showChat(id) {
+  async showChat(id, name) {
     const modal = await this.modalController.create({
       component: ChatComponent,
       mode: 'ios',
       presentingElement: this.routerOutlet.nativeEl,
-      componentProps: { id: id }
+      componentProps: { id: id, name : name}
     });
     return await modal.present();
   }
