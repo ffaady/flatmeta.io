@@ -564,8 +564,18 @@ export class HomePage implements OnInit {
               iconUrl: 'http://leafletdemo.mewebe.net/API/assets/img/map-icon.png',
               popupAnchor: [13, 0],
             });
-            let customPopup = pop.custom_details;
 
+            let userData = `
+            <div class="flex" style="align-items: center;">
+              <div>
+                <img src="${pop.image}" style="width: 50px; height: 50px; border-radius: 50%;"/>
+              </div>
+              <div style="padding-left: 10px; font-weight:bold">
+                ${pop.fullname}
+              </div>
+            </div>
+            `
+            let customPopup = userData + pop.custom_details;
             // specify popup options 
             let customOptions = {
               'maxWidth': '400',
