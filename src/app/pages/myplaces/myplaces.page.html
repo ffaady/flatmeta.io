@@ -1,39 +1,98 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      On Sale
+      My Places
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6" *ngFor="let c of tilesList; let i = index;">
-        <div class="flex box">
-          <div>
-            <img [src]="c?.image" class="tile-img">
-          </div>
+  <ion-card mode="ios" *ngFor="let c of tilesList; let i = index;">
+    <ion-card-content>
+      <div class="flex">
+        <div>
+          <img [src]="c?.image" class="img">
+        </div>
+        <div class="flex msg-box">
           <div>
             <div>
               Tiles: {{c?.no_of_tiles}}
             </div>
             <div>
-              Value: ${{c?.amount}}
+              Buy Price: {{c?.amount}} per tile
+            </div>
+            <div>
+              Sale Price: ${{c?.sale_price}} per tile
             </div>
           </div>
           <div class="flex">
             <div>
-              <ion-button expand="block" fill="outline" size="small" color="dark" [routerLink]="['/t/h/n/n']" (click)="toUserPlace(c)">View</ion-button>
+              <ion-button expand="block" fill="outline" size="small" color="dark" (click)="showPriceModal(c)">Update
+                Price</ion-button>
             </div>
-            <div>
-              <ion-button expand="block" fill="outline" size="small" color="dark">Buy</ion-button>
-            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </ion-card-content>
+  </ion-card>
+
+  <!-- sell modal -->
+  <ion-modal [isOpen]="showSellModal" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios"
+    backdrop-dismiss="false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Sell Your Boxes </ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showSellModal = false">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="ion-text-center">
+          <img [src]="selectedGroup?.image" class="sell-tile-img">
+        </div>
+
+        <div class="flex det">
+          <div>
+            Total Tiles: {{selectedGroup?.no_of_tiles}}
+          </div>
+          <div>
+            Current Price: {{selectedGroup?.sale_price}}
           </div>
         </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 
+        <ion-item>
+          <ion-label>On Sale</ion-label>
+          <ion-toggle [(ngModel)]="onSale" (ionChange)="putOnSale($event)"></ion-toggle>
+        </ion-item>
+
+        <ion-item mode="ios">
+          <ion-label position="floating">Price per Tile:</ion-label>
+          <ion-input type="number" [(ngModel)]="tilePrice"></ion-input>
+        </ion-item>
+
+        <p>
+          <strong>
+            <ion-text class="ion-text-center" color="danger">
+              Note: Update Price to put your tiles on Sell. Entered Price will be for each tile in your selected tiles
+              group.
+            </ion-text>
+          </strong>
+        </p>
+
+      </ion-content>
+      <ion-footer collapse="fade" mode="ios">
+        <ion-toolbar>
+          <ion-button expand="block" (click)="submitPrice()">Submit</ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
 </ion-content>

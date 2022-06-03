@@ -22,6 +22,10 @@ export class AppComponent {
       url: '/t/cart'
     },
     {
+      title: "My Places",
+      url: '/t/myplaces'
+    },
+    {
       title: "Friend Requests",
       url: '/t/friendrequest'
     },
@@ -71,7 +75,9 @@ export class AppComponent {
         this.events.publishLogin(res.data) 
       }
     }, (e) => {
-      console.log(e);
+      if(e.status == 401){
+        this.general.presentToast('Please Login to Continue!')
+      }
     })
   }
 

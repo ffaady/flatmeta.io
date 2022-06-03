@@ -1,14 +1,37 @@
-.box {
-    flex-direction: column;
-    align-items: center;
-    border-radius: 10px;
-    padding: 5px;
-    box-shadow: 0px 0px 10px -4px var(--ion-color-dark);
+ion-card {
+    margin: 10px 0;
 
-    .tile-img {
-        width: 120px;
-        height: 120px;
+    .flex {
+        align-items: center;
+    }
+
+    .img {
+        width: 80px;
+        height: 80px;
         border-radius: 50%;
         object-fit: contain;
+        margin-right: 10px
     }
+
+    .msg-box {
+        flex-direction: column;
+        padding-left: 10px;
+    }
+
+    .btns {
+        div {
+            width: calc(100%/2);
+        }
+    }
+}
+
+.sell-tile-img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.det {
+    justify-content: space-between;
 }
