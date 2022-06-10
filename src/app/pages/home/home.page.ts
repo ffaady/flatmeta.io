@@ -743,6 +743,7 @@ export class HomePage implements OnInit {
   }
 
   sellModal() {
+    console.log('asdf')
     this.showSellModal = true;
   }
 

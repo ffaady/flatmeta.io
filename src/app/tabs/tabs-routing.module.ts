@@ -32,6 +32,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/friendrequest/friendrequest.module').then(m => m.FriendrequestPageModule)
       },
       {
+        path: 'thankyou',
+        loadChildren: () => import('../pages/thankyou/thankyou.module').then( m => m.ThankyouPageModule)
+      },
+      {
         path: '',
         redirectTo: '/t/h/n/n',
         pathMatch: 'full'

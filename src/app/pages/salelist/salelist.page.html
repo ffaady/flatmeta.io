@@ -28,7 +28,7 @@
               <ion-button expand="block" fill="outline" size="small" color="dark" [routerLink]="['/t/h/n/n']" (click)="toUserPlace(c)">View</ion-button>
             </div>
             <div>
-              <ion-button expand="block" fill="outline" size="small" color="dark">Buy</ion-button>
+              <ion-button expand="block" fill="outline" size="small" color="dark" (click)="makePayment(c?.buy_link)">Buy</ion-button>
             </div>
           </div>
         </div>

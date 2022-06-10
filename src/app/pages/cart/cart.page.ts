@@ -44,8 +44,7 @@ export class CartPage implements OnInit {
     this.http.get('BuyNow', true).subscribe((res: any) => {
       this.general.stopLoading();
       if (res.status == true) {
-        this.general.presentToast(res.data.message);
-        this.general.goToPage('t/home');
+        this.makePayment(res.data.url);        
       }
     },
       (e) => {
@@ -54,7 +53,7 @@ export class CartPage implements OnInit {
       })
   }
 
-  makePayment(amt) {
+  makePayment(url) {
     const options: InAppBrowserOptions = {
       zoom: 'no',
       location: 'no',
@@ -69,13 +68,16 @@ export class CartPage implements OnInit {
       presentationstyle: 'fullscreen'
     };
 
-    const browser = this.iab.create('https://cocoon-paypal.herokuapp.com/pay/' + amt, '_blank', options);
+    const browser = this.iab.create(url, '_blank', options);
 
     browser.on('loadstart').subscribe((res) => {
-
-      let uri = res.url.split('?');
-      if (uri[0] == 'https://cocoon-paypal.herokuapp.com/success') {
-        browser.close();
+      console.log(res)
+      if (res.url.includes('flatmeta.io/TransactionCompleted')) {
+        setTimeout(()=>{
+          this.general.presentToast('Payment Successfull!');
+          browser.close();
+          this.general.goToPage('t/thankyou');
+        }, 250);
       }
     }, err => {
       console.error(err);
