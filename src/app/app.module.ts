@@ -16,7 +16,7 @@ import { LocationAccuracy } from '@awesome-cordova-plugins/location-accuracy/ngx
 import { ChatComponent } from './components/chat/chat.component';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-const config: SocketIoConfig = { url: 'https://idevsocket.herokuapp.com/', options: {} }
+const config: SocketIoConfig = { url: 'https://glitch.com/embed/#!/muddy-beautiful-cycle', options: {} }
 //const config: SocketIoConfig = { url: 'http://localhost:3500/', options: {} };
 
 @NgModule({
