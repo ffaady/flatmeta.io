@@ -6,10 +6,9 @@
           <h2>FlatMeta</h2>
         </div>
 
-        <ion-list  *ngIf="profile != undefined">
+        <ion-list>
           <ion-menu-toggle autoHide="false" *ngFor="let p of pages">
-            <ion-item [routerLink]="[p.url]" routerLinkActive="selected" routerDirection="root" lines="none"
-              detail="false">
+            <ion-item routerLinkActive="selected" routerDirection="root" lines="none" detail="true" (click)="goTo(p.url)">
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
 

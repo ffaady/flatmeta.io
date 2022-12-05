@@ -19,19 +19,19 @@ export class AppComponent {
   pages = [
     {
       title: "My Cart",
-      url: '/t/cart'
+      url: 't/cart'
     },
     {
       title: "My Places",
-      url: '/t/myplaces'
+      url: 't/myplaces'
     },
     {
       title: "Friend Requests",
-      url: '/t/friendrequest'
+      url: 't/friendrequest'
     },
     {
       title: "Profile",
-      url: '/t/profile'
+      url: 't/profile'
     }
   ];
 
@@ -64,6 +64,15 @@ export class AppComponent {
     } else {
       this.storage.removeItem('userObject');
       this.storage.removeItem('login_token');
+    }
+  }
+  
+  goTo(p){
+    if(this.profile != undefined){
+      this.general.goToPage(p)
+    }else{
+      this.general.goToPage('login')
+      this.general.presentToast('Please Login to continue!');
     }
   }
 
