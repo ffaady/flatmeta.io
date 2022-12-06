@@ -743,32 +743,6 @@ export class HomePage implements OnInit {
     })
   }
 
-  sellModal() {
-    console.log('asdf')
-    this.showSellModal = true;
-  }
-
-  submitPrice() {
-    if (this.tilePrice == null) {
-      this.general.presentToast('Please Enter Correct Price!');
-      return
-    };
-    let d = {
-      order_id: this.myBoxs[0].order_id,
-      sale_price: this.tilePrice
-    };
-    this.http.post('UpdateSalePrice', d, true).subscribe((res: any) => {
-      this.general.stopLoading();
-      if (res.status == true) {
-        this.general.presentToast(res.data.message);
-        this.showSellModal = false;
-      }
-    }, (e) => {
-      this.general.stopLoading();
-      console.log(e);
-    })
-  }
-
   async showChat(id, name) {
     const modal = await this.modalController.create({
       component: ChatComponent,

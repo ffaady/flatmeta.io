@@ -51,14 +51,6 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="myBoxs.length > 0">
-    <div class="swipe" (click)="sellModal()">
-      <ion-icon name="card-outline"></ion-icon>
-      <br />
-      Sell
-    </div>
-  </ng-container>
-
   <!-- Image Selection Modal -->
   <ion-modal [isOpen]="imgSelection" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios" backdrop-dismiss="false">
     <ng-template>
