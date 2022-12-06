@@ -68,7 +68,7 @@
           <ion-label position="floating">
             <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
             Confirm Password
-            <ng-container *ngIf="getControl.password.touched">
+            <ng-container *ngIf="getControl.confirm_password.touched">
               <span class="text-danger"
                 *ngIf="getControl.confirm_password.errors?.required">Confirm Password is Required*</span>
             </ng-container>
