@@ -120,8 +120,7 @@ export class LoginPage implements OnInit {
   }
 
   sendEmail(email) {
-    this.http.post2('ForgetPassword', { email: email }, true).subscribe((res: any) => {
-      console.log(res)
+    this.http.post2('ForgetPassword', { email: email }, true).subscribe((res: any) => {     
       this.general.stopLoading();
       if (res.status == true) {
         this.general.presentToast(res.data.message);
