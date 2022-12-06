@@ -51,7 +51,12 @@
 
     </form>
 
-    <p class="ion-text-center facebookLogin">Forget Password?</p>
+    <p class="ion-text-center facebookLogin">
+      <ion-button fill="clear" color="dark" mode="ios" (click)="presentAlertPrompt()" expland="block" size="small">
+        Forget Password?
+      </ion-button>
+
+    </p>
 
   </div>
 </ion-content>
@@ -60,7 +65,7 @@
   <ion-toolbar [routerLink]="['/signup']" mode="ios">
     <ion-title>
       <ion-button fill="clear" color="dark" size="small">
-        Dont have an Account?
+        Dont have an account?
       </ion-button>
     </ion-title>
   </ion-toolbar>

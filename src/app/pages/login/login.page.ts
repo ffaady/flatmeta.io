@@ -6,6 +6,9 @@ import { GlobaldataService } from '../../providers/globaldata.service';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { HttpService } from 'src/app/providers/http.service';
 import { EventsService } from 'src/app/providers/events.service';
+import { ModalController } from '@ionic/angular';
+import { ForgetpasswordComponent } from 'src/app/components/forgetpassword/forgetpassword.component';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +25,9 @@ export class LoginPage implements OnInit {
     public formBuilder: FormBuilder,
     private storage: StorageService,
     public http: HttpService,
-    public events: EventsService
+    public events: EventsService,
+    public modalController: ModalController,
+    public alertController: AlertController
   ) { }
 
   ngOnInit() {
@@ -78,6 +83,63 @@ export class LoginPage implements OnInit {
     }, (e) => {
       console.log(e);
     })
+  }
+
+  async presentAlertPrompt() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Enter Email Address',
+      inputs: [
+        {
+          name: 'email',
+          type: 'email',
+          placeholder: 'Enter Email'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+          }
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+            if (!this.general.validateEmail(data.email)) {
+              this.general.presentToast('Enter Correct Email');
+            } else {
+              this.sendEmail(data.email);
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  sendEmail(email) {
+    this.http.post2('ForgetPassword', { email: email }, true).subscribe((res: any) => {
+      console.log(res)
+      this.general.stopLoading();
+      if (res.status == true) {
+        this.general.presentToast(res.data.message);
+        this.presentModal();
+      } else {
+        this.general.presentToast(res.data.message);
+      }
+    }, (e) => {
+      this.general.stopLoading();
+      console.log(e)
+    })
+  }
+
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: ForgetpasswordComponent,
+    });
+    return await modal.present();
   }
 
 }
