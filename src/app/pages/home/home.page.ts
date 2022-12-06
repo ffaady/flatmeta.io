@@ -73,12 +73,7 @@ export class HomePage implements OnInit {
     private renderer: Renderer2,
     public modalController: ModalController,
     public events: EventsService
-  ) {
-
-    this.getEmitLocation().subscribe((data: any) => {
-      this.addOtherMarkers(data.data);
-    });
-  }
+  ) { }
 
   ngOnInit() {
     this.events.receiveToHome().subscribe((res: boolean) => {
@@ -98,6 +93,10 @@ export class HomePage implements OnInit {
         this.getUserTilesbyId(res.id);
       }
     })
+
+    this.getEmitLocation().subscribe((data: any) => {
+      this.addOtherMarkers(data.data);
+    });
   }
 
   goTo(page, title, url) {
