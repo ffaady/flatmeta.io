@@ -43,7 +43,6 @@ export class ChatComponent implements OnInit {
 
   getAllMessages(id) {
     this.http.post('GetRoomId', { follower_user_id: id }, true).subscribe((res: any) => {
-      console.log(res)
       this.general.stopLoading();
       if(res.status == true){
         this.chats = res.data.messages;

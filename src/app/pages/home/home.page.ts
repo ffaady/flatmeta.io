@@ -83,7 +83,7 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.events.receiveToHome().subscribe((res: boolean) => {
       if (res == true) {
-        setTimeout(()=>{
+        setTimeout(() => {
           if (this.tiles != undefined) {
             this.map.removeLayer(this.tiles);
           }
@@ -92,9 +92,9 @@ export class HomePage implements OnInit {
       }
     });
 
-    this.events.receiveToUser().subscribe((res:any)=>{
-      if(res){
-        this.goTo("Home Page", "FlatMeta | Buy / Sell Virtual Land", `t/h/${res.id+'/'+res.username}`);
+    this.events.receiveToUser().subscribe((res: any) => {
+      if (res) {
+        this.goTo("Home Page", "FlatMeta | Buy / Sell Virtual Land", `t/h/${res.id + '/' + res.username}`);
         this.getUserTilesbyId(res.id);
       }
     })
@@ -102,7 +102,7 @@ export class HomePage implements OnInit {
 
   goTo(page, title, url) {
     if ("undefined" !== typeof history.pushState) {
-      history.pushState({page: page}, title, url);
+      history.pushState({ page: page }, title, url);
     } else {
       window.location.assign(url);
     }
@@ -296,15 +296,17 @@ export class HomePage implements OnInit {
       popupAnchor: [13, 0],
     });
 
-    let name = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.full_name : 'No name'
-    let customPopup = `
-      <p>Hello i am ${name}<p>
-      <p>i am Selling my Place you can Buy it. 
-      <div class="flex">
-        <ion-button size="small">Message</ion-button>
-        <ion-button size="small">Request</ion-button>
-      </div>      
-    `;
+    let name = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.fullname : ''
+    
+    let customPopup = name == '' ?
+      `<p>Hello, Guest!<p>
+        <p>Please Signup to Continue!<p>
+      `
+    :
+      `
+        <p>Hello, ${name}<p>
+        <p>Buy or Sell Any place you like!</p>
+      `;
 
     // specify popup options 
     let customOptions = {
@@ -773,7 +775,7 @@ export class HomePage implements OnInit {
       component: ChatComponent,
       mode: 'ios',
       presentingElement: this.routerOutlet.nativeEl,
-      componentProps: { id: id, name : name}
+      componentProps: { id: id, name: name }
     });
     return await modal.present();
   }
