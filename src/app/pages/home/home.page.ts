@@ -562,6 +562,7 @@ export class HomePage implements OnInit {
             pop = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng);
             const Micon = Leaflet.icon({
               iconUrl: 'https://www.flatmeta.io/API/assets/img/map-icon.png',
+              iconSize: [20, 20], // size of the icon
               popupAnchor: [13, 0],
             });
 
