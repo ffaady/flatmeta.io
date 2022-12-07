@@ -16,9 +16,4 @@ export class TabsPage {
     public general: GeneralService,
     public events: EventsService
   ) { }
-
-  toHome() {
-    this.events.publishToHome(true);
-  }
-
 }

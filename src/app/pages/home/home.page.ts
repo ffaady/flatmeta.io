@@ -45,6 +45,7 @@ export class HomePage implements OnInit {
 
   imgSelection: boolean = false;
   boxImgs = [];
+  boxImgs2 = [];
   selectedImg: any = undefined;
   showUplaodedImage: boolean = false;
 
@@ -76,17 +77,6 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.events.receiveToHome().subscribe((res: boolean) => {
-      if (res == true) {
-        setTimeout(() => {
-          if (this.tiles != undefined) {
-            this.map.removeLayer(this.tiles);
-          }
-          this.map.flyTo([51.509720, -0.104317], 15);
-        }, 500)
-      }
-    });
-
     this.events.receiveToUser().subscribe((res: any) => {
       if (res) {
         this.goTo("Home Page", "FlatMeta | Buy / Sell Virtual Land", `t/h/${res.id + '/' + res.username}`);
@@ -97,6 +87,15 @@ export class HomePage implements OnInit {
     this.getEmitLocation().subscribe((data: any) => {
       this.addOtherMarkers(data.data);
     });
+  }
+
+  toFlatMetaHome(){
+    setTimeout(() => {
+      if (this.tiles != undefined) {
+        this.map.removeLayer(this.tiles);
+      }
+      this.map.flyTo([51.509720, -0.104317], 15);
+    }, 500)
   }
 
   goTo(page, title, url) {
@@ -562,7 +561,7 @@ export class HomePage implements OnInit {
             let pop = undefined;
             pop = that.soldBoxes.find(d => nw.lat == d.lat && nw.lng == d.lng);
             const Micon = Leaflet.icon({
-              iconUrl: 'http://leafletdemo.mewebe.net/API/assets/img/map-icon.png',
+              iconUrl: 'https://www.flatmeta.io/API/assets/img/map-icon.png',
               popupAnchor: [13, 0],
             });
 
@@ -630,6 +629,7 @@ export class HomePage implements OnInit {
     this.http.get2('BoxImages', false).subscribe((res: any) => {
       if (res.status == true) {
         this.boxImgs = res.data.images;
+        this.boxImgs2 = res.data.images;
       }
     }, (e) => {
       console.log(e)
@@ -779,5 +779,26 @@ export class HomePage implements OnInit {
       this.socket.emit("emitLocation", { userId: GlobaldataService.userObject.user_id, location: latLng });
     }
   }
+
+  initializeItems(): void {
+    this.boxImgs = this.boxImgs2;
+  }
+
+  searchIcon(evt) {
+    this.initializeItems();
+    const searchTerm = evt.detail.value;
+    if (!searchTerm) {
+      return;
+    }
+    this.boxImgs = this.boxImgs2.filter(currentSer => {
+      if (currentSer.country && searchTerm) {
+        if (currentSer.country.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+          return true;
+        }
+        return false;
+      }
+    });
+  }
+
 
 }

@@ -7,7 +7,22 @@
 </ion-header> -->
 
 <ion-content [fullscreen]="true">
-
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="dark">
+      <ion-icon name="globe"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="toFlatMetaHome()">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="color-palette"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="globe"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 
   <div id="mapId"></div>
 
@@ -52,7 +67,8 @@
   </ng-container>
 
   <!-- Image Selection Modal -->
-  <ion-modal [isOpen]="imgSelection" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios" backdrop-dismiss="false">
+  <ion-modal [isOpen]="imgSelection" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios"
+    backdrop-dismiss="false">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -67,13 +83,7 @@
       </ion-header>
       <ion-content class="ion-padding">
         <ion-grid>
-          <ion-row>
-            <ion-col size="4" *ngFor="let bi of boxImgs">
-              <div (click)="selectedImg = bi" [ngClass]="[selectedImg?.url == bi?.url ? 'selectImg' : '']">
-                <img [src]="bi?.url" class="box-img">
-              </div>
-            </ion-col>
-          </ion-row>
+
           <ion-row>
             <ion-col *ngIf="showUplaodedImage" size="12">
               <div class="ion-text-center">
@@ -87,6 +97,21 @@
               </ion-button>
             </ion-col>
           </ion-row>
+
+
+          <ion-row>
+            <ion-col size="12">
+              <ion-searchbar show-clear-button="focus" placeholder="Search Icon" animated="true"
+                (ionChange)="searchIcon($event)"></ion-searchbar>
+            </ion-col>
+            <ion-col size="4" *ngFor="let bi of boxImgs">
+              <div class="ion-text-center" [ngClass]="[selectedImg?.url == bi?.url ? 'selectImg' : '']"
+                (click)="selectedImg = bi">
+                <img [src]="bi?.url" class="box-img">
+              </div>
+            </ion-col>
+          </ion-row>
+
         </ion-grid>
       </ion-content>
       <ion-footer collapse="fade" mode="ios">
@@ -98,7 +123,8 @@
   </ion-modal>
 
   <!-- Editor Modal -->
-  <ion-modal [isOpen]="showEditor" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios" backdrop-dismiss="false">
+  <ion-modal [isOpen]="showEditor" [swipeToClose]="false" [presentingElement]="routerOutlet.nativeEl" mode="ios"
+    backdrop-dismiss="false">
     <ng-template>
       <ion-header>
         <ion-toolbar>
