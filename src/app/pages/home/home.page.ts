@@ -89,7 +89,7 @@ export class HomePage implements OnInit {
     });
   }
 
-  toFlatMetaHome(){
+  toFlatMetaHome() {
     setTimeout(() => {
       if (this.tiles != undefined) {
         this.map.removeLayer(this.tiles);
@@ -240,8 +240,8 @@ export class HomePage implements OnInit {
     }, 1000)
 
     //add current user marker. setout added because to user API if logged in
-    setTimeout(()=>{
-      this.addMarker(); 
+    setTimeout(() => {
+      this.addMarker();
     }, 1000)
 
     //on zoom level changed show but btns and set zoom
@@ -291,21 +291,27 @@ export class HomePage implements OnInit {
   async addMarker() {
     console.log('adding marker')
     const coordinates = await Geolocation.getCurrentPosition();
-    this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_image != null ? GlobaldataService.userObject.user_image : 'https://api.flatmeta.io/assets/uploads/users/noimage.png' : 'https://api.flatmeta.io/assets/uploads/users/noimage.png';
-
-    const icon = Leaflet.icon({
-      iconUrl: this.avatar,
-      iconSize: [50, 50], // size of the icon
+    this.avatar = GlobaldataService.userObject.user_image || 'https://api.flatmeta.io/assets/uploads/users/noimage.png';
+    console.log(this.avatar);
+    const icon = Leaflet.divIcon({
+      iconSize: [50, 50],
       popupAnchor: [13, 0],
+      className: 'icon-div',
+      html: `
+        <div class="myIcon">
+          <img src="${this.avatar}">
+        </div>
+      `
     });
 
     let name = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.fullname : ''
-    
+
     let customPopup = name == '' ?
-      `<p>Hello, Guest!<p>
+      `
+        <p>Hello, Guest!<p>
         <p>Please Signup to Continue!<p>
       `
-    :
+      :
       `
         <p>Hello, ${name}<p>
         <p>Buy or Sell Any place you like!</p>
@@ -321,7 +327,7 @@ export class HomePage implements OnInit {
       this.map.removeLayer(this.myMarker);
     }
     this.myMarker = new DriftMarker([coordinates.coords.latitude, coordinates.coords.longitude], {
-      draggable: true,
+      draggable: false,
       icon: icon
     })//@ts-ignore
       .bindPopup(customPopup, customOptions).addTo(this.map);
@@ -352,10 +358,15 @@ export class HomePage implements OnInit {
       let user = this.otherUsers.find(item => item.id == data.userId);
       user = { ...user, latLng: data.location };
 
-      const icon = Leaflet.icon({
-        iconUrl: user.image,
-        iconSize: [50, 50], // size of the icon
+      const icon = Leaflet.divIcon({
+        iconSize: [50, 50],
         popupAnchor: [13, 0],
+        className: 'icon-div',
+        html: `
+          <div class="myIcon">
+            <img src="${user.image}">
+          </div>
+        `
       });
 
       let customPopup = this.addCustomPopup(user);
@@ -404,8 +415,7 @@ export class HomePage implements OnInit {
     this.renderer.appendChild(p1, p1Text);
 
     const mDiv = this.renderer.createElement('div');
-    this.renderer.addClass(mDiv, 'flex');
-    this.renderer.addClass(mDiv, 'mdiv');
+    this.renderer.setAttribute(mDiv, 'class', 'flex mdiv');
 
     this.renderer.appendChild(mDiv, im);
     this.renderer.appendChild(mDiv, p1);

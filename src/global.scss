@@ -52,19 +52,19 @@ ion-app {
     border: 2px solid blue;
 }
 
-.my-box{
+.my-box {
     border: 2px solid orange;
 }
 
-.selected-box{
+.selected-box {
     border: 2px solid purple;
 }
 
 .glass {
-    background: #fff!important;
+    background: #fff !important;
 }
 
-.flex{
+.flex {
     display: flex;
 }
 
@@ -73,12 +73,26 @@ ion-app {
     text-align: center;
 }
 
-.popupCustom{
-    .leaflet-popup-content{
+.popupCustom {
+    .leaflet-popup-content {
         overflow: scroll;
         height: 250px;
         width: 200px;
         margin: 0;
         padding: 10px;
+    }
+}
+
+.icon-div {
+    .myIcon {
+        width: 50px;
+        height: 50px;
+
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: contain;
+        }
     }
 }
