@@ -113,16 +113,37 @@
     }
 }
 
-.popImgClass{
+.popImgClass {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-.mdiv{
+.mdiv {
     align-items: center;
-    p{
+
+    p {
         font-weight: bold;
     }
+}
+
+.ion-content-pop {
+    padding: 5px 10px;
+
+    .icon {
+        position: absolute;
+        right: 0;
+    }
+
+    .content {
+        text-align: center;
+
+        .head {
+            font-weight: bold;
+            font-size: 20px;
+         
+        }
+    }
+
 }

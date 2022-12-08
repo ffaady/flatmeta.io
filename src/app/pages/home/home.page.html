@@ -147,4 +147,43 @@
     </ng-template>
   </ion-modal>
 
+
+  <!-- report popover -->
+  <ion-popover [isOpen]="reportPopover">
+    <ng-template>
+      <div class="ion-content-pop">
+
+        <div class="icon">
+          <ion-button fill="clear" color="dark" (click)="reportPopover = false; toReportUser = undefined">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div class="content">
+          <p class="head">Report User!</p>
+        </div>
+        <div class="ion-text-center">
+          Select an option
+        </div>
+        
+        <ion-item button detail="true">
+          Spam Account
+        </ion-item>
+
+        <ion-item button detail="true">
+          Inappropriate Behaviour
+        </ion-item>
+
+        <ion-item button detail="true">
+          Harassment or bullying
+        </ion-item>
+
+        <ion-item button detail="true">
+          Nudity, pornograpphy, or violence
+        </ion-item>
+
+      </div>
+    </ng-template>
+  </ion-popover>
+
 </ion-content>

@@ -63,6 +63,9 @@ export class HomePage implements OnInit {
   showSellModal: boolean = false;
   tilePrice: number = 0.1;
 
+  reportPopover:boolean = false;
+  toReportUser: any = undefined;
+
   constructor(
     private route: ActivatedRoute,
     public routerOutlet: IonRouterOutlet,
@@ -423,41 +426,58 @@ export class HomePage implements OnInit {
     const p2Text = this.renderer.createText(`Lat: ${user.latLng.lat} \n Lng: ${user.latLng.lng}`);
     this.renderer.appendChild(p2, p2Text);
 
-    const button1 = this.renderer.createElement('ion-button');
+    const sendMessageBtn = this.renderer.createElement('ion-button');
     const button1Text = this.renderer.createText('Message');
-    button1.size = 'small';
-    button1.fill = 'outline';
-    button1.expand = 'block'
-
-    button1.onclick = () => {
+    sendMessageBtn.size = 'small';
+    sendMessageBtn.mode = 'ios';
+    sendMessageBtn.fill = 'outline';
+    sendMessageBtn.expand = 'block';
+    sendMessageBtn.onclick = () => {
       if (GlobaldataService.userObject != undefined) {
         this.showChat(user.id, user.fullname);
       } else {
         this.general.presentToast('Please login to continue!')
       }
     };
-    this.renderer.appendChild(button1, button1Text);
+    
+    
+    const rptBtn = this.renderer.createElement('ion-button');
+    const rptBtnText = this.renderer.createText('Report / Block');
+    rptBtn.size = 'small';
+    rptBtn.mode = 'ios';
+    rptBtn.color = 'danger';
+    rptBtn.fill = 'outline';
+    rptBtn.expand = 'block';
+    rptBtn.onclick = () => {
+      this.reportPopover = true;
+      this.toReportUser = user;
+    };
 
+    this.renderer.appendChild(sendMessageBtn, button1Text);
+    this.renderer.appendChild(rptBtn, rptBtnText)
 
-    const button2 = this.renderer.createElement('ion-button');
+    const sendRequestBtn = this.renderer.createElement('ion-button');
     const button2Text = this.renderer.createText('Send Request');
-    button2.size = 'small';
-    button2.fill = 'outline';
-    button2.expand = 'block'
+    sendRequestBtn.size = 'small';
+    sendRequestBtn.mode = 'ios';
+    sendRequestBtn.fill = 'outline';
+    sendRequestBtn.expand = 'block'
 
-    button2.onclick = () => {
+    sendRequestBtn.onclick = () => {
       this.sendRequest(user.id)
     };
-    this.renderer.appendChild(button2, button2Text);
+    this.renderer.appendChild(sendRequestBtn, button2Text);
 
     const d1 = this.renderer.createElement('div');
-    //this.renderer.addClass(d1, 'flex');
-    if (user.friends == true) {
-      this.renderer.appendChild(d1, button1);
-    } else {
-      this.renderer.appendChild(d1, button2);
-    }
 
+    if (user.friends == true) {
+      this.renderer.appendChild(d1, sendMessageBtn);
+      this.renderer.appendChild(d1, rptBtn); // report user btn
+      this.renderer.setAttribute(d1, 'class', 'flex justify-content-center');
+    } else {
+      this.renderer.appendChild(d1, sendRequestBtn);
+    }
+    
     const container = this.renderer.createElement('div');
     //this.renderer.appendChild(container, im);
     this.renderer.appendChild(container, mDiv);
@@ -812,6 +832,10 @@ export class HomePage implements OnInit {
         return false;
       }
     });
+  }
+
+  reportuser(){
+    
   }
 
 
