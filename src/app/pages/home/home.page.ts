@@ -157,19 +157,14 @@ export class HomePage implements OnInit {
       if (this.myMarker != undefined) {
         this.map.removeLayer(this.myMarker);
       }
-      // if (this.otherMarkers.length > 0) {
-      //   this.otherMarkers.map((marker) => {
-      //     this.map.removeLayer(marker)
-      //   })
-      // }
     } else {
-      this.addMarker();
       if (this.tiles != undefined) {
         this.selectedBoxs = [];
         this.myBoxs = [];
         this.map.removeLayer(this.tiles);
         this.tiles = undefined;
       }
+      this.addMarker();
     }
   }
 
@@ -199,6 +194,7 @@ export class HomePage implements OnInit {
     this.map.attributionControl.setPrefix('FlatMeta.io');
     let coordinates;
 
+    // Native platform and web condition for permission on mobile apps
     if (Capacitor.isNativePlatform()) {
       const canRequest: boolean = await this.locationAccuracy.canRequest();
       if (canRequest) {
@@ -214,6 +210,8 @@ export class HomePage implements OnInit {
     } else {
       coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     }
+
+    //setting map to curent location
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
     let allowZooms = [5, 10, 15];
     this.map.setView = function (center, zoom, options) {
@@ -228,8 +226,8 @@ export class HomePage implements OnInit {
       }
       return Leaflet.Map.prototype.setView.call(this, center, zoom, options);
     }
-    this.addMarker(); //add my marker
 
+    //adding search-bar 
     setTimeout(() => {
       const search = GeoSearch.GeoSearchControl({
         provider: provider,
@@ -241,12 +239,17 @@ export class HomePage implements OnInit {
       this.map.addControl(search);
     }, 1000)
 
+    //add current user marker. setout added because to user API if logged in
+    setTimeout(()=>{
+      this.addMarker(); 
+    }, 1000)
+
+    //on zoom level changed show but btns and set zoom
     this.map.on('zoomend', (res) => {
       if (res.target._zoom == 15) {
         this.showBuyBtn = true;
       } else {
         this.showBuyBtn = false;
-        this.addMarker();
         if (this.tiles != undefined) {
           this.selectedBoxs = [];
           this.myBoxs = [];
@@ -265,6 +268,7 @@ export class HomePage implements OnInit {
       }
     });
 
+    //on map moved update marker location
     this.map.on("moveend", (e) => {
       if (this.myMarker) {
         this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
@@ -285,6 +289,7 @@ export class HomePage implements OnInit {
   }
 
   async addMarker() {
+    console.log('adding marker')
     const coordinates = await Geolocation.getCurrentPosition();
     this.avatar = GlobaldataService.userObject != undefined ? GlobaldataService.userObject.user_image != null ? GlobaldataService.userObject.user_image : 'https://api.flatmeta.io/assets/uploads/users/noimage.png' : 'https://api.flatmeta.io/assets/uploads/users/noimage.png';
 
