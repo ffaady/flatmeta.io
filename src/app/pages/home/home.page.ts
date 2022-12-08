@@ -289,10 +289,8 @@ export class HomePage implements OnInit {
   }
 
   async addMarker() {
-    console.log('adding marker')
     const coordinates = await Geolocation.getCurrentPosition();
     this.avatar = GlobaldataService.userObject.user_image || 'https://api.flatmeta.io/assets/uploads/users/noimage.png';
-    console.log(this.avatar);
     const icon = Leaflet.divIcon({
       iconSize: [50, 50],
       popupAnchor: [13, 0],

@@ -7,12 +7,24 @@
 <ion-content class="ion-padding">
   <div id="container">
 
-    <div class="gett" (click)="chooseFile()">
-      <img [src]="profileImg" *ngIf="profileImg"/>
-      <ion-icon class="icon" name="camera-outline"></ion-icon>
-      Your Avatar
+    <div class="gett">
+      <img [src]="profileImg" *ngIf="profileImg" />
     </div>
 
+    <div class="flex justify-content-evenly ion-margin-bottom">
+      <div>
+        <ion-button expanded="block" fill="outline" color="dark" mode="ios" size="small" (click)="chooseFile()">
+          <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+          Upload Avatar
+        </ion-button>
+      </div>
+      <div>
+        <ion-button expanded="block" fill="outline" color="dark" mode="ios" size="small" (click)="generateAvatar()">
+          <ion-icon name="shuffle-outline" slot="start"></ion-icon>
+          Generate Avatar
+        </ion-button>
+      </div>
+    </div>
 
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" (keyup.enter)="onSubmit()" novalidate>
       <div>
@@ -44,8 +56,7 @@
             Email Address
             <ng-container *ngIf="getControl.email.touched">
               <span class="text-danger" *ngIf="getControl.email.errors?.required">Email is Required*</span>
-              <span class="text-danger"
-                *ngIf="(getControl.email.invalid && !getControl.email.errors?.required)">Invalid
+              <span class="text-danger" *ngIf="(getControl.email.invalid && !getControl.email.errors?.required)">Invalid
                 Email*</span>
             </ng-container>
           </ion-label>
@@ -94,4 +105,7 @@
   </div>
   <input type="file" #fileInput (change)="choosePhoto($event)" hidden="true" accept="image/*"
     style="visibility: hidden;" />
+
+
+  <div id="canvasRen" style="width: 200px;height: 200px;"></div>
 </ion-content>

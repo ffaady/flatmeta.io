@@ -68,6 +68,14 @@ ion-app {
     display: flex;
 }
 
+.justify-content-center{
+    justify-content: center;
+}
+
+.justify-content-evenly{
+    justify-content: space-evenly;
+}
+
 .text-danger {
     color: var(--ion-color-danger);
     text-align: center;

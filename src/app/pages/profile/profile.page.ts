@@ -16,6 +16,7 @@ export class ProfilePage implements OnInit {
 
   profileForm: FormGroup;
   profileImg: string = '';
+  canvas: any;
 
   constructor(
     public general: GeneralService,
@@ -109,5 +110,67 @@ export class ProfilePage implements OnInit {
         console.log(e)
       })
   }
+
+
+  generateAvatar() {
+
+    let tt = this.general.getRandomInt(0, GlobaldataService.topType.length)
+    let at = this.general.getRandomInt(0, GlobaldataService.accessoriesType.length)
+    let hc = this.general.getRandomInt(0, GlobaldataService.hairColor.length)
+    let fht = this.general.getRandomInt(0, GlobaldataService.facialHairType.length)
+    let ct = this.general.getRandomInt(0, GlobaldataService.clotheType.length)
+    let et = this.general.getRandomInt(0, GlobaldataService.eyeType.length)
+    let ebt = this.general.getRandomInt(0, GlobaldataService.eyebrowType.length)
+    let mt = this.general.getRandomInt(0, GlobaldataService.mouthType.length)
+    let sc = this.general.getRandomInt(0, GlobaldataService.skinColor.length)
+
+    let imgs = `https://avataaars.io/?avatarStyle=Transparent&topType=${GlobaldataService.topType[tt]}&accessoriesType=${GlobaldataService.accessoriesType[at]}&hairColor=${GlobaldataService.hairColor[hc]}&facialHairType=${GlobaldataService.facialHairType[fht]}&clotheType=${GlobaldataService.clotheType[ct]}&eyeType=${GlobaldataService.eyeType[et]}&eyebrowType=${GlobaldataService.eyebrowType[ebt]}&mouthType=${GlobaldataService.mouthType[mt]}&skinColor=${GlobaldataService.skinColor[sc]}`;
+    this.profileImg = imgs;
+
+    // let img = new Image();
+
+    // img.onload = () => {
+    //   this.canvas = document.createElement('canvas');
+    //   this.canvas.width = 200;
+    //   this.canvas.height = 200;
+    //   let ctx = this.canvas.getContext('2d');
+    //   ctx.drawImage(document.getElementById('profielImg'), 0, 0, 200, 200);
+
+    //   console.log(this.canvas)
+
+    //   setTimeout(() => {
+    //     this.canvasToImage()
+    //   });
+    // };
+
+    // img.onerror = () => {
+    //   console.error("The provided file couldn't be loaded as an Image media");
+    // };
+    // img.src = imgs;   
+  }
+
+  // canvasToImage() {
+  //   document.getElementById('canvasRen').appendChild(this.canvas);
+
+  //   let dataURL = this.canvas.toDataURL("image/jpeg", 1.0);
+  //   console.log(dataURL);
+  //   // let a = this.dataURLtoBlob(dataURL);
+  //   // console.log(a);
+  // }
+
+  // dataURLtoBlob(dataURL) {
+  //   let array, binary, i, len;
+  //   binary = atob(dataURL.split(',')[1]);
+  //   array = [];
+  //   i = 0;
+  //   len = binary.length;
+  //   while (i < len) {
+  //     array.push(binary.charCodeAt(i));
+  //     i++;
+  //   }
+  //   return new Blob([new Uint8Array(array)], {
+  //     type: 'image/png'
+  //   });
+  // };
 
 }
