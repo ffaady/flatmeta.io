@@ -64,6 +64,7 @@ export class HomePage implements OnInit {
   tilePrice: number = 0.1;
 
   reportPopover:boolean = false;
+  reportList = [];
   toReportUser: any = undefined;
 
   constructor(
@@ -148,6 +149,7 @@ export class HomePage implements OnInit {
   ionViewDidEnter() {
     this.getSoldBox();
     this.getBoxImgs();
+    this.getReportList();
     setTimeout(() => {
       this.getMapUser();
     }, 1500);
@@ -449,8 +451,8 @@ export class HomePage implements OnInit {
     rptBtn.fill = 'outline';
     rptBtn.expand = 'block';
     rptBtn.onclick = () => {
-      this.reportPopover = true;
       this.toReportUser = user;
+      this.reportPopover = true;
     };
 
     this.renderer.appendChild(sendMessageBtn, button1Text);
@@ -834,8 +836,34 @@ export class HomePage implements OnInit {
     });
   }
 
-  reportuser(){
-    
+  getReportList(){
+    this.http.get('GetAllReportText', false).subscribe((res:any)=>{
+      if(res.status == true){
+        this.reportList = res.data.reports;
+      }
+    }, (e)=>{
+      console.log(e)
+    })
+  }
+
+  reportUser(id){
+    let rpt = {
+      user_id: this.toReportUser.id,
+      report_id: id,
+      report_text: ''
+    };
+
+    this.http.post('AddUserReport', rpt, true).subscribe((res:any)=>{
+        this.general.stopLoading();
+      if(res.status == true){
+        this.reportPopover = false;
+        this.toReportUser = undefined;
+        this.general.presentToast(res.data.message);
+      }
+    }, (e)=>{
+      this.general.stopLoading();
+      console.log(e)
+    })
   }
 
 

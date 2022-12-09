@@ -162,25 +162,13 @@
         <div class="content">
           <p class="head">Report User!</p>
         </div>
-        <div class="ion-text-center">
-          Select an option
-        </div>
-        
-        <ion-item button detail="true">
-          Spam Account
-        </ion-item>
-
-        <ion-item button detail="true">
-          Inappropriate Behaviour
-        </ion-item>
-
-        <ion-item button detail="true">
-          Harassment or bullying
-        </ion-item>
-
-        <ion-item button detail="true">
-          Nudity, pornograpphy, or violence
-        </ion-item>
+        <ng-container *ngFor="let rt of reportList">
+            <div (click)="reportUser(rt?.id)">
+              <p>
+                {{rt?.text}}
+              </p>
+            </div>          
+        </ng-container>       
 
       </div>
     </ng-template>
