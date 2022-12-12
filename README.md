@@ -45,7 +45,14 @@ $ ionic serve
 
 - [IOS Setup](https://ionicframework.com/docs/developing/ios)
 
-### Generate Release Builds:
+## Generate Release Builds:
+
+### Web Build and Deployment:
+
+Next, make Web build:
+```$ ionic build --prod ```
+
+Copy `www` folder to upload on web Server
 
 ### Android Play Store Deployment:
 
@@ -54,9 +61,6 @@ To generate a release build for Android, build your web app and then run the fol
 ```$ npx cap copy && npx cap sync```
 
 This will copy all web assets and sync any plugin changes.
-
-Next, make Web build:
-```$ ionic build --prod ```
 
 Next, open Android studio:
 
