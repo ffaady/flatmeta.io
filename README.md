@@ -22,7 +22,7 @@ $ ionic -v
 ### Download and Clone: 
 
 ```
-$ git clone https://github.com/ffaady/
+$ git clone https://github.com/flatmeta/flatmeta.io.git
 ```
 
 ### Go to cloned folder and Install dependencies:
@@ -40,8 +40,8 @@ $ ionic serve
 ## Contributing
 
 Thanks for your interest in contributing! Read up on our guidelines for
-[contributing](https://github.com/ffaady/flatmeta.io/blob/main/.github/CONTRIBUTING.md)
-and then look through our issues with a [help wanted](ttps://github.com/ffaady/flatmeta.io/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
+[contributing](https://github.com/flatmeta/flatmeta.io/blob/main/.github/CONTRIBUTING.md)
+and then look through our issues with a [help wanted](ttps://github.com/flatmeta/flatmeta.io/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
 label.
 
 
