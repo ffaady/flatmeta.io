@@ -50,6 +50,7 @@ $ ionic serve
 ### Web Build and Deployment:
 
 Next, make Web build:
+
 ```$ ionic build --prod ```
 
 Copy `www` folder to upload on web Server
