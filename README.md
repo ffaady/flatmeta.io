@@ -37,6 +37,15 @@ $ npm i
 $ ionic serve
 ```
 
+## Contributing
+
+Thanks for your interest in contributing! Read up on our guidelines for
+[contributing](https://github.com/ffaady/flatmeta.io/blob/main/.github/CODE_OF_CONDUCT.md)
+and then look through our issues with a [help wanted](ttps://github.com/ffaady/flatmeta.io/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
+label.
+
+
+
 ### Android Development Setup:
 
 - [Android Setup](https://ionicframework.com/docs/developing/android)
