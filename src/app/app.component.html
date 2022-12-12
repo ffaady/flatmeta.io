@@ -8,11 +8,11 @@
 
         <ion-list>
           <ion-menu-toggle autoHide="false" *ngFor="let p of pages">
-            <ion-item routerLinkActive="selected" routerDirection="root" lines="none" detail="true" (click)="goTo(p.url)">
+            <ion-item routerLinkActive="selected" routerDirection="root" lines="true" detail="true" (click)="goTo(p.url)">
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
-
           </ion-menu-toggle>
+          
           <ion-item lines="none" (click)="logOut()" *ngIf="profile != undefined">
             <ion-label>Logout</ion-label>
           </ion-item>

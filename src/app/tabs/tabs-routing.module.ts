@@ -33,7 +33,11 @@ const routes: Routes = [
       },
       {
         path: 'thankyou',
-        loadChildren: () => import('../pages/thankyou/thankyou.module').then( m => m.ThankyouPageModule)
+        loadChildren: () => import('../pages/thankyou/thankyou.module').then(m => m.ThankyouPageModule)
+      },
+      {
+        path: 'opensource',
+        loadChildren: () => import('../pages/opensource/opensource.module').then(m => m.OpensourcePageModule)
       },
       {
         path: '',

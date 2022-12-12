@@ -32,6 +32,10 @@ export class AppComponent {
     {
       title: "Profile",
       url: 't/profile'
+    },
+    {
+      title: 'Open Source Contribution',
+      url: 't/opensource'
     }
   ];
 
