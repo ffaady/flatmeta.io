@@ -8,20 +8,9 @@
 
 <ion-content [fullscreen]="true">
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button color="dark">
-      <ion-icon name="globe"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button (click)="toFlatMetaHome()">
-        <ion-icon name="home-outline"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="color-palette"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="globe"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
+    <ion-fab-button color="light" (click)="toFlatMetaHome()">
+      <ion-icon name="home"></ion-icon>
+    </ion-fab-button>    
   </ion-fab>
 
   <div id="mapId"></div>
@@ -146,7 +135,6 @@
       </ion-footer>
     </ng-template>
   </ion-modal>
-
 
   <!-- report popover -->
   <ion-popover [isOpen]="reportPopover">
