@@ -294,7 +294,11 @@ export class HomePage implements OnInit {
 
   async addMarker() {
     const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-    this.avatar = GlobaldataService.userObject.user_image || 'https://api.flatmeta.io/assets/uploads/users/noimage.png';
+    if(GlobaldataService.userObject != undefined){
+      this.avatar = GlobaldataService.userObject.user_image;
+    }else{
+      this.avatar = 'https://api.flatmeta.io/assets/uploads/users/noimage.png'
+    }    
     const icon = Leaflet.divIcon({
       iconSize: [50, 50],
       popupAnchor: [13, 0],
