@@ -19,27 +19,33 @@ export class AppComponent {
   pages = [
     {
       title: "My Cart",
-      url: 'flatmeta/cart'
+      url: 'flatmeta/cart',
+      goWithoutLogin: false,
     },
     {
       title: "My Places",
-      url: 'flatmeta/myplaces'
+      url: 'flatmeta/myplaces',
+      goWithoutLogin: false,
     },
     {
       title: 'Recent Purchased Places',
-      url: 'flatmeta/recentpurchases'
+      url: 'flatmeta/recentpurchases',
+      goWithoutLogin: true,
     },
     {
       title: "Friend Requests",
-      url: 'flatmeta/friendrequest'
+      url: 'flatmeta/friendrequest',
+      goWithoutLogin: false,
     },
     {
       title: "Profile",
-      url: 'flatmeta/profile'
+      url: 'flatmeta/profile',
+      goWithoutLogin: false,
     },
     {
       title: 'Open Source Contribution',
-      url: 'flatmeta/opensource'
+      url: 'flatmeta/opensource',
+      goWithoutLogin: true,
     }
   ];
 
@@ -76,12 +82,17 @@ export class AppComponent {
   }
   
   goTo(p){
-    if(this.profile != undefined){
-      this.general.goToPage(p)
+    if(p.goWithoutLogin){
+      this.general.goToPage(p.url)
     }else{
-      this.general.goToPage('login')
-      this.general.presentToast('Please Login to continue!');
+      if(this.profile != undefined){
+        this.general.goToPage(p.url)
+      }else{
+        this.general.goToPage('login')
+        this.general.presentToast('Please Login to continue!');
+      }
     }
+
   }
 
   getUserDetails() {
