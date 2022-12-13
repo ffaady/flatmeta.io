@@ -247,7 +247,7 @@ export class HomePage implements OnInit {
     //add current user marker. setout added because to user API if logged in
     setTimeout(() => {
       this.addMarker();
-    }, 1000)
+    }, 5000)
 
     //on zoom level changed show but btns and set zoom
     this.map.on('zoomend', (res) => {
@@ -294,7 +294,7 @@ export class HomePage implements OnInit {
   }
 
   async addMarker() {
-    const coordinates = await Geolocation.getCurrentPosition();
+    const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     this.avatar = GlobaldataService.userObject.user_image || 'https://api.flatmeta.io/assets/uploads/users/noimage.png';
     const icon = Leaflet.divIcon({
       iconSize: [50, 50],
