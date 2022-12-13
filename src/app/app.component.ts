@@ -19,23 +19,27 @@ export class AppComponent {
   pages = [
     {
       title: "My Cart",
-      url: 't/cart'
+      url: 'flatmeta/cart'
     },
     {
       title: "My Places",
-      url: 't/myplaces'
+      url: 'flatmeta/myplaces'
+    },
+    {
+      title: 'Recent Purchased Places',
+      url: 'flatmeta/recentpurchases'
     },
     {
       title: "Friend Requests",
-      url: 't/friendrequest'
+      url: 'flatmeta/friendrequest'
     },
     {
       title: "Profile",
-      url: 't/profile'
+      url: 'flatmeta/profile'
     },
     {
       title: 'Open Source Contribution',
-      url: 't/opensource'
+      url: 'flatmeta/opensource'
     }
   ];
 

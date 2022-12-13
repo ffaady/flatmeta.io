@@ -83,7 +83,7 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.events.receiveToUser().subscribe((res: any) => {
       if (res) {
-        this.goTo("Home Page", "FlatMeta | Buy / Sell Virtual Land", `t/h/${res.id + '/' + res.username}`);
+        this.goTo("Home Page", "FlatMeta | Buy / Sell Virtual Land", `flatmeta/home/${res.id + '/' + res.username}`);
         this.getUserTilesbyId(res.id);
       }
     })

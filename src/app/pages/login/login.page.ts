@@ -78,7 +78,7 @@ export class LoginPage implements OnInit {
         GlobaldataService.userObject = res.data;
         this.storage.setObject('userObject', res.data);
         this.events.publishLogin(res.data)
-        this.general.goToPage('t/home');
+        this.general.goToPage('flatmeta/home');
       }
     }, (e) => {
       console.log(e);

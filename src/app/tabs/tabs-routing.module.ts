@@ -4,11 +4,11 @@ import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
-    path: 't',
+    path: 'flatmeta',
     component: TabsPage,
     children: [
       {
-        path: 'h/:id/:username',
+        path: 'home',
         loadChildren: () => import('../pages/home/home.module').then(m => m.HomePageModule)
       },
       {
@@ -40,15 +40,19 @@ const routes: Routes = [
         loadChildren: () => import('../pages/opensource/opensource.module').then(m => m.OpensourcePageModule)
       },
       {
+        path: 'recentpurchases',
+        loadChildren: () => import('../pages/recentpurchases/recentpurchases.module').then(m => m.RecentpurchasesPageModule)
+      },
+      {
         path: '',
-        redirectTo: '/t/h/n/n',
+        redirectTo: '/flatmeta/home',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/t/h/n/n',
+    redirectTo: '/flatmeta/home',
     pathMatch: 'full'
   }
 ];
