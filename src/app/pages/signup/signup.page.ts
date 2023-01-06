@@ -64,7 +64,7 @@ export class SignupPage implements OnInit {
       this.general.stopLoading();
       if (res.status == true) {
         this.general.presentToast(res.message);
-        this.general.goToPage('login');
+        this.general.goToPage('flatmeta/login');
       } else {
         this.general.presentToast(res.message);
       }

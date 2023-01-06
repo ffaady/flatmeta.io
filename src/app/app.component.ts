@@ -160,7 +160,7 @@ export class AppComponent {
             this.storage.setObject('darkMode', this.darkMode)
             GlobaldataService.clearGobal();
             this.profile = undefined;
-            this.general.goToPage('login');
+            this.general.goToPage('flatmeta/login');
             this.general.toggleMenu();
           }
         }
