@@ -31,6 +31,7 @@ const provider = new GeoSearch.OpenStreetMapProvider();
 export class HomePage implements OnInit {
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
+  ShowtopPop: boolean = true;
   map: Leaflet.Map;
   tiles: any = undefined;
 

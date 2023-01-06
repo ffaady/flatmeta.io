@@ -13,6 +13,28 @@
     </ion-fab-button>    
   </ion-fab>
 
+  <div id="top-pop" *ngIf="ShowtopPop">
+    <h2>Welcome to Flatmeta! 
+      <ion-icon (click)="ShowtopPop = false" name="close"></ion-icon>
+    </h2>
+
+    <p>Flatmeta.io is an Open-source, Online virtual World. Where you can Sell / Purchase your desired places as a square boxes and sell them at your own Cost.</p>
+
+    <p>You can Chat with other Users roaming in your area by adding them as friends, You can also visit any place or neighbourhood. </p>
+
+    <div class="button-box">
+
+      <ion-button [routerLink]="['/flatmeta/opensource']" expand="block">Learn More</ion-button>
+
+      <ion-button (click)="ShowtopPop = false" expand="block">Start Mapping</ion-button>
+
+    </div>
+
+    
+
+      
+  </div>
+
   <div id="mapId"></div>
 
   <ng-container *ngIf="showBuyBtn">
@@ -158,6 +180,16 @@
             </div>          
         </ng-container>       
 
+      </div>
+    </ng-template>
+  </ion-popover>
+
+  <ion-popover >
+    <ng-template>
+      <div class="ion-content-top-menu">
+        <div class="icon">
+          
+        </div>
       </div>
     </ng-template>
   </ion-popover>
