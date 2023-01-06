@@ -94,12 +94,16 @@ export class HomePage implements OnInit {
     });
   }
 
-  toFlatMetaHome() {
+  toAvatarLocation() {
     setTimeout(() => {
       if (this.tiles != undefined) {
         this.map.removeLayer(this.tiles);
       }
-      this.map.flyTo([51.509720, -0.104317], 15);
+      this.map.flyTo([this.myMarker._latlng.lat, this.myMarker._latlng.lng], this.map.getZoom());
+      setTimeout(()=>{
+        this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
+        this.emitLocation(this.map.getCenter())
+      }, 500)
     }, 500)
   }
 
@@ -308,19 +312,20 @@ export class HomePage implements OnInit {
 
     //on map moved update marker location
     this.map.on("moveend", (e) => {
-      if (this.myMarker) {
-        this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
-        this.emitLocation(this.map.getCenter())
-      }
+      // if (this.myMarker) {
+      //   this.myMarker.slideTo(this.map.getCenter(), { duration: 100 });
+      //   this.emitLocation(this.map.getCenter())
+      // }
     });
   }
 
   async getCurrentLocation() {
-    const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     if (this.tiles != undefined) {
       this.map.removeLayer(this.tiles);
     }
+    const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
     this.map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15);
+    this.myMarker.slideTo({ lat: coordinates.coords.latitude, lng: coordinates.coords.longitude }, { duration: 100 });
     if (GlobaldataService.userObject != undefined) {
       this.emitLocation({ lat: coordinates.coords.latitude, lng: coordinates.coords.longitude })
     }
@@ -367,7 +372,7 @@ export class HomePage implements OnInit {
       this.map.removeLayer(this.myMarker);
     }
     this.myMarker = new DriftMarker([coordinates.coords.latitude, coordinates.coords.longitude], {
-      draggable: false,
+      draggable: true,  
       icon: icon
     })//@ts-ignore
       .bindPopup(customPopup, customOptions).addTo(this.map);

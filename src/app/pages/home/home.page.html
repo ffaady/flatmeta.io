@@ -8,7 +8,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button color="light" (click)="toFlatMetaHome()">
+    <ion-fab-button color="light" (click)="getCurrentLocation()">
       <ion-icon name="home"></ion-icon>
     </ion-fab-button>    
   </ion-fab>
@@ -46,7 +46,7 @@
   </ng-container>
 
   <ng-container>
-    <div class="locatebtn" (click)="getCurrentLocation()">
+    <div class="locatebtn" (click)="toAvatarLocation()">
       <ion-icon name="locate-outline"></ion-icon>
     </div>
   </ng-container>

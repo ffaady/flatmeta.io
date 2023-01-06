@@ -88,7 +88,7 @@ export class AppComponent {
       if(this.profile != undefined){
         this.general.goToPage(p.url)
       }else{
-        this.general.goToPage('login')
+        this.general.goToPage('flatmeta/login')
         this.general.presentToast('Please Login to continue!');
       }
     }
