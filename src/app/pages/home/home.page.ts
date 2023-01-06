@@ -62,9 +62,10 @@ export class HomePage implements OnInit {
   showSellModal: boolean = false;
   tilePrice: number = 0.1;
 
-  reportPopover:boolean = false;
+  reportPopover: boolean = false;
   reportList = [];
   toReportUser: any = undefined;
+  prevZoom: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -193,8 +194,12 @@ export class HomePage implements OnInit {
       attribution: 'Buy / Customise land',
       maxZoom: 15,
       id: 'mapbox/streets-v11',
+      bounceAtZoomLimits: false,
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
+    this.map.touchZoom.disable();
+    this.map.doubleClickZoom.disable();
+
     this.map.attributionControl.setPrefix('FlatMeta.io');
     let coordinates;
 
@@ -248,8 +253,36 @@ export class HomePage implements OnInit {
       this.addMarker();
     }, 5000)
 
+    this.map.on('zoomstart', (res) => {
+      this.prevZoom = this.map.getZoom();
+    })
     //on zoom level changed show but btns and set zoom
     this.map.on('zoomend', (res) => {
+      // if(!Capacitor.isNativePlatform()){
+      //   let currZoom = this.map.getZoom();
+      //   let diff = this.prevZoom - currZoom;
+      //   if(diff > 0){
+      //     console.log('zoomed out');
+      //     // if (currZoom < 8) {
+      //     //   this.map.setZoom(5)
+      //     // } else if (currZoom >= 8 && currZoom <= 11) {
+      //     //   this.map.setZoom(10)
+      //     // } else if (currZoom >= 12 && currZoom <= 15) {
+      //     //   this.map.setZoom(15)
+      //     // }
+      //   } else if(diff < 0) {
+      //     console.log('zoomed in');
+      //     // if (currZoom < 8) {
+      //     //   this.map.setZoom(5)
+      //     // } else if (currZoom >= 8 && currZoom <= 11) {
+      //     //   this.map.setZoom(10)
+      //     // } else if (currZoom >= 12 && currZoom <= 15) {
+      //     //   this.map.setZoom(15)
+      //     // }          
+      //   }
+      // }
+
+      //this.map.setZoomAround(this.map.getBounds().getNorthWest(), res.target._zoom)
       if (res.target._zoom == 15) {
         this.showBuyBtn = true;
       } else {
@@ -261,7 +294,7 @@ export class HomePage implements OnInit {
           this.tiles = undefined;
         }
       }
-      if (Capacitor.isNativePlatform()) {
+      //if (Capacitor.isNativePlatform()) {
         if (res.target._zoom < 8) {
           this.map.setZoom(5)
         } else if (res.target._zoom >= 8 && res.target._zoom <= 11) {
@@ -269,7 +302,7 @@ export class HomePage implements OnInit {
         } else if (res.target._zoom >= 12 && res.target._zoom <= 15) {
           this.map.setZoom(15)
         }
-      }
+      //}
     });
 
     //on map moved update marker location
@@ -294,11 +327,11 @@ export class HomePage implements OnInit {
 
   async addMarker() {
     const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-    if(GlobaldataService.userObject != undefined){
+    if (GlobaldataService.userObject != undefined) {
       this.avatar = GlobaldataService.userObject.user_image;
-    }else{
+    } else {
       this.avatar = 'https://api.flatmeta.io/assets/uploads/users/noimage.png'
-    }    
+    }
     const icon = Leaflet.divIcon({
       iconSize: [50, 50],
       popupAnchor: [13, 0],
@@ -444,8 +477,8 @@ export class HomePage implements OnInit {
         this.general.presentToast('Please login to continue!')
       }
     };
-    
-    
+
+
     const rptBtn = this.renderer.createElement('ion-button');
     const rptBtnText = this.renderer.createText('Report / Block');
     rptBtn.size = 'small';
@@ -482,7 +515,7 @@ export class HomePage implements OnInit {
     } else {
       this.renderer.appendChild(d1, sendRequestBtn);
     }
-    
+
     const container = this.renderer.createElement('div');
     //this.renderer.appendChild(container, im);
     this.renderer.appendChild(container, mDiv);
@@ -839,31 +872,31 @@ export class HomePage implements OnInit {
     });
   }
 
-  getReportList(){
-    this.http.get('GetAllReportText', false).subscribe((res:any)=>{
-      if(res.status == true){
+  getReportList() {
+    this.http.get('GetAllReportText', false).subscribe((res: any) => {
+      if (res.status == true) {
         this.reportList = res.data.reports;
       }
-    }, (e)=>{
+    }, (e) => {
       console.log(e)
     })
   }
 
-  reportUser(id){
+  reportUser(id) {
     let rpt = {
       user_id: this.toReportUser.id,
       report_id: id,
       report_text: ''
     };
 
-    this.http.post('AddUserReport', rpt, true).subscribe((res:any)=>{
-        this.general.stopLoading();
-      if(res.status == true){
+    this.http.post('AddUserReport', rpt, true).subscribe((res: any) => {
+      this.general.stopLoading();
+      if (res.status == true) {
         this.reportPopover = false;
         this.toReportUser = undefined;
         this.general.presentToast(res.data.message);
       }
-    }, (e)=>{
+    }, (e) => {
       this.general.stopLoading();
       console.log(e)
     })

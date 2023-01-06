@@ -147,3 +147,41 @@
     }
 
 }
+
+::ng-deep .leaflet-control-geosearch{
+    background-color: var(--ion-color-light);
+    border-radius: 10px;
+    form {
+        background-color: var(--ion-color-light);
+    }
+    .glass{
+        background: var(--ion-color-light)!important;
+    }
+    .reset{
+        background-color: var(--ion-color-light)!important;
+        color: var(--ion-color-medium)!important;
+    }
+    .results{
+        background: var(--ion-color-light);
+        div{
+            &:hover{
+                background-color: var(--ion-color-medium);
+                color: var(--ion-color-light);
+            }
+        }
+    }
+}
+
+::ng-deep .leaflet-top {
+    .leaflet-control-zoom{
+        .leaflet-control-zoom-in{
+            background-color: var(--ion-color-light);
+            color: var(--ion-color-dark);
+        }
+
+        .leaflet-control-zoom-out{
+            background-color: var(--ion-color-light);
+            color: var(--ion-color-dark);
+        }
+    }
+}

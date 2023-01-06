@@ -101,6 +101,8 @@ ion-app {
             height: 50px;
             border-radius: 50%;
             object-fit: contain;
+            border: 1.5px solid var(--ion-color-medium);
+            box-shadow: 3px 3px 13px 2px var(--ion-color-medium);
         }
     }
 }
