@@ -111,7 +111,6 @@ export class ProfilePage implements OnInit {
       })
   }
 
-
   generateAvatar() {
     let tt = this.general.getRandomInt(0, GlobaldataService.topType.length)
     let at = this.general.getRandomInt(0, GlobaldataService.accessoriesType.length)
