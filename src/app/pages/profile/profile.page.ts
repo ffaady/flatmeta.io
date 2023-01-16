@@ -98,7 +98,7 @@ export class ProfilePage implements OnInit {
       this.general.stopLoading();
       if (res.status == true) {
         this.profileForm.patchValue(res.data);
-        this.profileImg = res.data.user_image;
+        //this.profileImg = res.data.user_image;
         GlobaldataService.userObject = res.data;
         this.storage.setObject('userObject', res.data);
       } else {
