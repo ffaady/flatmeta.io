@@ -9,6 +9,7 @@ import { EventsService } from 'src/app/providers/events.service';
 import { ModalController } from '@ionic/angular';
 import { ForgetpasswordComponent } from 'src/app/components/forgetpassword/forgetpassword.component';
 import { AlertController } from '@ionic/angular';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +30,9 @@ export class LoginPage implements OnInit {
     public modalController: ModalController,
     public alertController: AlertController
   ) { }
+
+  ionViewWillEnter(){
+  }
 
   ngOnInit() {
     this.initLoginForm();

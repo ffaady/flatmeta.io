@@ -193,18 +193,18 @@ export class HomePage implements OnInit {
     if (this.map !== undefined) {
       return
     }
-    this.map = Leaflet.map('mapId').setView([0, 0], 1);
+    this.map = Leaflet.map('mapId', {
+      scrollWheelZoom: 'center',
+      touchZoom: false,
+      doubleClickZoom: false
+    }).setView([0, 0], 1);
     //Leaflet.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?access_token={accessToken}', {
     Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Buy / Customise land',
       maxZoom: 15,
       id: 'mapbox/streets-v11',
-      bounceAtZoomLimits: false,
       accessToken: 'pk.eyJ1IjoiaWRldmUiLCJhIjoiY2wxZ2o1cnlhMWFjbTNkcGNpbGZ3djI1bSJ9.H-6HJziV9Wu75UT4gQu5Bw',
     }).addTo(this.map);
-    this.map.touchZoom.disable();
-    this.map.doubleClickZoom.disable();
-
     this.map.attributionControl.setPrefix('FlatMeta.io');
     let coordinates;
 

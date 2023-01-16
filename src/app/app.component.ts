@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { GeneralService } from './providers/general.service';
 import { StorageService } from './providers/storage.service';
 import { Platform, AlertController } from '@ionic/angular';
 import { GlobaldataService } from './providers/globaldata.service';
 import { EventsService } from './providers/events.service';
 import { HttpService } from './providers/http.service';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-root',
@@ -55,7 +56,8 @@ export class AppComponent {
     private platform: Platform,
     private storage: StorageService,
     public events: EventsService,
-    public http: HttpService
+    public http: HttpService,
+    private zone: NgZone
   ) {
     this.initializeApp();
     this.events.receiveLogin().subscribe((res: any) => {
@@ -67,6 +69,13 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.getLoginUser();
       this.checkdarkMode();
+      App.addListener('backButton', data => {
+        if(data.canGoBack){
+          this.zone.run(()=>{
+            this.general.goToPage('flatmeta/home');
+          })
+        }
+      });
     });
   }
 
